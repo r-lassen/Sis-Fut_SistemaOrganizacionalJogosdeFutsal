@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +26,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<BancoContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DataBase"),
+                    ServerVersion.AutoDetect(Configuration.GetConnectionString("DataBase"))));
+            services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
         }
+
+   
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

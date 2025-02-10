@@ -9,6 +9,26 @@
 
     <br>
 
+    @if(TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+            A simple success alert—check it out!
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+            A simple danger alert—check it out!
+            @TempData["MensagemErro"]
+        </div>
+    }
+
+    <br />
+
     <h1>Listagens de contatos</h1>
     <p> Sistema controle contatos</p>
 

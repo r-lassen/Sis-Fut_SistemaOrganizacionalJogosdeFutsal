@@ -13,7 +13,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             _bancoContext = bancoContext; 
         }
 
-        public ContatoModel ListarPorId(int id)
+        public ContatoModel BuscarPorId(int id)
         {
             return _bancoContext.Contatos.FirstOrDefault(x => x.Id == id);
         }
@@ -33,7 +33,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
 
         public ContatoModel Atualizar(ContatoModel contato)
         {
-            ContatoModel contatoDB = ListarPorId(contato.Id);
+            ContatoModel contatoDB = BuscarPorId(contato.Id);
             if (contatoDB == null) throw new System.Exception("Erro na Atualização do contato");
 
             contatoDB.Nome = contatoDB.Nome;
@@ -47,7 +47,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
 
         public bool Apagar(int id)
         {
-            ContatoModel contatoDB = ListarPorId(id);
+            ContatoModel contatoDB = BuscarPorId(id);
             if (contatoDB == null) throw new System.Exception("Erro em apagar contato");
             _bancoContext.Contatos.Remove(contatoDB);
             _bancoContext.SaveChanges();

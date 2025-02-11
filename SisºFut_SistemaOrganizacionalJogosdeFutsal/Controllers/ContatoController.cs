@@ -27,13 +27,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult Editar(int id)
         {
-            ContatoModel contato = _contatoRepositorio.ListarPorId(id);
+            ContatoModel contato = _contatoRepositorio.BuscarPorId(id);
             return View(contato);
         }
 
         public IActionResult ApagarConfirmacao(int id)
         {
-            ContatoModel contato = _contatoRepositorio.ListarPorId(id);
+            ContatoModel contato = _contatoRepositorio.BuscarPorId(id);
             return View(contato);
         }
 
@@ -99,7 +99,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return View("Editar", contato);
             }catch (System.Exception erro) {
                 TempData["MensagemErro"] = $"Erro ao alterar o contato, tente novamente. detalhe do erro: {erro.Message}";
-                throw;
+                return RedirectToAction("Index");
             }
 
         }

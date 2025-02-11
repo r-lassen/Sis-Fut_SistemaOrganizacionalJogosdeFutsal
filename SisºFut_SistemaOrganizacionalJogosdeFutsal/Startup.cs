@@ -30,6 +30,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
                 options.UseMySql(Configuration.GetConnectionString("DataBase"),
                     ServerVersion.AutoDetect(Configuration.GetConnectionString("DataBase"))));
             services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
+            services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
         }
 
    

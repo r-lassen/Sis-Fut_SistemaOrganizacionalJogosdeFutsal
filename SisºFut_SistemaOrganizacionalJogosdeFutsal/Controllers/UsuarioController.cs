@@ -43,22 +43,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             try
             {
                 bool apagado = _usuarioRepositorio.Apagar(id);
-
-                if (apagado)
-                {
-                    TempData["MensagemSucesso"] = "Usuário apagado com sucesso!";
-                }
-                else
-                {
-                    TempData["MensagemErro"] = "Erro ao apagar seu usuário, tente novamente. detalhe do erro: ";
-                }
+                if (apagado) TempData["MensagemSucesso"] = "Usuário apagado com sucesso!"; else TempData["MensagemErro"] = "Ops, não conseguimos apagar seu usuário, tente novamante!";
                 return RedirectToAction("Index");
             }
-            catch (System.Exception erro)
+            catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Não conseguimos apagar seu usuário, tente novamente. detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Ops, não conseguimos apagar seu usuário, tente novamante, detalhe do erro: {erro.Message}";
                 return RedirectToAction("Index");
-
             }
         }
 
@@ -92,27 +83,27 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             try
             {
                 UsuarioModel usuario = null;
-
                 if (ModelState.IsValid)
                 {
                     usuario = new UsuarioModel()
                     {
-                        Id= usuarioSemSenhaModel.Id,
+                        Id = usuarioSemSenhaModel.Id,
                         Name = usuarioSemSenhaModel.Name,
                         Login = usuarioSemSenhaModel.Login,
+                        Email = usuarioSemSenhaModel.Email,
                         Perfil = usuarioSemSenhaModel.Perfil
                     };
 
-
                     usuario = _usuarioRepositorio.Atualizar(usuario);
-                    TempData["MensagemSucesso"] = "Usuário alterado com sucesso";
+
+                    TempData["MensagemSucesso"] = "Usuário alterado com sucesso!";
                     return RedirectToAction("Index");
                 }
-                return View("Editar", usuario);
+                return View(usuario);
             }
-            catch (System.Exception erro)
+            catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Erro ao alterar o usuário, tente novamente. detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Ops, não conseguimos atualizar seu usuário, tente novamante, detalhe do erro: {erro.Message}";
                 return RedirectToAction("Index");
             }
 

@@ -20,6 +20,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
         public string Senha { get; set; }
         public DateTime DataCadastro { get; set; }
         public DateTime? DataAtualização { get; set; }
+        public bool SenhaValida(string senha)
+        {
+            return Senha == senha;
+        }
 
     }
 }

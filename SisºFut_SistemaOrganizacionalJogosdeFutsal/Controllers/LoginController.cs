@@ -10,5 +10,17 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             return View();  
         }
     }
+                   
+                    TempData["MensagemError"] = $"Usuário e/ou senha inválido(s). Tente Novamente.";
 }
-//36.35
+
+                return View("Index");
+            }
+            catch(Exception erro)
+            {
+                TempData["MensagemErro"] = $"Não conseguimos realizar seu login, Tente novamente. Detalhes do erro: {erro.Message}";
+                return RedirectToAction("Index");
+            }
+        }
+    }
+}

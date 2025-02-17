@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
-
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models; 
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System.Collections.Generic;
 using System;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
+    [PaginaRestritaAdm]
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;

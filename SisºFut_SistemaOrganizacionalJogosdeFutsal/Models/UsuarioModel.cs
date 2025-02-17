@@ -1,4 +1,5 @@
 ﻿using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,7 +23,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
         public DateTime? DataAtualização { get; set; }
         public bool SenhaValida(string senha)
         {
-            return Senha == senha;
+            return Senha == senha.GerarHash();
+        }
+
+        public void SetSenhaHash()
+        {
+            Senha = Senha.GerarHash();
         }
 
     }

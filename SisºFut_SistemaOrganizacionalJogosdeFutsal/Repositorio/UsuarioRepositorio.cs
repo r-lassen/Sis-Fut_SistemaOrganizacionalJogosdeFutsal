@@ -34,6 +34,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         {
             //Gravar no banco de Dados
             usuario.DataCadastro = DateTime.Now;
+            usuario.SetSenhaHash();
             _bancoContext.Usuarios.Add(usuario);
             _bancoContext.SaveChanges();
             return usuario;

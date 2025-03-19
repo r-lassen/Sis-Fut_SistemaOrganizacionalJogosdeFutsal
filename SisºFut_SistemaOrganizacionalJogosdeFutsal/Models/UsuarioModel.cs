@@ -7,6 +7,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 {
     public class UsuarioModel
     {
+
+
         public int Id { get; set; }
         [Required(ErrorMessage = "Digite o nome do usuário")]
         public string Name { get; set; }

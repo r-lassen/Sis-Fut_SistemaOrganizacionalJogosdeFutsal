@@ -1,6 +1,5 @@
-﻿using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Data
@@ -14,6 +13,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Data
         public DbSet<ContatoModel> Contatos { get; set; }
         public DbSet<UsuarioModel> Usuarios { get; set; }
 
+        public DbSet<QuadrasModel> Quadras { get; set; }
+
+        public DbSet<AgendamentosModel> Agendamentos { get; set; }
+
+        public DbSet<TimeXQuadrasModel> TimexQuadras { get; set; }
+
 
     }
 
@@ -21,6 +26,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Data
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
+        public string Celular { get; set; }
     }
 }
 

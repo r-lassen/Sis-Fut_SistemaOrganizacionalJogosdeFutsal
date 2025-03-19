@@ -1,4 +1,3 @@
-using System;
 //Add-Migration CriacaoTabela------- -Context BancoContext
 //Update-Database -ContextBanco Context
 

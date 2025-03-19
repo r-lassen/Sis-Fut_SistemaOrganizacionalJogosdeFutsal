@@ -1,6 +1,4 @@
-﻿using Intercom.Data;
-
-namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
+﻿namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
 {
     public enum PerfilEnum
     {

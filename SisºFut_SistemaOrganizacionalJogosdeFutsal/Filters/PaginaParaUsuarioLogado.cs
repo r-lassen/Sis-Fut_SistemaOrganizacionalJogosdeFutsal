@@ -12,7 +12,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             string sessaoUsuario = context.HttpContext.Session.GetString("sessaoUsuarioLogado");
-            
+
             if (string.IsNullOrEmpty(sessaoUsuario))
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Login" }, { "action", "Index" } });
@@ -20,8 +20,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters
             else
             {
                 UsuarioModel usuario = JsonConvert.DeserializeObject<UsuarioModel>(sessaoUsuario);
-                
-                if(usuario == null)
+
+                if (usuario == null)
                 {
                     context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Login" }, { "action", "Index" } });
                 }

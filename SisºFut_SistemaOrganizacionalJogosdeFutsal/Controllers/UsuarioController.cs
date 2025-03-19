@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models; 
-using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
-using System.Collections.Generic;
-using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
+using System;
+using System.Collections.Generic;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
@@ -55,7 +56,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Criar(UsuarioModel usuario)
+
         {
             try
             {
@@ -79,7 +82,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
         [HttpPost]
-        public IActionResult Alterar(UsuarioSemSenhaModel usuarioSemSenhaModel)
+        public IActionResult Editar(UsuarioSemSenhaModel usuarioSemSenhaModel)
         {
             try
             {
@@ -109,5 +112,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
 
         }
+
+
+
+
     }
 }

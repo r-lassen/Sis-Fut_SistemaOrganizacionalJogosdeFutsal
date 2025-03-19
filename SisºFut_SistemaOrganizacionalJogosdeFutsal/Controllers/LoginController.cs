@@ -10,7 +10,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly ISessao _sessao;
-        public LoginController(IUsuarioRepositorio usuarioRepositorio, 
+        public LoginController(IUsuarioRepositorio usuarioRepositorio,
                                ISessao sessao)
         {
             _usuarioRepositorio = usuarioRepositorio;
@@ -92,5 +92,41 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+
+        //public IActionResult Criar()
+        //{
+        //    return View();
+        //}
+
+
+        //[HttpPost]
+        //public IActionResult Criar(UsuarioModel usuario)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            usuario = _usuarioRepositorio.Adicionar(usuario);
+        //            TempData["MensagemSucesso"] = "Usuário cadastrado com sucesso";
+
+        //            return RedirectToAction("Index", "Login");
+        //        }
+
+        //        return View(usuario);
+
+        //    }
+        //    catch (System.Exception erro)
+        //    {
+        //        TempData["MensagemErro"] = $"Erro ao cadastrar seu usuário, tente novamente. Detalhe do erro: {erro.Message}";
+        //        return RedirectToAction("Index");
+        //    }
+
+        //}
+
+
+
+
+
     }
 }

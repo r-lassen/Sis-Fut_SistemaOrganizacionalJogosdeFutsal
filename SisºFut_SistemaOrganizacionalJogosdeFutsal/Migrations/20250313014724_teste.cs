@@ -1,16 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 {
-    public partial class CriandoTabelaUsuario : Migration
+    public partial class teste : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Nome",
-                table: "Contatos",
+                name: "Senha",
+                table: "Usuarios",
+                type: "longtext",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "longtext",
+                oldNullable: true)
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .OldAnnotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "Usuarios",
+                type: "longtext",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "longtext",
+                oldNullable: true)
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .OldAnnotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Login",
+                table: "Usuarios",
                 type: "longtext",
                 nullable: false,
                 defaultValue: "",
@@ -22,19 +45,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Email",
-                table: "Contatos",
-                type: "longtext",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "longtext",
-                oldNullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4")
-                .OldAnnotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Celular",
-                table: "Contatos",
+                table: "Usuarios",
                 type: "longtext",
                 nullable: false,
                 defaultValue: "",
@@ -45,26 +56,21 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Usuarios",
+                name: "Times",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    NM_Time = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Login = table.Column<string>(type: "longtext", nullable: true)
+                    IMG_Time = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Perfil = table.Column<int>(type: "int", nullable: false),
-                    Senha = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DataCadastro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DataAtualização = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    NM_Responsavel = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.PrimaryKey("PK_Times", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
@@ -72,11 +78,31 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "Times");
 
             migrationBuilder.AlterColumn<string>(
-                name: "Nome",
-                table: "Contatos",
+                name: "Senha",
+                table: "Usuarios",
+                type: "longtext",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "longtext")
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .OldAnnotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "Usuarios",
+                type: "longtext",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "longtext")
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .OldAnnotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Login",
+                table: "Usuarios",
                 type: "longtext",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -86,17 +112,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Email",
-                table: "Contatos",
-                type: "longtext",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "longtext")
-                .Annotation("MySql:CharSet", "utf8mb4")
-                .OldAnnotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Celular",
-                table: "Contatos",
+                table: "Usuarios",
                 type: "longtext",
                 nullable: true,
                 oldClrType: typeof(string),

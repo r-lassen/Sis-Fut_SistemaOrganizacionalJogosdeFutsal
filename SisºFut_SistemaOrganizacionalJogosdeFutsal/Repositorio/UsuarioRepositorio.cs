@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
+﻿using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         private readonly BancoContext _bancoContext;
         public UsuarioRepositorio(BancoContext bancoContext)
         {
-            this._bancoContext = bancoContext; 
+            this._bancoContext = bancoContext;
         }
 
         public UsuarioModel BuscarPorLogin(string login)
@@ -50,10 +49,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             UsuarioModel usuarioDB = BuscarPorId(usuario.Id);
             if (usuarioDB == null) throw new Exception("Erro na atualização do usuário");
 
-            usuarioDB.Name = usuarioDB.Name;
-            usuarioDB.Email = usuarioDB.Email;
-            usuarioDB.Login = usuarioDB.Login;
-            usuarioDB.Perfil = usuarioDB.Perfil;
+            usuarioDB.Name = usuario.Name;
+            usuarioDB.Email = usuario.Email;
+            usuarioDB.Login = usuario.Login;
+            usuarioDB.Perfil = usuario.Perfil;
             usuarioDB.DataAtualização = DateTime.Now;
 
 

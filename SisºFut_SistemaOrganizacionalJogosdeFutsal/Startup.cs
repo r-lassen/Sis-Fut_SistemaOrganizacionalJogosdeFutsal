@@ -8,10 +8,6 @@ using Microsoft.Extensions.Hosting;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
 {
@@ -36,6 +32,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
 
             services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddScoped<ITimeXQuadrasRepositorio, TimeXQuadrasRepositorio>();
+            services.AddScoped<IQuadrasRepositorio, QuadrasRepositorio>();
+
             services.AddScoped<ISessao, Sessao>();
 
             services.AddSession(o =>
@@ -45,7 +44,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
             });
         }
 
-   
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

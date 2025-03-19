@@ -1,0 +1,81 @@
+﻿@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
+@model CadastroModel
+<div class="text-center">
+
+    <h2>Cadastro de Novo Usuário</h2>
+
+</div>
+
+@{
+    Layout = "_LayoutDeslogado";
+    ViewData["Title"] = "Cadastrar Times";
+}
+
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+}
+
+<form asp-controller="CadastroPublico" asp-action="Cadastro" method="post">
+    <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px;">
+        <div class="form-group">
+            <label for="nome">Nome do Time</label>
+            <input type="text" asp-for="usuario.Name" class="form-control" placeholder="Digite o nome">
+            @Html.ValidationMessageFor(x => x.usuario.Name)
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Nome da Quadra</label>
+            <input type="text" asp-for="NM_Quadra" class="form-control" placeholder="Digite o nome da Quadra">
+            @Html.ValidationMessageFor(x => x.NM_Quadra)
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Endereço da Quadra</label>
+            <input type="text" asp-for="DS_Endereco" class="form-control" placeholder="Digite o endereço da Quadra">
+            @Html.ValidationMessageFor(x => x.DS_Endereco)
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">E-mail</label>
+            <input type="text" asp-for="usuario.Email" class="form-control" placeholder="Digite o email">
+            @Html.ValidationMessageFor(x => x.usuario.Email)
+        </div>
+
+        <div class="form-group">
+            <label for="nome" class="form-label">Login</label>
+            <input type="text" asp-for="usuario.Login" class="form-control" placeholder="Digite o Login">
+            @Html.ValidationMessageFor(x => x.usuario.Login)
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="form-label">Perfil</label>
+
+            <select asp-for="usuario.Perfil" class="form-control">
+                <option selected="">Selecione</option>
+                <option value="@PerfilEnum.Padrao">Padrao</option>
+            </select>
+
+            @Html.ValidationMessageFor(x => x.usuario.Perfil)
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="form-label">Senha</label>
+            <input type="password" asp-for="usuario.Senha" class="form-control" placeholder="Digite a Senha">
+            @Html.ValidationMessageFor(x => x.usuario.Senha)
+        </div>
+
+        <br>
+
+        <a class="btn btn-secondary" asp-controller="Usuario" asp-action="Index" role="button">Voltar</a>
+        <button type="submit" class="btn btn-primary">Adicionar</button>
+
+    </div>
+</form>
+

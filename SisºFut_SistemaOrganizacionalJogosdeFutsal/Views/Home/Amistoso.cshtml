@@ -1,0 +1,86 @@
+﻿@model AgendamentosModel
+
+
+<div class="text-center">
+    <h1 class="display-4"> Agendar Jogos </h1>
+    <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+</div>
+
+
+
+<div class="col-sm-12 col-md-6 col-md-offset-4"
+     style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top:20px">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+
+        <!-- Time 1 -->
+        <div class="col-mb-4" style="flex: 1; margin-right: 20px;">
+            <label for="login" class="form-label">Time 1</label>
+            @*    <input type="text" asp-for="id_Time1" class="form-control" id="login"> *@
+            @Html.TextBoxFor(model => model.Usuario.Name, new { @readonly = "readonly" })
+
+
+            @* @Html.ValidationMessageFor(x => x.Login) *@
+        </div>
+
+        <!-- X no meio -->
+        <div class="form-group" style="margin: 0 20px;">
+            <label>X</label>
+            @* <input asp-for="Name" class="form-control" required /> *@
+        </div>
+
+        <!-- Time 2 com espaço à direita -->
+        <div class="col-mb-4" style="flex: 1; margin-left: 20px;">
+            <label for="login" class="form-label">Time 2</label>
+            @Html.DropDownListFor(model => model.UsuarioSelecionado, (SelectList)ViewBag.UserList, "Selecione um usuario")
+            @* @Html.ValidationMessageFor(x => x.Login) *@
+        </div>
+
+
+    </div>
+
+
+
+
+    <div>
+
+        <!-- Div para seleção de calendário -->
+        <div style="margin-bottom: 20px;">
+            <label for="data" class="form-label">Selecione a Data</label>
+            <input type="date" class="form-control" id="data" name="data">
+        </div>
+
+    </div>
+
+
+
+    <div>
+
+        <!-- Div para seleção de Local do Jogo -->
+        <div class="col-mb-4" style="flex: 1; margin-right: 20px;">
+            <label for="login" class="form-label">Local do Jogo</label>
+            @Html.TextBoxFor(model => model.Quadra, new { @readonly = "readonly" })
+
+            @* @Html.ValidationMessageFor(x => x.Login) *@
+        </div>
+
+    </div>
+
+
+
+    <div>
+
+        <!-- Div para seleção de Descrição -->
+        <div class="col-mb-4" style="flex: 1; margin-right: 20px;">
+            <label for="login" class="form-label">Descrição</label>
+            <input type="text" asp-for="DS_Descricao" class="form-control" id="login"
+                   style="height: 100px; width: 100%; padding: 10px; resize: vertical;">
+            @* @Html.ValidationMessageFor(x => x.Login) *@
+        </div>
+
+    </div>
+
+
+
+
+</div>

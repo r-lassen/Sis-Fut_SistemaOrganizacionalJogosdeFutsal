@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper
 {

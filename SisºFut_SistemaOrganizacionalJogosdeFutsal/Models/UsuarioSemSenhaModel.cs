@@ -1,5 +1,4 @@
 ﻿using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
@@ -16,6 +15,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
         public string Email { get; set; }
         [Required(ErrorMessage = "Digite o perfil do usuário")]
         public PerfilEnum? Perfil { get; set; }
-      
+
     }
 }

@@ -2,52 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    partial class BancoContextModelSnapshot : ModelSnapshot
+    [Migration("20250313014724_teste")]
+    partial class teste
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.17");
-
-            modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.AgendamentosModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("DS_Descricao")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("DT_Agendamento")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DT_Atualizacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("HR_Agendamento")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("id_Quadra")
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_Time1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("id_Time2")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Agendamentos");
-                });
 
             modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.ContatoModel", b =>
                 {
@@ -72,38 +42,24 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
                     b.ToTable("Contatos");
                 });
 
-            modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.QuadrasModel", b =>
+            modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.TimesModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("DS_Endereco")
+                    b.Property<string>("IMG_Time")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("NM_Quadra")
+                    b.Property<string>("NM_Responsavel")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NM_Time")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quadras");
-                });
-
-            modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.TimeXQuadrasModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_Quadra")
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_Time")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TimexQuadras");
+                    b.ToTable("Times");
                 });
 
             modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.UsuarioModel", b =>

@@ -3,10 +3,9 @@
     ViewData["Title"] = "Listagem de Usuários";
 }
 <div class="text-center">
-    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <a class="btn btn-primary" asp-controller="Usuario" asp-action="Criar" role="button"> Adicionar novo usuário</a>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+        <a class="btn btn-primary" asp-controller="Usuario" asp-action="Criar" role="button">Adicionar novo usuário</a>
     </div>
-
     <br>
 
     @if(TempData["MensagemSucesso"] != null)

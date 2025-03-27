@@ -1,16 +1,21 @@
 ﻿@model HomeModel
 
-@{
-    ViewData["Title"] = "Página Inicial";
+@* @{
+    Layout = "_Layout";
+    // ViewData["Title"] = "Redefinir Senha";
 }
+ *@
 
+@* 
 <div class="text-center">
     <h1 class="display-4"> Publicações </h1>
-    <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+    <hr style="border: 2px solid cyan; width: 25%; margin: auto;">
+</div> *@
+
+<div class="text-center" style="font-family: Courier, monospace;">
+    <h1 class="display-4"> Publicações </h1>
+    <hr style="border: 2px solid cyan; width: 25%; margin: auto;">
 </div>
-
-
-
 
 <div class="jumbotron" style="margin-top: 30px">
 
@@ -19,37 +24,33 @@
 
 <div class="text-center">
     <h1 class="display-4"> Jogos </h1>
-    <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+    <hr style="border: 2px solid cyan; width: 10%; margin: auto;">
 </div>
 
 
 <div style="display: flex; gap: 15px; margin-top: 30px">
-    <div class="card" style="width: 18rem;display: flex; align-items: center; text-align: center;">
+    <div class="card" style="width: 24rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
         <div class="card-body">
-            <h2 class="card-title" style="align-items:center"> Amistosos </h2>
-            <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="20px" style="width: 100px; height: auto;margin-top: 30px">
+            <!-- Alteração feita aqui: Adicionado color: cyan; para mudar a cor do texto para ciano -->
+            <h2 class="card-title" style="align-items:center; color: cyan;"> Amistosos </h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="20px" style="width: 100px; height: auto; margin-top: 30px;">
             <div style="margin-top: 60px;">
                 <a asp-action="Amistoso" asp-controller="Home" class="btn btn-primary" style="display: block; width: fit-content; margin: auto;">Go somewhere</a>
             </div>
         </div>
     </div>
 
-    <div class="card" style="width: 18rem;display: flex; align-items: center; text-align: center;">
-        <div class="card-body">
-            <h2 class="card-title" style="align-items:center"> Lista de Jogos </h2>
-            <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="20px" style="width: 100px; height: auto;margin-top: 30px">
-            <div style="margin-top: 60px;">
-                <a href="#" class="btn btn-primary" style="display: block; width: fit-content; margin: auto;">Go somewhere</a>
+
+    <div class="container">
+        <div class="card" style="width: 40rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
+            <div class="card-body">
+                <h2 class="card-title" style="align-items:center; color: cyan;"> Lista de Jogos  </h2>
+                <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="20px" style="width: 100px; height: auto; margin-top: 30px;">
+                <div style="margin-top: 60px;">
+                    <a asp-action="Amistoso" asp-controller="Home" class="btn btn-primary" style="display: block; width: fit-content; margin: auto;">Go somewhere</a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="card" style="width: 18rem;">
-        @* <img src="..." class="card-img-top" alt="..."> *@
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
     </div>
 </div>

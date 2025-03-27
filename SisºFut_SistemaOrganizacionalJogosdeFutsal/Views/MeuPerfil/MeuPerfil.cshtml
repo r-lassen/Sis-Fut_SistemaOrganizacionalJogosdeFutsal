@@ -1,0 +1,96 @@
+﻿@model AgendamentosModel
+
+@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
+
+@* <div class="text-center">
+
+    <h2>Meu Perfil</h2>
+
+</div> *@
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Cadastrar Times";
+}
+
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+}
+
+<form asp-controller="CadastroPublico" asp-action="Cadastro" method="post">
+
+    <!-- Container principal responsivo para imagem + card -->
+    <div class="container-fluid p-3" style=" border-radius: 10px; max-width: 800px; margin: auto; margin-top: 20px;">
+        <div class="mt-4 d-flex flex-wrap justify-content-center align-items-start" style="gap: 30px;">
+            <!-- Div da Imagem (centralizada e responsiva) -->
+            <div class="text-center text-md-start" style="flex: 0 0 auto;">
+                <img src="https://yt3.googleusercontent.com/9ubNXtsrqMzRa1osrojGmiYQOStjWRXja9kUqQPWPG4oJGmO2eKY2TFTka6ZcYuBSilE4WBStQ=s900-c-k-c0x00ffffff-no-rj"
+                     class="rounded-circle img-fluid"
+                     style="width: 200px; height: 200px; object-fit: cover; max-width: 100%;"
+                     alt="Logo do Time">
+            </div>
+
+            <!-- Div do Card (responsivo) -->
+            <div class="card flex-grow-1 border-0 ms-md-4 ms-lg-5" style="min-width: 250px; padding: 0.40rem;">
+                <div class="card-body p-4">
+                    <h1 class="mb-4 text-center">Nome Time</h1>
+                    <div class="d-flex flex-column align-items-center" style="gap: 1rem;">
+                        <button type="button" class="btn btn-primary btn-sm w-100 rounded-pill" style="max-width: 200px;">
+                            Editar
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm w-100 rounded-pill" style="max-width: 200px;">
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- Container principal para os cards duplos (mantido como exemplo) -->
+    <div class="container-fluid p-3" style="border: 1px solid #ddd; border-radius: 10px; max-width: 800px; margin: auto; margin-top:20px;">
+        <div class="mt-4 d-flex flex-wrap justify-content-between" style="gap: 30px;">
+
+            <!-- Card da esquerda -->
+            <div class="card flex-grow-1" style="min-width: 250px; max-width: 600px; padding: 1.0rem; border: 2px solid #e0e0e0; border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Informações Gerais</h3>
+                    <div class="py-3">
+                       
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card da direita -->
+            <div class="card flex-grow-1" style="min-width: 250px; max-width: 600px; padding: 1.0rem; border: 2px solid #e0e0e0; border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Integrantes do Times</h3>
+                    <div class="py-3">
+                        <p>Conteúdo do card direito...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card único abaixo -->
+        <div class="card flex-grow-1" style="max-width: 100%; padding: 0.40rem; border: 2px solid #e0e0e0; border-radius: 12px; margin-top: 20px;">
+            <div class="card-body p-4">
+                <h3 class="mb-4">Endereço</h3>
+                <div class="py-3">
+                    <p>Rua Alameida da Margaridas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>

@@ -29,15 +29,49 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
 
+        //public IActionResult Index()
+        //{
+        //    HomeModel home = new HomeModel();
+
+        //        home.Nome = "Gabriel Souza";
+        //        home.Email = "Thelashgss@gmail.com";    
+
+        //    return View(home);
+        //}
+
+
+
+
         public IActionResult Index()
         {
-            HomeModel home = new HomeModel();
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
 
-                home.Nome = "Gabriel Souza";
-                home.Email = "Thelashgss@gmail.com";    
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
+
+            HomeModel home = new HomeModel
+            {
+                Nome = usuarioLogado.Name,
+                Email = usuarioLogado.Email,
+                //Banco = usuarioLogado.Banco // Pegando o nome do banco (adicione essa propriedade ao modelo)
+            };
 
             return View(home);
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
         public IActionResult Privacy()
         {

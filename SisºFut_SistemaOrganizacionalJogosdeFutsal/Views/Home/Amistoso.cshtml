@@ -1,86 +1,66 @@
 ﻿@model AgendamentosModel
 
 
-<div class="text-center">
+<div class="text-center" style="font-family: Courier, monospace;">
     <h1 class="display-4"> Agendar Jogos </h1>
     <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
 </div>
 
 
 
-<div class="col-sm-12 col-md-6 col-md-offset-4"
-     style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top:20px">
+<div class="col-sm-12 col-md-8 col-md-offset-2"
+     style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top:20px; max-width: 800px;">
 
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-
+    <!-- Times -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <!-- Time 1 -->
-        <div class="col-mb-4" style="flex: 1; margin-right: 20px;">
+        <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
             <label for="login" class="form-label">Time 1</label>
-            @*    <input type="text" asp-for="id_Time1" class="form-control" id="login"> *@
-            @Html.TextBoxFor(model => model.Usuario.Name, new { @readonly = "readonly" })
-
-
-            @* @Html.ValidationMessageFor(x => x.Login) *@
+            @Html.TextBoxFor(model => model.Usuario.Name, new { @readonly = "readonly", @class = "form-control" })
         </div>
 
         <!-- X no meio -->
-        <div class="form-group" style="margin: 0 20px;">
-            <label>X</label>
-            @* <input asp-for="Name" class="form-control" required /> *@
+        <div class="col-md-2 text-center" style="margin: 15px 0;">
+            <label style="font-size: 1.5rem;">X</label>
         </div>
 
-        <!-- Time 2 com espaço à direita -->
-        <div class="col-mb-4" style="flex: 1; margin-left: 20px;">
+        <!-- Time 2 -->
+        <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
             <label for="login" class="form-label">Time 2</label>
-            @Html.DropDownListFor(model => model.UsuarioSelecionado, (SelectList)ViewBag.UserList, "Selecione um usuario")
-            @* @Html.ValidationMessageFor(x => x.Login) *@
+            @Html.DropDownListFor(model => model.UsuarioSelecionado, (SelectList)ViewBag.UserList, "Selecione um usuario", new { @class = "form-control" })
         </div>
-
-
     </div>
 
-
-
-
-    <div>
-
-        <!-- Div para seleção de calendário -->
-        <div style="margin-bottom: 20px;">
+    <!-- Data -->
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-md-12">
             <label for="data" class="form-label">Selecione a Data</label>
             <input type="date" class="form-control" id="data" name="data">
         </div>
-
     </div>
 
-
-
-    <div>
-
-        <!-- Div para seleção de Local do Jogo -->
-        <div class="col-mb-4" style="flex: 1; margin-right: 20px;">
+    <!-- Local -->
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-md-12">
             <label for="login" class="form-label">Local do Jogo</label>
-            @Html.TextBoxFor(model => model.Quadra, new { @readonly = "readonly" })
-
-            @* @Html.ValidationMessageFor(x => x.Login) *@
+            @Html.TextBoxFor(model => model.Quadra, new { @readonly = "readonly", @class = "form-control" })
         </div>
-
     </div>
 
-
-
-    <div>
-
-        <!-- Div para seleção de Descrição -->
-        <div class="col-mb-4" style="flex: 1; margin-right: 20px;">
+    <!-- Descrição -->
+    <div class="row" style="margin-bottom: 25px;">
+        <div class="col-md-12">
             <label for="login" class="form-label">Descrição</label>
-            <input type="text" asp-for="DS_Descricao" class="form-control" id="login"
-                   style="height: 100px; width: 100%; padding: 10px; resize: vertical;">
-            @* @Html.ValidationMessageFor(x => x.Login) *@
+            <textarea asp-for="DS_Descricao" class="form-control"
+                      style="height: 100px; width: 100%; padding: 10px; resize: vertical;"></textarea>
         </div>
-
     </div>
 
-
-
-
+    <!-- Botões -->
+    <div class="row mt-3">
+        <div class="col-md-12 text-right">
+            <button type="submit" class="btn btn-primary mr-2">Salvar</button>
+            <a class="btn btn-secondary" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
+        </div>
+    </div>
 </div>

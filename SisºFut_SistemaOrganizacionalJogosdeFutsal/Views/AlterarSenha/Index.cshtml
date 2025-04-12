@@ -5,9 +5,12 @@
 }
 
 
-<div class="text-center">
+<div class="text-center" style="font-family: Courier, monospace;">
     <h2 class="display-4">Alterar senha do usuário</h2>
 </div>
+
+
+
 
 @if (TempData["MensagemSucesso"] != null)
 {
@@ -46,6 +49,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-block">Alterar</button>
-        <a class="btn btn-secondary btn-block" asp-action="Index" asp-controller="Home" role="button">Voltar</a>
+        <a class="btn btn-secondary btn-block" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
     </div>
 </form>

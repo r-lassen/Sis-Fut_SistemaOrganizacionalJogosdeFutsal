@@ -16,12 +16,12 @@
     <div class="form-group">
         <label for="nome">Nome</label>
         <input type="text" asp-for="Name" class="form-control" placeholder="Digite o nome">
-        @Html.ValidationMessageFor( x => x.Name)
+        @Html.ValidationMessageFor(x => x.Name)
     </div>
 
     <div class="form-group">
         <label for="nome" class="form-label">E-mail</label>
-        <input type="text"  asp-for="Email" class="form-control" placeholder="Digite o email">
+        <input type="text" asp-for="Email" class="form-control" placeholder="Digite o email">
         @Html.ValidationMessageFor(x => x.Email)
     </div>
 
@@ -31,23 +31,10 @@
         @Html.ValidationMessageFor(x => x.Login)
     </div>
 
-    <div class="form-group">
-        <label for="name" class="form-label">Perfil</label>
-        
-        <select asp-for="Perfil" class="form-control">
-            <option selected="">Selecione</option>
-            <option value="@PerfilEnum.Admin">Administrador</option>
-            <option value="@PerfilEnum.Padrao">Padrao</option>
-        </select>
 
-        @Html.ValidationMessageFor(x => x.Perfil)
-    </div>
+    <button type="submit" class="btn btn-primary">Editar</button>
+ 
+    <a class="btn btn-secondary" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
 
-    <br>
-
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a class="btn btn-secondary" asp-controller="Usuario" asp-action="Index" role="button">Voltar</a>
-
-    </div>
+</div>
 </form>
-

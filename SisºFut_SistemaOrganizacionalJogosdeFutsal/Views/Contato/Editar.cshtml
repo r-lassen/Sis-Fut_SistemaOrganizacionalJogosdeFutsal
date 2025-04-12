@@ -2,14 +2,14 @@
 @{
     ViewData["Title"] = "Editar contatos";
 }
-<div class="text-center">
+<div class="text-center" style="font-family: Courier, monospace;">
 
     <h1 class="display-4">Editar contato</h1>
 
 </div>
 
 <form asp-controller="Contato" asp-action="Alterar" method="post">
-    
+    <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top: 30px">
     <input type="hidden" asp-for="Id" />
     <div class="form-group">
         <label for="nome">Nome</label>
@@ -31,9 +31,9 @@
 
     <br>
 
-    <button type="submit" class="btn btn-primary">Alterar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
     <a class="btn btn-secondary" asp-action="Index" asp-controller="Contato" role="button">Voltar</a>
 
-
+    </div>
 </form>
 

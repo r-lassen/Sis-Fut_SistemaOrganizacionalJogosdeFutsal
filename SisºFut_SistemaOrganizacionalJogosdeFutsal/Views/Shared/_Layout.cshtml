@@ -7,20 +7,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="https://cdn.datatables.net/v/dt/dt-2.2.2/datatables.min.css" rel="stylesheet">
-    
+
 
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 
-            <div class="container">
+            <div class="container d-flex justify-content-center">
 
-
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action=""><strong>  Sis </strong> <span style="color: #37c3b4;">•</span> Fut  </a>
                 @await Component.InvokeAsync("Menu")
             </div>
         </nav>
     </header>
+
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -29,8 +31,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - SisºFut_SistemaOrganizacionalJogosdeFutsal 
+        <div class="container d-flex justify-content-center">
+            &copy; 2025 <span style="color: #37c3b4; margin: 0 8px;">•</span> <strong>Sistema Organizacional Jogos de Futsal</strong>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

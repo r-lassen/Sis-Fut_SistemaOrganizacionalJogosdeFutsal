@@ -19,10 +19,22 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             _sessao = sessao;
         }
 
-        public IActionResult MeuPerfil()
+        public IActionResult Index()
+        {
+            return View("MeuPerfil");
+        }
+
+
+
+        public IActionResult Editar()
         {
             return View();
         }
+
+
+
+
+
 
         //[HttpPost]
         //public iactionresult alterar(alterarsenhamodel alterarsenhamodel)

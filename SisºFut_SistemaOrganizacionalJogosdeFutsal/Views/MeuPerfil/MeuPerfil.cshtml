@@ -42,12 +42,24 @@
                 <div class="card-body p-4">
                     <h1 class="mb-4 text-center">Nome Time</h1>
                     <div class="d-flex flex-column align-items-center" style="gap: 1rem;">
-                        <button type="button" class="btn btn-primary btn-sm w-100 rounded-pill" style="max-width: 200px;">
+
+
+
+                        <a asp-area="" asp-controller="MeuPerfil" asp-action="Editar" class="btn btn-secondary btn-sm w-100 rounded-pill" style="max-width: 200px;">
+                            Editar 
+                        </a>
+
+                   @*      <button type="button" class="btn btn-primary btn-sm w-100 rounded-pill" style="max-width: 200px;">
                             Editar
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-sm w-100 rounded-pill" style="max-width: 200px;">
-                            Sair
-                        </button>
+                        </button> *@
+
+
+                        <a asp-area="" asp-controller="AlterarSenha" asp-action="Index" class="btn btn-secondary btn-sm w-100 rounded-pill" style="max-width: 200px;">
+                            Alterar Senha
+                        </a>
+@*                         <button type="button" class="btn btn-secondary btn-sm w-100 rounded-pill" style="max-width: 200px;">
+                            Alterar Senha
+                        </button> *@
                     </div>
                 </div>
             </div>

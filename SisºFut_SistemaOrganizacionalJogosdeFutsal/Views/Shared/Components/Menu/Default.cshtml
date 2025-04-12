@@ -17,12 +17,9 @@
 
 
 
-
-
 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
     <ul class="navbar-nav" style="margin-left: 656px;">
         <!-- Alinhar à direita com CSS inline -->
-
 
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index">Contatos</a>
@@ -36,12 +33,12 @@
         }
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="MeuPerfil" asp-action="MeuPerfil">Perfil</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="MeuPerfil" asp-action="Index">Perfil</a>
         </li>
 
-        <li class="nav-item">
+@*         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="AlterarSenha" asp-action="Index">AlterarSenha</a>
-        </li>
+        </li> *@
 
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair">Sair</a>
@@ -51,30 +48,3 @@
 
 
 
-@* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav flex-grow-1">
-
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index">Contatos</a>
-        </li>     
-       
-        @if (Model.Perfil == SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums.PerfilEnum.Admin)
-        {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
-            </li>
-        }
-
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="AlterarSenha" asp-action="Index">Meu Perfil</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="AlterarSenha" asp-action="Index">AlterarSenha</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair">Sair</a>
-        </li>
-    </ul>
-</div> *@

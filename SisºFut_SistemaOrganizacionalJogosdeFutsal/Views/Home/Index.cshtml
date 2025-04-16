@@ -1,16 +1,22 @@
 ﻿@model HomeModel
 
-@* @{
-    Layout = "_Layout";
-    // ViewData["Title"] = "Redefinir Senha";
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+        @TempData["MensagemSucesso"]
+    </div>
 }
- *@
 
-@* 
-<div class="text-center">
-    <h1 class="display-4"> Publicações </h1>
-    <hr style="border: 2px solid cyan; width: 25%; margin: auto;">
-</div> *@
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+        @TempData["MensagemErro"]
+    </div>
+}
+
+
 
 <div class="text-center" style="font-family: Courier, monospace;">
     <h1 class="display-4"> Publicações </h1>
@@ -18,6 +24,61 @@
 </div>
 
 <div class="jumbotron" style="margin-top: 30px">
+
+
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+               @*  <img class="d-block w-100" src="..." alt="First slide"> *@
+            </div>
+
+            <div class="carousel-item">
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="text-center text-md-start" style="flex: 0 0 auto;">
+                        <img src="https://yt3.googleusercontent.com/9ubNXtsrqMzRa1osrojGmiYQOStjWRXja9kUqQPWPG4oJGmO2eKY2TFTka6ZcYuBSilE4WBStQ=s900-c-k-c0x00ffffff-no-rj"
+                             class="rounded-circle img-fluid"
+                             style="width: 50px; height: 50px; object-fit: cover; max-width: 100%;"
+                             alt="Logo do Time">
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+
+                </a>
+            </div>
+
+            <div class="carousel-item">
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+
+                </a>
+            </div>
+
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+
+
+
 
 
 </div>
@@ -28,29 +89,100 @@
 </div>
 
 
-<div style="display: flex; gap: 15px; margin-top: 30px">
-    <div class="card" style="width: 24rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
+<div class="cards-container" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 30px; justify-content: center;">
+    <div class="card" style="width: 100%; max-width: 24rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
         <div class="card-body">
-            <!-- Alteração feita aqui: Adicionado color: cyan; para mudar a cor do texto para ciano -->
-            <h2 class="card-title" style="align-items:center; color: cyan;"> Amistosos </h2>
-            <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="20px" style="width: 100px; height: auto; margin-top: 30px;">
+            <h2 class="card-title" style="align-items:center; color: cyan;">Amistosos</h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="Ícone" style="width: 100px; height: auto; margin-top: 30px; max-width: 100%;">
             <div style="margin-top: 60px;">
                 <a asp-action="Amistoso" asp-controller="Home" class="btn btn-primary" style="display: block; width: fit-content; margin: auto;">Go somewhere</a>
             </div>
         </div>
     </div>
 
+    <div class="card" style="width: 100%; max-width: 40rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
+        <div class="card-body">
+            <h2 class="card-title" style="align-items:center; color: cyan;">Lista</h2>
 
-    <div class="container">
-        <div class="card" style="width: 40rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
-            <div class="card-body">
-                <h2 class="card-title" style="align-items:center; color: cyan;"> Lista de Jogos  </h2>
-                <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="20px" style="width: 100px; height: auto; margin-top: 30px;">
-                <div style="margin-top: 60px;">
-                    <a asp-action="Amistoso" asp-controller="Home" class="btn btn-primary" style="display: block; width: fit-content; margin: auto;">Go somewhere</a>
-                </div>
+            <!-- Container da lista com scroll -->
+            <div class="list-group" style="gap: 0.5rem; max-height: 400px; overflow-y: auto;">
+
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+                        
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                   
+                </a>
+                                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+                        
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                   
+                </a>
+
+                                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+                        
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                   
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Jogo Marcado</h5>
+
+                    </div>
+                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+
+                </a>
+
+
+
+
+
+
+
+
+
+                <!-- Adicione mais itens aqui para testar o scroll -->
+            </div>
+
+            <div style="margin-top: 60px;">
+                <a asp-action="JogoMarcado" asp-controller="Home" class="btn btn-default" style="display: block; width: fit-content; margin: auto;">Acessar</a>
             </div>
         </div>
-
     </div>
 </div>

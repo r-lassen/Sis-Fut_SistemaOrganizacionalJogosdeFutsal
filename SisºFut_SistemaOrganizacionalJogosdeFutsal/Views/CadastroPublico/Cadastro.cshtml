@@ -31,8 +31,15 @@
     <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
 }
 
-<form asp-controller="CadastroPublico" asp-action="Cadastro" method="post">
+<form asp-controller="CadastroPublico" asp-action="Cadastro" method="post" enctype="multipart/form-data">
     <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px;">
+
+
+
+        <div class="form-group">
+            <label for="foto">Foto do Time</label>
+            <input type="file" class="form-control" name="foto" accept="image/*" />
+        </div>
       
         <div class="form-group">
             <label for="nome">Nome do Time</label>

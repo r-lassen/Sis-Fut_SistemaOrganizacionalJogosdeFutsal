@@ -25,6 +25,16 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             return _bancoContext.Agendamentos.ToList();
         }
 
+        public List<AgendamentosModel> ListarAbertos()
+        {
+            return _bancoContext.Agendamentos.Where(x => x.id_Time2 == null).ToList();
+        }
+
+        public List<AgendamentosModel> ListarMarcados()
+        {
+            return _bancoContext.Agendamentos.Where(x => x.id_Time2 != null).ToList();
+        }
+
 
         public AgendamentosModel Adicionar(AgendamentosModel agendamentos)
         {

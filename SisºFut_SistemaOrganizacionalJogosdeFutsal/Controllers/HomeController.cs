@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Org.BouncyCastle.Asn1.Cms;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
@@ -15,16 +18,20 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly ITimeXQuadrasRepositorio _timeXquadrasRepositorio;
         private readonly IQuadrasRepositorio _quadrasRepositorio;
+        private readonly IAgendamentoRepositorio _agendamentoRepositorio;
 
         public HomeController(IUsuarioRepositorio usuarioRepositorio,
             ISessao sessao,
             ITimeXQuadrasRepositorio timeXquadras,
-            IQuadrasRepositorio quadras)
+            IQuadrasRepositorio quadras,
+            IAgendamentoRepositorio agendamentos)
+
         {
             _usuarioRepositorio = usuarioRepositorio;
             _sessao = sessao;
             _timeXquadrasRepositorio = timeXquadras;
             _quadrasRepositorio = quadras;
+            _agendamentoRepositorio = agendamentos;
         }
 
 
@@ -51,26 +58,70 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
             }
 
+
+            var abertos = _agendamentoRepositorio.ListarAbertos();
+
+            var marcados = _agendamentoRepositorio.ListarMarcados();
+
+
+
+            List<DadosAgendamentos> dadosAbertos = new List<DadosAgendamentos>();
+
+
+            List<DadosAgendamentos> dadosMarcados = new List<DadosAgendamentos>();
+
+
+            foreach (var aberto in abertos)
+            {
+                var time1 = _usuarioRepositorio.BuscarPorId(aberto.id_Time1);
+                var quadra = _quadrasRepositorio.BuscarPorId(aberto.id_Quadra);
+
+
+                dadosAbertos.Add(new DadosAgendamentos { 
+                    Time1 = time1.Name, 
+                    Time2 = "", Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco, 
+                    Data = aberto.DT_Agendamento, DS_Descrição = aberto.DS_Descricao, 
+                    Hora = aberto.HR_Agendamento,
+                    id = aberto.Id
+                });
+            }
+
+
+            foreach (var marcado in marcados)
+            {
+                var time1 = _usuarioRepositorio.BuscarPorId(marcado.id_Time1);
+                var time2 = _usuarioRepositorio.BuscarPorId(marcado.id_Time2.Value);
+
+                var quadra = _quadrasRepositorio.BuscarPorId(marcado.id_Quadra);
+
+
+                dadosAbertos.Add(new DadosAgendamentos
+                {
+                    Time1 = time1.Name,
+                    Time2 = time2.Name,
+                    Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                    Data = marcado.DT_Agendamento,
+                    DS_Descrição = marcado.DS_Descricao,
+                    Hora = marcado.HR_Agendamento,
+                    id = marcado.Id
+                });
+            }
+
+
+
             HomeModel home = new HomeModel
             {
                 Nome = usuarioLogado.Name,
                 Email = usuarioLogado.Email,
+
+                Abertos = dadosAbertos,
+                Marcados = dadosMarcados,
+
                 //Banco = usuarioLogado.Banco // Pegando o nome do banco (adicione essa propriedade ao modelo)
             };
 
             return View(home);
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
         public IActionResult Privacy()
@@ -89,6 +140,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
 
             var Usuarios = _usuarioRepositorio.BuscarTodos();
+
             ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
 
             var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
@@ -97,15 +149,82 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             var Quadras = _quadrasRepositorio.BuscarPorId(TimeXQuadras.Id);
 
-            return View(new AgendamentosModel {Usuario = UsuarioSessao, UsuarioSelecionado = 0, Quadra = Quadras.NM_Quadra });
+            //ViewBag.UsuarioSessao = UsuarioSessao;
+
+            return View(new AgendamentosModel { Usuario = UsuarioSessao, id_Time2 = 0, Quadra = Quadras.NM_Quadra, id_Quadra = Quadras.Id, id_Time1 = UsuarioSessao.Id });
+
+        }
+
+        [HttpPost]
+        public IActionResult Amistoso(AgendamentosModel agendamentos)
+        {
+
+            try
+            {
+
+                if (agendamentos.DT_Agendamento < DateTime.Now)
+                {
+
+                    var Usuarios = _usuarioRepositorio.BuscarTodos();
+
+                    ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
+
+                    TempData["MensagemErro"] = "Selecione um data Valida";
+                    return View (agendamentos);
+                }
+
+
+
+                var Hora = agendamentos.HR_Agendamento.Split(":");
+
+                if (Convert.ToInt32(Hora[0]) > 24 || Convert.ToInt32(Hora[1]) > 60)
+                {
+                    var Usuarios = _usuarioRepositorio.BuscarTodos();
+
+                    ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
+
+                    TempData["MensagemErro"] = "Selecione uma Hora Valida";
+                    return View(agendamentos);
+                }
+
+                var resultado = _agendamentoRepositorio.Adicionar(agendamentos);
+                TempData["MensagemSucesso"] = "Jogo cadastrado com Sucesso";
+
+                return RedirectToAction("Index");
+
+
+
+
+            }
+            catch (System.Exception erro)
+            {
+                TempData["MensagemErro"] = $"Erro ao cadastrar seu Jogo, tente novamente. Detalhe do erro: {erro.Message}";
+                return RedirectToAction("Index");
+            }
+
+
         }
 
 
-    
 
+        public IActionResult JogoMarcado()
+        {
 
+            var Usuarios = _usuarioRepositorio.BuscarTodos();
 
+            ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
 
+            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+
+            var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
+
+            var Quadras = _quadrasRepositorio.BuscarPorId(TimeXQuadras.Id);
+
+            //ViewBag.UsuarioSessao = UsuarioSessao;
+
+            return View(new AgendamentosModel { Usuario = UsuarioSessao, id_Time2 = 0, Quadra = Quadras.NM_Quadra, id_Quadra = Quadras.Id, id_Time1 = UsuarioSessao.Id });
+
+        }
 
 
     }

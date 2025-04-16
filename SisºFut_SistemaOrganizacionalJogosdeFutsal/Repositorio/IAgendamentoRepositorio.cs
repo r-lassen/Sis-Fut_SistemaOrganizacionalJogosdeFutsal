@@ -9,6 +9,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         AgendamentosModel BuscarPorId(int id);
         AgendamentosModel Adicionar(AgendamentosModel agendamentos);
         AgendamentosModel Atualizar(AgendamentosModel agendamentos);
+
+        List<AgendamentosModel> ListarAbertos();
+
+        List<AgendamentosModel> ListarMarcados();
         bool Apagar(int id);
     }
 }

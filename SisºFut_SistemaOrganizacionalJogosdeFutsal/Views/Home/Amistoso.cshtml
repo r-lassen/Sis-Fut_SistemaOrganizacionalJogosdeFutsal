@@ -1,13 +1,21 @@
 ﻿@model AgendamentosModel
 
 
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+        @TempData["MensagemErro"]
+    </div>
+}
+
 <div class="text-center" style="font-family: Courier, monospace;">
     <h1 class="display-4"> Agendar Jogos </h1>
     <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
 </div>
 
 
-
+<form asp-controller="Home" asp-action="Amistoso" method="post">
 <div class="col-sm-12 col-md-8 col-md-offset-2"
      style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top:20px; max-width: 800px;">
 
@@ -17,6 +25,7 @@
         <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
             <label for="login" class="form-label">Time 1</label>
             @Html.TextBoxFor(model => model.Usuario.Name, new { @readonly = "readonly", @class = "form-control" })
+                @Html.HiddenFor(model => model.id_Time1)
         </div>
 
         <!-- X no meio -->
@@ -27,7 +36,8 @@
         <!-- Time 2 -->
         <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
             <label for="login" class="form-label">Time 2</label>
-            @Html.DropDownListFor(model => model.UsuarioSelecionado, (SelectList)ViewBag.UserList, "Selecione um usuario", new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.id_Time2, (SelectList)ViewBag.UserList, "Selecione um usuario", new { @class = "form-control" })
+          @* @Html.HiddenFor(model => model.id_Time2) *@
         </div>
     </div>
 
@@ -35,7 +45,9 @@
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12">
             <label for="data" class="form-label">Selecione a Data</label>
-            <input type="date" class="form-control" id="data" name="data">
+           @*  <input type="date" class="form-control" id="data" name="data"> *@
+                @Html.TextBoxFor(model => model.DT_Agendamento, new { @class = "form-control", @type = "date"})
+                @Html.TextBoxFor(model => model.HR_Agendamento, new { @class = "form-control", @type = "time" })
         </div>
     </div>
 
@@ -44,6 +56,7 @@
         <div class="col-md-12">
             <label for="login" class="form-label">Local do Jogo</label>
             @Html.TextBoxFor(model => model.Quadra, new { @readonly = "readonly", @class = "form-control" })
+            @Html.HiddenFor(model => model.id_Quadra)
         </div>
     </div>
 
@@ -60,7 +73,8 @@
     <div class="row mt-3">
         <div class="col-md-12 text-right">
             <button type="submit" class="btn btn-primary mr-2">Salvar</button>
-            <a class="btn btn-secondary" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
+            <a class="btn btn-secondary" asp-action="Index" asp-controller="Home" role="button">Voltar</a>
         </div>
     </div>
 </div>
+</form>

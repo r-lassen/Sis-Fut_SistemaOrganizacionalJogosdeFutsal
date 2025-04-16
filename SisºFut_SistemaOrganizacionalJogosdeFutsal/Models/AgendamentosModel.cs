@@ -1,15 +1,15 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 {
     public class AgendamentosModel
     {
-        public UsuarioModel Usuario { get; set; }
 
         public string Quadra { get; set; }
 
-        public int UsuarioSelecionado { get; set; }
+        //public int UsuarioSelecionado { get; set; }
         public int Id { get; set; }
 
         public int id_Time1 { get; set; }
@@ -25,5 +25,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
         public int id_Quadra { get; set; }
 
         public string DS_Descricao { get; set; }
+
+        [NotMapped]
+        public UsuarioModel Usuario { get; set; }
     }
 }

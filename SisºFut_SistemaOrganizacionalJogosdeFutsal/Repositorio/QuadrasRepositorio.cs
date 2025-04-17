@@ -21,8 +21,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
 
         public QuadrasModel BuscarPorId(int id)
         {
+            return _bancoContext.Quadras.FirstOrDefault(x => x.id_Time == id);
+        }
+
+        public QuadrasModel BuscarPorIdQuadra(int id)
+        {
             return _bancoContext.Quadras.FirstOrDefault(x => x.Id == id);
         }
+
 
         public QuadrasModel Adicionar(QuadrasModel quadras)
         {

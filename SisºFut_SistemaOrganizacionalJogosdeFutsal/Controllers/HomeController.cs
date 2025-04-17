@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Cms;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
@@ -74,15 +75,17 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             foreach (var aberto in abertos)
             {
                 var time1 = _usuarioRepositorio.BuscarPorId(aberto.id_Time1);
-                var quadra = _quadrasRepositorio.BuscarPorId(aberto.id_Quadra);
+                var quadra = _quadrasRepositorio.BuscarPorIdQuadra(aberto.id_Quadra);
 
 
                 dadosAbertos.Add(new DadosAgendamentos { 
                     Time1 = time1.Name, 
                     Time2 = "", Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco, 
+
                     Data = aberto.DT_Agendamento, DS_Descrição = aberto.DS_Descricao, 
                     Hora = aberto.HR_Agendamento,
-                    id = aberto.Id
+                    id = aberto.Id,
+                    FotoTime1 = time1.Foto
                 });
             }
 
@@ -92,10 +95,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 var time1 = _usuarioRepositorio.BuscarPorId(marcado.id_Time1);
                 var time2 = _usuarioRepositorio.BuscarPorId(marcado.id_Time2.Value);
 
-                var quadra = _quadrasRepositorio.BuscarPorId(marcado.id_Quadra);
+                var quadra = _quadrasRepositorio.BuscarPorIdQuadra(marcado.id_Quadra);
 
 
-                dadosAbertos.Add(new DadosAgendamentos
+                dadosMarcados.Add(new DadosAgendamentos
                 {
                     Time1 = time1.Name,
                     Time2 = time2.Name,
@@ -103,7 +106,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     Data = marcado.DT_Agendamento,
                     DS_Descrição = marcado.DS_Descricao,
                     Hora = marcado.HR_Agendamento,
-                    id = marcado.Id
+                    id = marcado.Id,
+                    FotoTime1 = time1.Foto,
+                    FotoTime2 = time2.Foto
                 });
             }
 
@@ -145,9 +150,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
 
-            var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
+            //var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
 
-            var Quadras = _quadrasRepositorio.BuscarPorId(TimeXQuadras.Id);
+            var Quadras = _quadrasRepositorio.BuscarPorId(UsuarioSessao.Id);
 
             //ViewBag.UsuarioSessao = UsuarioSessao;
 
@@ -207,7 +212,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
 
-        public IActionResult JogoMarcado()
+        public IActionResult JogoAberto()
         {
 
             var Usuarios = _usuarioRepositorio.BuscarTodos();
@@ -216,13 +221,51 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
 
-            var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
+            //var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
 
-            var Quadras = _quadrasRepositorio.BuscarPorId(TimeXQuadras.Id);
+            var Quadras = _quadrasRepositorio.BuscarPorId(UsuarioSessao.Id);
 
             //ViewBag.UsuarioSessao = UsuarioSessao;
 
             return View(new AgendamentosModel { Usuario = UsuarioSessao, id_Time2 = 0, Quadra = Quadras.NM_Quadra, id_Quadra = Quadras.Id, id_Time1 = UsuarioSessao.Id });
+
+        }
+
+
+
+        public IActionResult JogoMarcado(int id)
+        {
+
+            var Agendamento = _agendamentoRepositorio.BuscarPorId(id);
+
+
+            var time1 = _usuarioRepositorio.BuscarPorId(Agendamento.id_Time1);
+            var time2 = _usuarioRepositorio.BuscarPorId(Agendamento.id_Time2.Value);
+
+            var quadra = _quadrasRepositorio.BuscarPorIdQuadra(Agendamento.id_Quadra);
+
+            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+
+            DadosAgendamentos dadosMarcados = new DadosAgendamentos()
+
+            {
+                Time1 = time1.Name,
+                Time2 = time2.Name,
+                Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                Data = Agendamento.DT_Agendamento,
+                DS_Descrição = Agendamento.DS_Descricao,
+                Hora = Agendamento.HR_Agendamento,
+                id = Agendamento.Id,
+                FotoTime1 = time1.Foto,
+                FotoTime2 = time2.Foto,
+                idTime1 = time1.Id,
+                idTime2 = time2.Id,
+            };
+
+            return View(new AgendamentosModel {
+                UsuarioId = UsuarioSessao.Id,
+                Agendar = dadosMarcados
+            });
 
         }
 

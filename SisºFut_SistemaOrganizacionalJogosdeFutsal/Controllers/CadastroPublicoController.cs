@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 
 using System;
+using System.IO;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
@@ -37,15 +39,32 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+
+
+
+
+                if (!string.IsNullOrEmpty(cadastro.usuario.Login) && !string.IsNullOrEmpty(cadastro.usuario.Senha)) 
                 {
+
+                    var base64 = "";
+
+                    if (cadastro.usuario.FotoArquivo != null && cadastro.usuario.FotoArquivo.Length > 0)
+                    {
+                        base64 = ConverterParaBase64(cadastro.usuario.FotoArquivo);
+                        cadastro.usuario.Foto = base64;
+                    }
+
+
                     cadastro.usuario.Perfil = Enums.PerfilEnum.Padrao; // Define um perfil padrão
-                    _usuarioRepositorio.Adicionar(cadastro.usuario);
+                    var a = _usuarioRepositorio.Adicionar(cadastro.usuario);
 
+                    if (!string.IsNullOrEmpty(cadastro.DS_Endereco) && !string.IsNullOrEmpty(cadastro.NM_Quadra))
+                    {
+                        QuadrasModel quadras = new QuadrasModel { DS_Endereco = cadastro.DS_Endereco, NM_Quadra = cadastro.NM_Quadra, id_Time = a.Id };
+                        _quadrasRepositorio.Adicionar(quadras);
+                    }
 
-                    QuadrasModel quadras = new QuadrasModel { DS_Endereco = cadastro.DS_Endereco, NM_Quadra = cadastro.NM_Quadra };
-                    _quadrasRepositorio.Adicionar(quadras);
-                    _timeXquadrasRepositorio.Adicionar(new TimeXQuadrasModel { id_Quadra = quadras.Id, id_Time = cadastro.usuario.Id }); 
+                    //_timeXquadrasRepositorio.Adicionar(new TimeXQuadrasModel { id_Quadra = quadras.Id, id_Time = cadastro.usuario.Id }); 
 
                     TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
                     return RedirectToAction("Index", "Login"); // Redireciona para login
@@ -62,7 +81,18 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
 
+        public string ConverterParaBase64(IFormFile arquivo)
+        {
+            if (arquivo == null || arquivo.Length == 0)
+                return null;
 
+            using (var memoryStream = new MemoryStream())
+            {
+                arquivo.CopyTo(memoryStream); // versão síncrona
+                var bytes = memoryStream.ToArray();
+                return Convert.ToBase64String(bytes);
+            }
+        }
 
 
 

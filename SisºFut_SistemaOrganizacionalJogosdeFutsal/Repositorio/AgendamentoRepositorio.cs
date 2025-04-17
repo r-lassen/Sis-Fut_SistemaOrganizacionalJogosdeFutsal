@@ -20,6 +20,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             return _bancoContext.Agendamentos.FirstOrDefault(x => x.Id == id);
         }
 
+
         public List<AgendamentosModel> BuscarTodos()
         {
             return _bancoContext.Agendamentos.ToList();

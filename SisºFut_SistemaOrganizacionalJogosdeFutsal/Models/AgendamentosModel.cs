@@ -7,6 +7,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
     public class AgendamentosModel
     {
 
+        [NotMapped]
+        public int UsuarioId { get; set; }
+        [NotMapped]
+        public DadosAgendamentos Agendar { get; set; }
         public string Quadra { get; set; }
 
         //public int UsuarioSelecionado { get; set; }

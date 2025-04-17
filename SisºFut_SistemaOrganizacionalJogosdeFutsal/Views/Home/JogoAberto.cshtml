@@ -1,0 +1,106 @@
+﻿@model AgendamentosModel
+
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+        @TempData["MensagemErro"]
+    </div>
+}
+
+<div class="text-center" style="font-family: Courier, monospace;">
+    <h1 class="display-4"> Jogo Marcado </h1>
+    <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+</div>
+
+
+<form asp-controller="Home" asp-action="JogoMarcado" method="post">
+    <div class="col-sm-12 col-md-8 col-md-offset-2"
+         style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top:20px; max-width: 800px;">
+
+        <!-- Times -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <!-- Time 1 -->
+
+            <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
+
+                <div class="text-center text-md-start" style="flex: 0 0 auto;">
+@*                     <img src="https://yt3.googleusercontent.com/9ubNXtsrqMzRa1osrojGmiYQOStjWRXja9kUqQPWPG4oJGmO2eKY2TFTka6ZcYuBSilE4WBStQ=s900-c-k-c0x00ffffff-no-rj"
+                         class="rounded-circle img-fluid"
+                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;"
+                         alt="Logo do Time"> *@
+
+                    <img src="data:image/*;base64,@Model.Usuario.Foto"
+                         class="rounded-circle img-fluid"
+                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;" />
+
+
+
+                </div>
+
+                <label for="login" class="form-label">Time 1</label>
+                @Html.TextBoxFor(model => model.Usuario.Name, new { @readonly = "readonly", @class = "form-control" })
+                @Html.HiddenFor(model => model.id_Time1)
+
+            </div>
+
+            <!-- X no meio -->
+            <div class="col-md-2 text-center" style="margin: 15px 0;">
+                <label style="font-size: 1.5rem;">X</label>
+            </div>
+
+            <!-- Time 2 -->
+            <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
+                <div class="text-center text-md-start" style="flex: 0 0 auto;">
+                    <img src="https://yt3.googleusercontent.com/9ubNXtsrqMzRa1osrojGmiYQOStjWRXja9kUqQPWPG4oJGmO2eKY2TFTka6ZcYuBSilE4WBStQ=s900-c-k-c0x00ffffff-no-rj"
+                         class="rounded-circle img-fluid"
+                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;"
+                         alt="Logo do Time">
+                </div>
+                <label for="login" class="form-label">Time 2</label>
+                @Html.TextBoxFor(model => model.Usuario.Name, new { @readonly = "readonly", @class = "form-control" })
+                @Html.HiddenFor(model => model.id_Time2)
+            </div>
+        </div>
+
+        <!-- Data -->
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-md-12">
+                <label for="data" class="form-label">Selecione a Data</label>
+                @*  <input type="date" class="form-control" id="data" name="data"> *@
+                @Html.TextBoxFor(model => model.DT_Agendamento, new { @class = "form-control", @type = "date" })
+                @Html.TextBoxFor(model => model.HR_Agendamento, new { @class = "form-control", @type = "time" })
+            </div>
+        </div>
+
+        <!-- Local -->
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-md-12">
+                <label for="login" class="form-label">Local do Jogo</label>
+                @Html.TextBoxFor(model => model.Quadra, new { @readonly = "readonly", @class = "form-control" })
+                @Html.HiddenFor(model => model.id_Quadra)
+            </div>
+        </div>
+
+        <!-- Descrição -->
+        <div class="row" style="margin-bottom: 25px;">
+            <div class="col-md-12">
+                <label for="login" class="form-label">Descrição</label>
+                <textarea asp-for="DS_Descricao" class="form-control"
+                          style="height: 100px; width: 100%; padding: 10px; resize: vertical;"></textarea>
+            </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="row mt-3">
+            <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-primary mr-2">Editar</button>
+                <a class="btn btn-secondary" asp-action="Index" asp-controller="Home" role="button">Voltar</a>
+            </div>
+        </div>
+
+
+
+    </div>
+</form>

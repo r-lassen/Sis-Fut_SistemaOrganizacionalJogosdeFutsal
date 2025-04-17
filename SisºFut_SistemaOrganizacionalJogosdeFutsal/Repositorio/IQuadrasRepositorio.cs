@@ -7,6 +7,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
     {
         List<QuadrasModel> BuscarTodos();
         QuadrasModel BuscarPorId(int id);
+
+        QuadrasModel BuscarPorIdQuadra(int id);
         QuadrasModel Adicionar(QuadrasModel Quadras);
         QuadrasModel Atualizar(QuadrasModel Quadras);
         bool Apagar(int id);

@@ -9,10 +9,21 @@
     </div>
 }
 
-<div class="text-center" style="font-family: Courier, monospace;">
-    <h1 class="display-4"> Jogo Marcado </h1>
-    <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
-</div>
+
+@if (Model.Agendar.idTime1 == Model.UsuarioId)
+{
+    <div class="text-center" style="font-family: Courier, monospace;">
+        <h1 class="display-4"> Editar Jogo Marcado </h1>
+        <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+    </div>
+} else
+{
+    <div class="text-center" style="font-family: Courier, monospace;">
+        <h1 class="display-4"> Jogo Marcado </h1>
+        <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+    </div>
+}
+
 
 
 <form asp-controller="Home" asp-action="JogoMarcado" method="post">
@@ -81,7 +92,13 @@
                 @*  <input type="date" class="form-control" id="data" name="data"> *@
                 @if (Model.Agendar.idTime1 == Model.UsuarioId)
                 {
-                    @Html.TextBoxFor(model => model.Agendar.Data, new { @class = "form-control", @type = "data" })
+                    @Html.TextBox("Agendar.Data", Model.Agendar.Data.ToString("yyyy-MM-dd"), new
+                        {
+                            @class = "form-control",
+                            @type = "date"
+                        })
+
+
                     @Html.TextBoxFor(model => model.Agendar.Hora, new { @class = "form-control", @type = "time" })
 
                 }else

@@ -18,12 +18,12 @@
 
 
 
-@* <div class="text-center" style="font-family: Courier, monospace;">
+<div class="text-center" style="font-family: Courier, monospace;">
     <h1 class="display-4"> Publicações </h1>
     <hr style="border: 2px solid cyan; width: 25%; margin: auto;">
-</div> *@
+</div>
 
-@* <div class="jumbotron" style="margin-top: 30px">
+<div class="jumbotron" style="margin-top: 30px">
 
 
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -76,7 +76,7 @@
         </a>
     </div>
 
-</div> *@
+</div>
 
 <div class="text-center" style="font-family: Courier, monospace;">
     <h1 class="display-4"> Jogos </h1>
@@ -88,7 +88,7 @@
 
 
 
-    <div class="card" style="width: 100%; max-width: 24rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
+    @*     <div class="card" style="width: 100%; max-width: 24rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
         <div class="card-body">
             <h2 class="card-title" style="align-items:center; color: cyan;">Amistosos</h2>
             <img src="https://cdn-icons-png.flaticon.com/512/53/53264.png" class="card-img-top" alt="Ícone" style="width: 100px; height: auto; margin-top: 30px; max-width: 100%;">
@@ -97,6 +97,7 @@
             </div>
         </div>
     </div>
+ *@
 
 
 
@@ -104,32 +105,87 @@
 
 
 
-
+    @* -------------------------------Lista de Jogos Abertos---------------------------------- *@
 
 
     <div class="card" style="width: 48%; max-width: 40rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
-        <div class="card-body">
-            <h2 class="card-title" style="align-items:center; color: cyan;">Lista</h2>
+        <div class="card-body" style="width: 100%;">
+            <h2 class="card-title" style="align-items:center; color: cyan;">Jogos em Aberto</h2>
 
             <!-- Container da lista com scroll -->
             <div class="list-group" style="gap: 0.5rem; max-height: 400px; overflow-y: auto;">
+                @if (Model.Abertos.Count > 0)
+                {
+                    @foreach (var abertos in Model.Abertos)
+                    {
+                        if (abertos.idTime1 == Model.Id)
+                        {
+                            <a asp-controller="Home" asp-action="EditarJogoAberto" asp-route-id="@abertos.id" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">@abertos.Time1</h5>
+                                </div>
 
-                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start rounded">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Jogo Marcado</h5>
+                                <input type="hidden" value="@abertos.id" />
+
+
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 10px;">
+                                    <div style="text-align: center;">
+                                        <img src="data:image/;base64,@abertos.FotoTime1"
+                                             class="rounded-circle img-fluid"
+                                             style="width: 90px; height: 90px; object-fit: cover; max-width: 100%;" />
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <p>@abertos.Local</p>
+                                        <p>@abertos.Data.ToString("d")</p>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/20/20183.png" class="card-img-top" alt="Ícone" style="width: 100px; height: auto; margin-top: 30px; max-width: 100%;">
+                                    </div>
+                                </div>
+
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Home" asp-action="JogoAberto" asp-route-id="@abertos.id" class="list-group-item list-group-item-action flex-column align-items-start rounded">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">@abertos.Time1</h5>
+                                </div>
+
+                                <input type="hidden" value="@abertos.id" />
+
+
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 10px;">
+                                    <div style="text-align: center;">
+                                        <img src="data:image/;base64,@abertos.FotoTime1"
+                                             class="rounded-circle img-fluid"
+                                             style="width: 90px; height: 90px; object-fit: cover; max-width: 100%;" />
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <p>@abertos.Local</p>
+                                        <p>@abertos.Data.ToString("d")</p>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/20/20183.png" class="card-img-top" alt="Ícone" style="width: 100px; height: auto; margin-top: 30px; max-width: 100%;">
+                                    </div>
+                                </div>
+
+                            </a>
+                        }
+                    }
+                }
+                else
+                {
+                    <div style="display: flex; justify-content: center; align-items: center; height: 300px; width: 100%;">
+                        <h1 style="margin: 0;">Nenhum Jogo Aberto no Momento</h1>
                     </div>
-                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                </a>
-
-                <!-- Adicione mais itens aqui para testar o scroll -->
-            </div>
-
-            <div style="margin-top: 60px;">
-                <a asp-action="JogoAberto" asp-controller="Home" class="btn btn-default" style="display: block; width: fit-content; margin: auto;">Acessar</a>
+                }
             </div>
         </div>
     </div>
 
+
+    @* -------------------------------Lista de Jogos Marcados---------------------------------- *@
     <div class="card" style="width: 48%; max-width: 40rem; height: auto; padding: 20px; border: 1px solid #000; border-radius: 15px; display: flex; align-items: center; text-align: center;">
         <div class="card-body">
             <h2 class="card-title" style="align-items:center; color: cyan;">Lista jgo marcado</h2>
@@ -150,7 +206,7 @@
                                 <h5 class="mb-1">Jogo Marcado</h5>
                             </div>
 
-                            <input type="hidden" value="@marcado.id"/>
+                            <input type="hidden" value="@marcado.id" />
 
 
                             <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 10px;">
@@ -175,8 +231,10 @@
                             </div>
                         </a>
                     }
-                } else {
-                    <div> 
+                }
+                else
+                {
+                    <div style="display: flex; justify-content: center; align-items: center; height: 300px; width: 100%;">
                         <h1>Nenhum Jogo Marcado no Momento</h1>
                     </div>
                 }

@@ -10,6 +10,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         AgendamentosModel Adicionar(AgendamentosModel agendamentos);
         AgendamentosModel Atualizar(AgendamentosModel agendamentos);
 
+        List<AgendamentosModel> BuscarJogosAbertosPorIdTime1(int id);
+        List<AgendamentosModel> BuscarJogosAbertosPorIdTime2(int id);
+
         List<AgendamentosModel> ListarAbertos();
 
         List<AgendamentosModel> ListarMarcados();

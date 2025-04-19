@@ -8,6 +8,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
         public string Email { get; set; }
 
+        public int Id { get; set; }
+
         public List<DadosAgendamentos> Abertos { get; set; }
 
         public List<DadosAgendamentos> Marcados { get; set; }

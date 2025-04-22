@@ -20,30 +20,28 @@
 
 
 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav" style="margin-left: 656px;">
+    <ul class="navbar-nav" style="margin-left: 656px; font-family: 'Courier New', Courier, monospace;">
         <!-- Alinhar à direita com CSS inline -->
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Amistoso">Abrir-Jogo</a>
-        </li>
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index">Contatos</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index" style="font-family: 'Courier New', Courier, monospace;">Contatos</a>
         </li>
 
         @if (Model.Perfil == SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums.PerfilEnum.Admin)
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index" style="font-family: 'Courier New', Courier, monospace;">Usuarios</a>
             </li>
         }
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="MeuPerfil" asp-action="Index">Perfil</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="MeuPerfil" asp-action="Index" style="font-family: 'Courier New', Courier, monospace;">Perfil</a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair">
-                <i class="fa-solid fa-right-from-bracket"></i>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair" style="font-family: 'Courier New', Courier, monospace;">
+                Sair
+                @*             <i class="fa-solid fa-right-from-bracket"></i> *@
             </a>
         </li>
     </ul>

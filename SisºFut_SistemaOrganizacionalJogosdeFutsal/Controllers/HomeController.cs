@@ -10,6 +10,7 @@ using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
@@ -304,9 +305,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 {
                     var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime1);
                     var jaExisteData = false;
+                    var jaTemAgendadoTime1MenosoAtual = jaTemAgendadoTime1.Where(m => m.Id != Agendado.Id);
 
-
-                    foreach (var a in jaTemAgendadoTime1)
+                    foreach (var a in jaTemAgendadoTime1MenosoAtual)
                     {
                         if (a.DT_Agendamento == agendamentos.Agendar.Data)
                         {
@@ -317,16 +318,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
                     if (agendamentos.Agendar.idTime2 > 0)
                     {
-                        var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2((int)agendamentos.Agendar.idTime2);
+                        var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(agendamentos.Agendar.idTime2);
                         foreach (var a in jaTemAgendadoTime2)
                         {
                             if (a.DT_Agendamento == agendamentos.Agendar.Data)
                             {
                                 jaExisteData = true;
-
                             }
                         }
-
                     }
 
                     if (!jaExisteData)
@@ -340,17 +339,22 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     }
                     else
                     {
-                        TempData["MensagemErro"] = "Já existe jogo marcado para essa data";
-                        return RedirectToAction("Amistoso");
+                        TempData["MensagemErro"] = "JÃ¡ existe jogo marcado para essa data";
+                        return RedirectToAction("Index");
                     }
 
 
                 }
                 else
                 {
+
                     TempData["MensagemErro"] = "Erro ao marcar o jogo, tente novamente";
                     return RedirectToAction("Index");
                 }
+
+
+
+
 
 
             }
@@ -420,23 +424,43 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             {
                 var Agendado = _agendamentoRepositorio.BuscarPorId(agendamentos.Agendar.id);
 
-                var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime1);
+                var listaAgendamentos = new List<AgendamentosModel>();
+
+                var jaTemAgendadoTime1x1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime1);
+                listaAgendamentos.AddRange(jaTemAgendadoTime1x1);
+
+
+                if (agendamentos.id_Time2 > 0)
+                {
+                    var jaTemAgendadoTime1x2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1((int)agendamentos.id_Time2);
+                    listaAgendamentos.AddRange(jaTemAgendadoTime1x2);
+                }
+
+                var jaTemAgendadoTime1MenosoAtual = listaAgendamentos.Where(m => m.Id != Agendado.Id);
+
                 var jaExisteData = false;
 
-
-                foreach (var a in jaTemAgendadoTime1)
+                foreach (var a in jaTemAgendadoTime1MenosoAtual)
                 {
                     if (a.DT_Agendamento == agendamentos.Agendar.Data)
                     {
                         jaExisteData = true;
-
                     }
                 }
 
                 if (agendamentos.id_Time2 > 0)
                 {
-                    var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2((int)agendamentos.Agendar.idTime2);
-                    foreach (var a in jaTemAgendadoTime2)
+                    var jaTemAgendadoTime2x1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(agendamentos.Agendar.idTime1);
+                    var jaTemAgendadoTime2x2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2((int)agendamentos.id_Time2);
+
+                    var listaAgendamentos2 = new List<AgendamentosModel>();
+
+                    listaAgendamentos2.AddRange(jaTemAgendadoTime2x1);
+                    listaAgendamentos2.AddRange(jaTemAgendadoTime2x2);
+
+                    var jaTemAgendadoTime2MenosoAtual = listaAgendamentos2.Where(m => m.Id != Agendado.Id);
+
+                    foreach (var a in jaTemAgendadoTime2MenosoAtual)
                     {
                         if (a.DT_Agendamento == agendamentos.Agendar.Data)
                         {
@@ -451,7 +475,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 {
                     if (Agendado != null)
                     {
-                        Agendado.id_Time2 = agendamentos.Agendar.idTime2 == Agendado.id_Time2 ? Agendado.id_Time2 : null;
+                        Agendado.id_Time2 = agendamentos.id_Time2 == Agendado.id_Time2 ? Agendado.id_Time2 : agendamentos.id_Time2;
                         Agendado.HR_Agendamento = agendamentos.Agendar.Hora == Agendado.HR_Agendamento ? Agendado.HR_Agendamento : agendamentos.Agendar.Hora;
                         Agendado.DT_Agendamento = agendamentos.Agendar.Data == Agendado.DT_Agendamento ? Agendado.DT_Agendamento : agendamentos.Agendar.Data;
                         Agendado.DS_Descricao = agendamentos.Agendar.DS_Descrição == Agendado.DS_Descricao ? Agendado.DS_Descricao : agendamentos.Agendar.DS_Descrição;
@@ -470,7 +494,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 else
                 {
                     TempData["MensagemErro"] = "Já existe jogo marcado para essa data";
-                    return RedirectToAction("Amistoso");
+                    return RedirectToAction("Index");
                 }
 
             }

@@ -14,13 +14,13 @@
 {
     <div class="text-center" style="font-family: Courier, monospace;">
         <h1 class="display-4"> Editar Jogo Marcado </h1>
-        <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+      @*   <hr style="border: 2px solid cyan; width: 50%; margin: auto;"> *@
     </div>
 } else
 {
     <div class="text-center" style="font-family: Courier, monospace;">
         <h1 class="display-4"> Jogo Marcado </h1>
-        <hr style="border: 2px solid cyan; width: 50%; margin: auto;">
+      @*   <hr style="border: 2px solid cyan; width: 50%; margin: auto;"> *@
     </div>
 }
 
@@ -28,128 +28,178 @@
 
 <form asp-controller="Home" asp-action="JogoMarcado" method="post">
     <div class="col-sm-12 col-md-8 col-md-offset-2"
-    style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top:20px; max-width: 800px;">
+         style="border: 2px solid #ccc; padding: 20px; margin: 20px auto; border-radius: 10px; max-width: 800px; font-family: 'Courier New', Courier, monospace;">
 
         <!-- Times -->
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div class="row align-items-center mb-4">
             <!-- Time 1 -->
-
-            <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
-
-                <div class="text-center text-md-start" style="flex: 0 0 auto;">
-                    @* <img src="https://yt3.googleusercontent.com/9ubNXtsrqMzRa1osrojGmiYQOStjWRXja9kUqQPWPG4oJGmO2eKY2TFTka6ZcYuBSilE4WBStQ=s900-c-k-c0x00ffffff-no-rj"
-                         class="rounded-circle img-fluid"
-                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;"
-                         alt="Logo do Time"> *@
-
+            <div class="col-md-5 mb-3 mb-md-0">
+                <div class="text-center text-md-start mb-2">
                     <img src="data:image/*;base64,@Model.Agendar.FotoTime1"
-                    class="rounded-circle img-fluid"
-                    style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;" />
-
-
-
+                         class="rounded-circle img-fluid"
+                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;" />
                 </div>
 
-                <label for="login" class="form-label">Time 1</label>
-                @Html.TextBoxFor(model => model.Agendar.Time1, new { @readonly = "readonly", @class = "form-control" })
-                @*  @Html.HiddenFor(model => model.id_Time1) *@
-
+                <label class="form-label fw-bold">Time 1</label>
+                @Html.TextBoxFor(model => model.Agendar.Time1, new
+                    {
+                        @readonly = "readonly",
+                        @class = "form-control rounded-3",
+                        style = "border-radius: 10px;"
+                    })
             </div>
 
             <!-- X no meio -->
-            <div class="col-md-2 text-center" style="margin: 15px 0;">
-                <label style="font-size: 1.5rem;">X</label>
+            <div class="col-md-2 text-center my-3 my-md-0">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <span class="fs-4 text-muted">VS</span>
+                </div>
             </div>
 
             <!-- Time 2 -->
-            <div class="col-md-5" style="flex: 1 1 200px; margin-bottom: 15px;">
-
-                <div class="text-center text-md-start" style="flex: 0 0 auto;">
-                    @* <img src="https://yt3.googleusercontent.com/9ubNXtsrqMzRa1osrojGmiYQOStjWRXja9kUqQPWPG4oJGmO2eKY2TFTka6ZcYuBSilE4WBStQ=s900-c-k-c0x00ffffff-no-rj"
-                         class="rounded-circle img-fluid"
-                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;"
-                         alt="Logo do Time"> *@
-
+            <div class="col-md-5">
+                <div class="text-center text-md-start mb-2">
                     <img src="data:image/*;base64,@Model.Agendar.FotoTime2"
-                    class="rounded-circle img-fluid"
-                    style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;" />
-
-
-
+                         class="rounded-circle img-fluid"
+                         style="width: 100px; height: 100px; object-fit: cover; max-width: 100%;" />
                 </div>
 
-                <label for="login" class="form-label">Time 2</label>
-                @Html.TextBoxFor(model => model.Agendar.Time2, new { @readonly = "readonly", @class = "form-control" })
-                @*  @Html.HiddenFor(model => model.id_Time1) *@
-
+                <label class="form-label fw-bold">Time 2</label>
+                @Html.TextBoxFor(model => model.Agendar.Time2, new
+                    {
+                        @readonly = "readonly",
+                        @class = "form-control rounded-3",
+                        style = "border-radius: 10px;"
+                    })
             </div>
         </div>
 
-        <!-- Data -->
-        <div class="row" style="margin-bottom: 20px;">
-            <div class="col-md-12">
-                <label for="data" class="form-label">Selecione a Data</label>
-                @*  <input type="date" class="form-control" id="data" name="data"> *@
+        @Html.HiddenFor(model => model.Agendar.idTime1)
+        @Html.HiddenFor(model => model.Agendar.id)
+        @Html.HiddenFor(model => model.Agendar.idTime2)
+
+        <!-- Data e Hora -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <label class="form-label">Selecione a Data</label>
                 @if (Model.Agendar.idTime1 == Model.UsuarioId)
                 {
                     @Html.TextBox("Agendar.Data", Model.Agendar.Data.ToString("yyyy-MM-dd"), new
                         {
-                            @class = "form-control",
-                            @type = "date"
+                            @class = "form-control rounded-3",
+                            @type = "date",
+                            style = "border-radius: 10px;"
                         })
-
-
-                    @Html.TextBoxFor(model => model.Agendar.Hora, new { @class = "form-control", @type = "time" })
-
-                }else
+                }
+                else
                 {
-                    @Html.TextBoxFor(model => model.Agendar.Data, new { @readonly = "readonly", @class = "form-control" })
-                    @Html.TextBoxFor(model => model.Agendar.Hora, new { @readonly = "readonly", @class = "form-control"})
+                    @Html.TextBoxFor(model => model.Agendar.Data, new
+                        {
+                            @readonly = "readonly",
+                            @class = "form-control rounded-3",
+                            style = "border-radius: 10px;"
+                        })
+                }
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Horário</label>
+                @if (Model.Agendar.idTime1 == Model.UsuarioId)
+                {
+                    @Html.TextBoxFor(model => model.Agendar.Hora, new
+                        {
+                            @class = "form-control rounded-3",
+                            @type = "time",
+                            style = "border-radius: 10px;"
+                        })
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.Agendar.Hora, new
+                        {
+                            @readonly = "readonly",
+                            @class = "form-control rounded-3",
+                            style = "border-radius: 10px;"
+                        })
                 }
             </div>
         </div>
 
         <!-- Local -->
-        <div class="row" style="margin-bottom: 20px;">
-            <div class="col-md-12">
-                <label for="login" class="form-label">Local do Jogo</label>
+        <div class="row mb-4">
+            <div class="col-12">
+                <label class="form-label">Local do Jogo</label>
                 @if (Model.Agendar.idTime1 == Model.UsuarioId)
                 {
-                    @Html.TextBoxFor(model => model.Agendar.Local, new { @class = "form-control" })
-
-                }else{
-                    @Html.TextBoxFor(model => model.Agendar.Local, new { @readonly = "readonly", @class = "form-control" })
+                    @Html.TextBoxFor(model => model.Agendar.Local, new
+                        {
+                            @readonly = "readonly",
+                            @class = "form-control rounded-3",
+                            style = "border-radius: 10px;"
+                        })
                 }
-                @*@Html.HiddenFor(model => model.id_Quadra) *@
+                else
+                {
+                    @Html.TextBoxFor(model => model.Agendar.Local, new
+                        {
+                            @readonly = "readonly",
+                            @class = "form-control rounded-3",
+                            style = "border-radius: 10px;"
+                        })
+                }
             </div>
         </div>
 
         <!-- Descrição -->
-        <div class="row" style="margin-bottom: 25px;">
-            <div class="col-md-12">
+        <div class="row mb-4">
+            <div class="col-12">
+                <label class="form-label">Descrição</label>
                 @if (Model.Agendar.idTime1 == Model.UsuarioId)
                 {
-                @Html.TextBoxFor(model => model.Agendar.DS_Descrição, new { @class = "form-control" })
-                    
-                }else{
-                    @Html.TextBoxFor(model => model.Agendar.DS_Descrição, new { @readonly = "readonly", @class = "form-control" })
+                    @Html.TextAreaFor(model => model.Agendar.DS_Descrição, new
+                        {
+                            @class = "form-control rounded-3",
+                            style = "border-radius: 10px; height: 100px;",
+                            rows = "5"
+                        })
+                }
+                else
+                {
+                    @Html.TextAreaFor(model => model.Agendar.DS_Descrição, new
+                        {
+                            @readonly = "readonly",
+                            @class = "form-control rounded-3",
+                            style = "border-radius: 10px; height: 100px;",
+                            rows = "5"
+                        })
                 }
             </div>
         </div>
 
         <!-- Botões -->
-        <div class="row mt-3">
-            <div class="col-md-12 text-right">
-                @if (Model.Agendar.idTime1 == Model.UsuarioId)
-                {
-                    <button type="submit" class="btn btn-primary mr-2">Editar</button>
-                }
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-end">
+                    <div class="d-flex" style="gap: 1rem;">
+                        <!-- Botão Voltar -->
+                        <a class="btn btn-sm rounded-pill px-4"
+                           asp-action="Index"
+                           asp-controller="Home"
+                           style="color: #37c3b4; border-color: #37c3b4; background-color: transparent;">
+                            Voltar
+                        </a>
 
-                <a class="btn btn-secondary" asp-action="Index" asp-controller="Home" role="button">Voltar</a>
+                        @if (Model.Agendar.idTime1 == Model.UsuarioId)
+                        {
+                            <!-- Botão Editar -->
+                            <button type="submit"
+                                    class="btn btn-sm rounded-pill px-4"
+                                    style="background-color: #37c3b4; color: white; border: none;">
+                                Editar
+                            </button>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
-
-
-
     </div>
 </form>

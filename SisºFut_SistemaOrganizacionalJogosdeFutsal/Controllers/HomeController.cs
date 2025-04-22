@@ -157,11 +157,15 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         public IActionResult Amistoso()
         {
 
-            var Usuarios = _usuarioRepositorio.BuscarTodos();
+            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+
+            var UsuariosAll = _usuarioRepositorio.BuscarTodos();
+
+            var Usuarios = UsuariosAll.Where(m => m.Id != UsuarioSessao.Id).ToList();
 
             ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
 
-            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+
 
             //var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
 
@@ -393,11 +397,15 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             };
 
 
-            var Usuarios = _usuarioRepositorio.BuscarTodos();
+            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+
+            var UsuariosAll = _usuarioRepositorio.BuscarTodos();
+
+            var Usuarios = UsuariosAll.Where(m => m.Id != UsuarioSessao.Id).ToList();
 
             ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
 
-            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+
 
             //var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
 
@@ -507,6 +515,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         }
 
+        //---------------Essa carrega a view--------------
         public IActionResult JogoMarcado(int id)
         {
 
@@ -544,7 +553,94 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         }
 
+        [HttpPost]
+        public IActionResult JogoMarcado(AgendamentosModel agendamentos)
+        {
+            try
+            {
+                var Agendado = _agendamentoRepositorio.BuscarPorId(agendamentos.Agendar.id);
 
+                var listaAgendamentos = new List<AgendamentosModel>();
+
+                var jaTemAgendadoTime1x1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime1);
+                listaAgendamentos.AddRange(jaTemAgendadoTime1x1);
+
+
+                if (agendamentos.Agendar.idTime2 > 0)
+                {
+                    var jaTemAgendadoTime1x2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime2);
+                    listaAgendamentos.AddRange(jaTemAgendadoTime1x2);
+                }
+
+                var jaTemAgendadoTime1MenosoAtual = listaAgendamentos.Where(m => m.Id != Agendado.Id);
+
+                var jaExisteData = false;
+
+                foreach (var a in jaTemAgendadoTime1MenosoAtual)
+                {
+                    if (a.DT_Agendamento == agendamentos.Agendar.Data)
+                    {
+                        jaExisteData = true;
+                    }
+                }
+
+                if (agendamentos.Agendar.idTime2 > 0)
+                {
+                    var jaTemAgendadoTime2x1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(agendamentos.Agendar.idTime1);
+                    var jaTemAgendadoTime2x2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(agendamentos.Agendar.idTime2);
+
+                    var listaAgendamentos2 = new List<AgendamentosModel>();
+
+                    listaAgendamentos2.AddRange(jaTemAgendadoTime2x1);
+                    listaAgendamentos2.AddRange(jaTemAgendadoTime2x2);
+
+                    var jaTemAgendadoTime2MenosoAtual = listaAgendamentos2.Where(m => m.Id != Agendado.Id);
+
+                    foreach (var a in jaTemAgendadoTime2MenosoAtual)
+                    {
+                        if (a.DT_Agendamento == agendamentos.Agendar.Data)
+                        {
+                            jaExisteData = true;
+
+                        }
+                    }
+
+                }
+
+                if (!jaExisteData)
+                {
+                    if (Agendado != null)
+                    {
+                        Agendado.HR_Agendamento = agendamentos.Agendar.Hora == Agendado.HR_Agendamento ? Agendado.HR_Agendamento : agendamentos.Agendar.Hora;
+                        Agendado.DT_Agendamento = agendamentos.Agendar.Data == Agendado.DT_Agendamento ? Agendado.DT_Agendamento : agendamentos.Agendar.Data;
+                        Agendado.DS_Descricao = agendamentos.Agendar.DS_Descrição == Agendado.DS_Descricao ? Agendado.DS_Descricao : agendamentos.Agendar.DS_Descrição;
+
+
+                        var resultado = _agendamentoRepositorio.Atualizar(Agendado);
+                        TempData["MensagemSucesso"] = "Jogo editado com Sucesso";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["MensagemErro"] = "Erro ao marcar o jogo, tente novamente";
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    TempData["MensagemErro"] = "Já existe jogo marcado para essa data";
+                    return RedirectToAction("Index");
+                }
+
+            }
+            catch (System.Exception erro)
+            {
+                TempData["MensagemErro"] = $"Erro ao cadastrar seu Jogo, tente novamente. Detalhe do erro: {erro.Message}";
+                return RedirectToAction("Index");
+            }
+
+
+        }
     }
 }
 

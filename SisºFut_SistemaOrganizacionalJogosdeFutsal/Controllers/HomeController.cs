@@ -72,53 +72,61 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             List<DadosAgendamentos> dadosAbertos = new List<DadosAgendamentos>();
             List<DadosAgendamentos> dadosMarcados = new List<DadosAgendamentos>();
 
-
-            foreach (var aberto in abertos)
+            if(abertos.Count > 0)
             {
-                var time1 = _usuarioRepositorio.BuscarPorId(aberto.id_Time1);
-                var quadra = _quadrasRepositorio.BuscarPorIdQuadra(aberto.id_Quadra);
-
-
-                dadosAbertos.Add(new DadosAgendamentos
+                foreach (var aberto in abertos)
                 {
-                    Time1 = time1.Name,
-                    Time2 = "",
-                    Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
-                    Data = aberto.DT_Agendamento,
-                    DS_Descrição = aberto.DS_Descricao,
-                    Hora = aberto.HR_Agendamento,
-                    id = aberto.Id,
-                    FotoTime1 = time1.Foto,
-                    idTime1 = time1.Id,
+                    var time1 = _usuarioRepositorio.BuscarPorId(aberto.id_Time1);
+                    var quadra = _quadrasRepositorio.BuscarPorIdQuadra(aberto.id_Quadra);
 
-                });
 
+                    dadosAbertos.Add(new DadosAgendamentos
+                    {
+                        Time1 = time1.Name,
+                        Time2 = "",
+                        Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                        Data = aberto.DT_Agendamento,
+                        DS_Descrição = aberto.DS_Descricao,
+                        Hora = aberto.HR_Agendamento,
+                        id = aberto.Id,
+                        FotoTime1 = time1.Foto,
+                        idTime1 = time1.Id,
+
+                    });
+
+
+                }
 
             }
 
 
-            foreach (var marcado in marcados)
+
+            if (marcados.Count > 0)
             {
-                var time1 = _usuarioRepositorio.BuscarPorId(marcado.id_Time1);
-                var time2 = _usuarioRepositorio.BuscarPorId(marcado.id_Time2.Value);
-
-                var quadra = _quadrasRepositorio.BuscarPorIdQuadra(marcado.id_Quadra);
-
-
-                dadosMarcados.Add(new DadosAgendamentos
+                foreach (var marcado in marcados)
                 {
-                    Time1 = time1.Name,
-                    Time2 = time2.Name,
-                    Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
-                    Data = marcado.DT_Agendamento,
-                    DS_Descrição = marcado.DS_Descricao,
-                    Hora = marcado.HR_Agendamento,
-                    id = marcado.Id,
-                    FotoTime1 = time1.Foto,
-                    FotoTime2 = time2.Foto,
-                    idTime1 = time1.Id,
-                    idTime2 = time2.Id,
-                });
+                    var time1 = _usuarioRepositorio.BuscarPorId(marcado.id_Time1);
+                    var time2 = _usuarioRepositorio.BuscarPorId(marcado.id_Time2.Value);
+
+                    var quadra = _quadrasRepositorio.BuscarPorIdQuadra(marcado.id_Quadra);
+
+
+                    dadosMarcados.Add(new DadosAgendamentos
+                    {
+                        Time1 = time1.Name,
+                        Time2 = time2.Name,
+                        Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                        Data = marcado.DT_Agendamento,
+                        DS_Descrição = marcado.DS_Descricao,
+                        Hora = marcado.HR_Agendamento,
+                        id = marcado.Id,
+                        FotoTime1 = time1.Foto,
+                        FotoTime2 = time2.Foto,
+                        idTime1 = time1.Id,
+                        idTime2 = time2.Id,
+                    });
+                }
+
             }
 
 

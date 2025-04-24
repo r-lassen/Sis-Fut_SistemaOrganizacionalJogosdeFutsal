@@ -41,12 +41,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
 
         public QuadrasModel Atualizar(QuadrasModel quadras)
         {
-            QuadrasModel quadrasDB = BuscarPorId(quadras.Id);
-            if (quadrasDB == null) throw new System.Exception("Erro na Atualização do contato");
+            QuadrasModel quadrasDB = BuscarPorIdQuadra(quadras.Id);
+            if (quadrasDB == null) throw new System.Exception("Erro na Atualização da Quadra");
 
             quadrasDB.NM_Quadra = quadras.NM_Quadra;
             quadrasDB.DS_Endereco = quadras.DS_Endereco;
-  
+            quadrasDB.id_Time = quadras.id_Time;
 
             _bancoContext.Quadras.Update(quadrasDB);
             _bancoContext.SaveChanges();

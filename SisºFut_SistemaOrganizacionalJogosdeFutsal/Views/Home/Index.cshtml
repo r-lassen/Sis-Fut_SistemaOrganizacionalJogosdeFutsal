@@ -79,10 +79,8 @@
                     @foreach (var abertos in Model.Abertos)
                     {
                         <!-- Link para cada jogo aberto - agora com classe clickable-card -->
-                        <a asp-controller="Home"
-                           asp-action="@(abertos.idTime1 == Model.Id ? "EditarJogoAberto" : "JogoAberto")"
-                           asp-route-id="@abertos.id"
-                           class="clickable-card"
+                        <a asp-controller="Home" asp-action="@(abertos.idTime1 == Model.Id ? "EditarJogoAberto" : "JogoAberto")" asp-route-id="@abertos.id" class="clickable-card"
+
                            style="display: flex;
                             align-items: center;
                             text-decoration: none;

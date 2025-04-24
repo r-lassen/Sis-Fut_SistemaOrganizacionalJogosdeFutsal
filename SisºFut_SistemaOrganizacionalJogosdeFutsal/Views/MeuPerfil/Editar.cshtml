@@ -1,5 +1,4 @@
-﻿@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
-@model UsuarioModel
+﻿@model HomeModel
 @{
     ViewData["Title"] = "Editar Usuario";
 }
@@ -10,31 +9,58 @@
 </div>
 
 
-<form asp-controller="Usuario" asp-action="Editar" method="post">
+<form asp-controller="MeuPerfil" asp-action="Editar" method="post" enctype="multipart/form-data">
     <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top: 30px">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label for="nome">Nome</label>
-        <input type="text" asp-for="Name" class="form-control" placeholder="Digite o nome">
-        @Html.ValidationMessageFor(x => x.Name)
+        <input type="hidden" asp-for="Id" />
+
+
+
+        <div class="form-group">
+            <label for="foto">Foto do Time</label>
+            <input type="file" asp-for="Usuario.FotoArquivo" class="form-control" accept="image/*" />
+        </div>
+
+
+        <div class="form-group">
+            <label for="nome">Nome</label>
+            @Html.TextBoxFor(m => m.Usuario.Name)
+            @Html.HiddenFor(m => m.Usuario.Id)
+            @Html.HiddenFor(m => m.Usuario.DataCadastro)
+            @Html.HiddenFor(m => m.Usuario.DataAtualização)
+            @Html.HiddenFor(m => m.Usuario.Foto)
+            @Html.HiddenFor(m => m.Usuario.Login)
+            @Html.HiddenFor(m => m.Usuario.Senha)
+            @Html.HiddenFor(m => m.Usuario.Perfil)
+
+        </div>
+
+        <div class="form-group">
+            <label for="nome" class="form-label">E-mail</label>
+            @Html.TextBoxFor(m => m.Usuario.Email)
+        </div>
+
+        <div class="form-group">
+            <label for="nome" class="form-label">Login</label>
+            @Html.TextBoxFor(m => m.Usuario.Login)
+        </div>
+
+
+        <div class="form-group">
+            <label for="nome" class="form-label">Login</label>
+            @Html.TextBoxFor(m => m.Quadra.NM_Quadra)
+            @Html.HiddenFor(m => m.Quadra.id_Time)
+            @Html.HiddenFor(m => m.Quadra.Id)
+        </div>
+
+        <div class="form-group">
+            <label for="nome" class="form-label">Login</label>
+            @Html.TextBoxFor(m => m.Quadra.DS_Endereco)
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Editar</button>
+
+        <a class="btn btn-secondary" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
+
     </div>
-
-    <div class="form-group">
-        <label for="nome" class="form-label">E-mail</label>
-        <input type="text" asp-for="Email" class="form-control" placeholder="Digite o email">
-        @Html.ValidationMessageFor(x => x.Email)
-    </div>
-
-    <div class="form-group">
-        <label for="nome" class="form-label">Login</label>
-        <input type="text" asp-for="Login" class="form-control" placeholder="Digite o Login">
-        @Html.ValidationMessageFor(x => x.Login)
-    </div>
-
-
-    <button type="submit" class="btn btn-primary">Editar</button>
- 
-    <a class="btn btn-secondary" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
-
-</div>
 </form>

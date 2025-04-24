@@ -54,6 +54,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             usuarioDB.Login = usuario.Login;
             usuarioDB.Perfil = usuario.Perfil;
             usuarioDB.DataAtualização = DateTime.Now;
+            usuarioDB.Senha = usuario.Senha;
+            usuarioDB.DataCadastro = usuario.DataCadastro;
+            usuarioDB.Foto = usuario.Foto;
 
 
             _bancoContext.Usuarios.Update(usuarioDB);

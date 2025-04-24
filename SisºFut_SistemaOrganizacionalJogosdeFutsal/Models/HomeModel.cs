@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 {
@@ -13,5 +14,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
         public List<DadosAgendamentos> Abertos { get; set; }
 
         public List<DadosAgendamentos> Marcados { get; set; }
+
+        [NotMapped]
+        public UsuarioModel Usuario { get; set; }
+
+        [NotMapped]
+        public QuadrasModel Quadra { get; set; }
     }
 }

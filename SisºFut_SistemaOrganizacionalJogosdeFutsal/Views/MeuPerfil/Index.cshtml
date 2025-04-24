@@ -1,0 +1,201 @@
+﻿@model HomeModel
+
+@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
+
+@* <div class="text-center">
+
+    <h2>Meu Perfil</h2>
+
+</div> *@
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Cadastrar Times";
+}
+
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+}
+
+<form asp-controller="CadastroPublico" asp-action="Cadastro" method="post">
+
+    <!-- Container principal responsivo -->
+    <div class="card p-2"
+         style="width: 80%;
+            max-width: 100%;
+            min-width:  80%;
+            height: auto;
+            border: 1px solid #000;
+            border-radius: 20px;
+            margin: 20px auto 0;
+            font-family: 'Courier New', Courier, monospace;">
+
+        <!-- Layout flexível para diferentes telas -->
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between" style="gap: 15px; padding: 10px;">
+
+            <!-- Imagem + Nome (alinha à esquerda) -->
+            <div class="d-flex align-items-center" style="gap: 15px; max-width: 100%; overflow: hidden;">
+                <!-- Imagem responsiva -->
+                <div style="text-align: center; width: 100px;">
+                    <img src="data:image/;base64,@Model.Usuario.Foto"
+                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
+
+                </div>
+
+                <!-- Nome do time responsivo -->
+                <div style="overflow: hidden;">
+                    <h2 style="font-weight: bold;
+                          margin: 0;
+                          overflow: hidden;
+                          text-overflow: ellipsis;">
+                        @Model.Usuario.Name
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Botões de ação (centralizados em mobile, à direita em desktop) -->
+            <div class="d-flex flex-column align-items-center align-items-md-stretch"
+                 style="gap: 8px; min-width: 120px; width: 100%; max-width: 200px;">
+
+                <!-- Botão Editar -->
+                <a asp-area="" asp-controller="MeuPerfil" asp-action="Editar"
+                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center"
+                   style="border: 1px solid #000; font-weight: bold; width: 100%;">
+                    Editar
+                </a>
+
+                <!-- Botão Alterar Senha -->
+                <a asp-area="" asp-controller="AlterarSenha" asp-action="Index"
+                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center"
+                   style="border: 1px solid #000; font-weight: bold; width: 100%;">
+                    Alterar Senha
+                </a>
+
+                <!-- Botão Excluir Perfil -->
+                <a asp-area="" asp-controller="MeuPerfil" asp-action="ExcluirPerfil"
+                class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center"
+                   style="border: 1px solid #000; font-weight: bold; width: 100%;">
+                    Excluir Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+<!-- CONTAINER DAS LISTAS DE JOGOS -->
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 50px;">
+
+
+
+
+
+    <div style="flex: 1; min-width: 300px; max-width: 450px; border: 1px solid #000; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
+        <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Marcados</h1>
+
+        <div style="max-height: 400px; overflow-y: auto;">
+            @if (Model.Marcados.Count > 0)
+            {
+                @foreach (var marcado in Model.Marcados)
+                {
+                    <!-- Link para cada jogo marcado - agora com classe clickable-card -->
+                    <a asp-controller="MeuPerfil" asp-action="JogoMarcado" asp-route-id="@marcado.id"
+                       class="clickable-card"
+                       style="display: block;
+                           text-decoration: none;
+                           color: inherit;
+                           padding: 12px 20px;
+                           margin-bottom: 12px;
+                           border-radius: 20px;
+                           background-color: #f8f9fa;
+                           border: 1px solid #e0e0e0;
+                           transition: all 0.3s ease;
+                           max-width: 500px;
+                           margin-left: auto;
+                           margin-right: auto;">
+
+                        <!-- Container dos times -->
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <!-- Time 1 -->
+                            <div style="text-align: center; width: 100px;">
+                                <img src="data:image/;base64,@marcado.FotoTime1"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
+                                <p style="margin-top: 5px; font-weight: bold;">@marcado.Time1</p>
+                            </div>
+
+                            <!-- Separador "X" -->
+                            <div class="col-md-2 text-center my-3 my-md-0">
+                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <span class="fs-4 text-muted">VS</span>
+                                </div>
+                            </div>
+
+                            <!-- Time 2 -->
+                            <div style="text-align: center; width: 100px;">
+                                <img src="data:image/;base64,@marcado.FotoTime2"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
+                                <p style="margin-top: 5px; font-weight: bold;">@marcado.Time2</p>
+                            </div>
+                        </div>
+
+                        <!-- Informações do jogo -->
+                        <div style="text-align: center;">
+                            <p style="font-size: 13px; color: #555; margin: 0;">@marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora</p>
+                        </div>
+
+                        <!-- Campo hidden com ID do jogo -->
+                        <input type="hidden" value="@marcado.id" />
+                    </a>
+                }
+            }
+            else
+            {
+                <!-- Mensagem quando não há jogos marcados -->
+                <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+                    <h3 style="margin: 0; font-size: 16px;">Nenhum Jogo Marcado no Momento</h3>
+                </div>
+            }
+        </div>
+
+    </div>
+
+
+
+
+    <div style="flex: 1; min-width: 300px; max-width: 450px; border: 1px solid #000; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
+        <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Informações</h1>
+
+
+
+
+        @Html.TextBoxFor(m => m.Usuario.Name)
+        @Html.TextBoxFor(m => m.Usuario.Email)
+        @Html.TextBoxFor(m => m.Usuario.Login)
+        @Html.TextBoxFor(m => m.Usuario.DataCadastro)
+
+
+
+
+        @if (Model.Quadra != null)
+        {
+
+            @Html.TextBoxFor(m => m.Quadra.NM_Quadra)
+            @Html.TextBoxFor(m => m.Quadra.DS_Endereco)
+
+
+        }
+
+
+
+    </div>
+
+
+</div>

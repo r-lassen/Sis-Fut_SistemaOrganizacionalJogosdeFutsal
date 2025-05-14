@@ -1,39 +1,139 @@
 ﻿@model ContatoModel
+@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Categoria
 @{
     ViewData["Title"] = "Criar contato";
 }
-<div class="text-center" style="font-family: Courier, monospace;">
 
-    <h1 class="display-4">Cadastrar contato</h1>
-
-</div>
+<!-- jQuery e Plugin de Máscara -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <form asp-controller="Contato" asp-action="Criar" method="post">
-    <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px;">
-        <div class="form-group">
-            <label for="nome">Nome</label>
-            <input type="text" asp-for="Nome" class="form-control" placeholder="Digite o nome">
-            @Html.ValidationMessageFor(x => x.Nome)
+    <div class="container-formulario">
+        <div class="form-card">
+
+            <div class="titulo-container">
+                <h1 class="titulo-centralizado">Adicionar Contato</h1>
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="nome" class="form-label">Nome</label>
+                <input type="text" asp-for="Nome" class="form-control custom-input" placeholder="Digite o Nome">
+                <span class="text-danger">@Html.ValidationMessageFor(x => x.Nome)</span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="email" class="form-label">E-mail</label>
+                <input type="text" asp-for="Email" class="form-control custom-input" placeholder="Digite o Email">
+                <span class="text-danger">@Html.ValidationMessageFor(x => x.Email)</span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="celular" class="form-label">Celular</label>
+                <input type="text" asp-for="Celular" class="form-control custom-input celular-mask" placeholder="(99) 99999-9999">
+                <span class="text-danger">@Html.ValidationMessageFor(x => x.Celular)</span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label">Tipo de Categoria</label>
+                <select asp-for="Categoria" class="form-control custom-input">
+                    <option value="">Selecione</option> <!-- Valor vazio para representar "Selecione" -->
+                    <option value="@CategoriaEnum.Materiais">Materiais</option>
+                    <option value="@CategoriaEnum.Transportes">Transportes</option>
+                    <option value="@CategoriaEnum.Uniformes">Uniformes</option>
+                    <option value="@CategoriaEnum.Outros">Outros</option>
+                </select>
+                <span class="text-danger">@Html.ValidationMessageFor(x => x.Categoria)</span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4 button-container">
+                <a class="btn btn-custom" asp-controller="Contato" asp-action="Index">Voltar</a>
+                <button type="submit" class="btn btn-custom">Adicionar</button>
+            </div>
+
         </div>
-
-        <div class="form-group">
-            <label for="email">E-mail</label>
-            <input type="text" asp-for="Email" class="form-control" placeholder="Digite o email">
-            @Html.ValidationMessageFor(x => x.Email)
-        </div>
-
-        <div class="form-group">
-            <label for="celular">Celular</label>
-            <input type="text" asp-for="Celular" class="form-control" placeholder="Digite o celular">
-            @Html.ValidationMessageFor(x => x.Celular)
-        </div>
-
-        <br>
-
-        <a class="btn btn-secondary" asp-controller="Contato" asp-action="Index" role="button">Voltar</a>
-        <button type="submit" class="btn btn-primary">Adicionar</button>
-
     </div>
 </form>
 
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.celular-mask').mask('(00) 00000-0000', {
+                placeholder: "(99) 99999-9999",
+                clearIfNotMatch: true
+            });
+        });
+    </script>
+}
+
+<style>
+    body {
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .container-formulario {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        width: 100%;
+    }
+
+    .form-card {
+        border: 2px solid #ccc;
+        padding: 35px;
+        border-radius: 15px;
+        background-color: white;
+        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 650px;
+    }
+
+    .titulo-centralizado {
+        font-weight: bold;
+        color: #37c3b4;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .btn-custom {
+        border: 1px solid #37c3b4;
+        font-weight: bold;
+        color: #37c3b4;
+        background-color: transparent;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        border-radius: 20px;
+        padding: 10px 20px;
+        width: 48%;
+    }
+
+        .btn-custom:hover {
+            background-color: #37c3b4;
+            color: white;
+        }
+
+    .custom-input {
+        border-radius: 10px !important;
+    }
+
+    .button-container {
+        gap: 10px;
+    }
+
+    @@media (max-width: 768px) {
+        .form-card {
+            padding: 20px;
+        }
+
+        .btn-custom {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            flex-direction: column;
+        }
+    }
+</style>

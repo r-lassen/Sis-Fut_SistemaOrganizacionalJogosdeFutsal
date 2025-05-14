@@ -2,7 +2,10 @@
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using X.PagedList;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
@@ -15,12 +18,40 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             _contatoRepositorio = contatoRepositorio;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string filtro, int? page)
         {
-            List<ContatoModel> contatos = _contatoRepositorio.BuscarTodos();
+            int pageNumber = page ?? 1;
+            int pageSize = 10;
 
-            return View(contatos);
+            var contatos = _contatoRepositorio.BuscarTodos().AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtro))
+            {
+                contatos = contatos
+                    .Where(c => c.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var contatosPaginados = contatos
+                .OrderBy(c => c.Nome)
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(contatosPaginados);
         }
+
+
+        public IActionResult Filtrar(string filtro, int? page)
+        {
+            int pageNumber = page ?? 1;
+            int pageSize = 10;
+
+            var contatos = _contatoRepositorio.BuscarTodos()
+                                             .Where(c => string.IsNullOrEmpty(filtro) || c.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                                             .OrderBy(c => c.Nome)
+                                             .ToPagedList(pageNumber, pageSize);
+
+            return PartialView("_TabelaContatos", contatos);
+        }
+
         public IActionResult Criar()
         {
             return View();
@@ -122,10 +153,29 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // Adicionando o novo contato
-                    _contatoRepositorio.Adicionar(contato);
-                    TempData["MensagemSucesso"] = "Contato Cadastrado com sucesso!";
+                    // Verifica se o número de celular já está cadastrado
+                    var celularExistente = _contatoRepositorio.BuscarPorCelular(contato.Celular);
+                    if (celularExistente != null)
+                    {
+                        ModelState.AddModelError("Celular", "Este número de celular já está cadastrado.");
+                    }
 
+                    // Verifica se o e-mail já está cadastrado
+                    var emailExistente = _contatoRepositorio.BuscarPorEmail(contato.Email);
+                    if (emailExistente != null)
+                    {
+                        ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
+                    }
+
+                    // Se houver erros, retorna para a View com mensagens
+                    if (!ModelState.IsValid)
+                    {
+                        return View(contato);
+                    }
+
+                    // Adiciona o contato
+                    _contatoRepositorio.Adicionar(contato);
+                    TempData["MensagemSucesso"] = "Contato cadastrado com sucesso!";
                     return RedirectToAction("Index");
                 }
 
@@ -133,7 +183,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
             catch (System.Exception erro)
             {
-                TempData["MensagemErro"] = $"Erro ao cadastrar seu contato, tente novamente. Detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Erro ao cadastrar o contato. Detalhes: {erro.Message}";
                 throw;
             }
         }
@@ -143,20 +193,59 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+
+
+                var contatoNoBanco = _contatoRepositorio.BuscarPorId(contato.Id);
+
+                if (contatoNoBanco == null)
                 {
-                    _contatoRepositorio.Atualizar(contato);
-                    TempData["MensagemSucesso"] = "Contato Alterado com sucesso";
+                    TempData["MensagemErro"] = "Contato não encontrado.";
                     return RedirectToAction("Index");
                 }
-                return View("Editar", contato);
-            }
-            catch (System.Exception erro)
-            {
-                TempData["MensagemErro"] = $"Erro ao alterar o contato, tente novamente. detalhe do erro: {erro.Message}";
+
+                // Verifica se o celular já está em uso por outro contato
+                var celularExistente = _contatoRepositorio.BuscarPorCelular(contato.Celular);
+                if (celularExistente != null && celularExistente.Id != contato.Id)
+                {
+                    ModelState.AddModelError("Celular", "Este número de celular já está cadastrado.");
+                }
+
+                // Verifica se o e-mail já está em uso por outro contato
+                var emailExistente = _contatoRepositorio.BuscarPorEmail(contato.Email);
+                if (emailExistente != null && emailExistente.Id != contato.Id)
+                {
+                    ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
+                }
+
+                // Se houver erro de validação, retorna à view
+                if (!ModelState.IsValid)
+                {
+                    return View("Editar", contato);
+                }
+
+                // Se tudo estiver ok, faz a atualização no banco
+                contatoNoBanco.Nome = contato.Nome;
+                contatoNoBanco.Email = contato.Email;
+                contatoNoBanco.Celular = contato.Celular;
+                contatoNoBanco.Categoria = contato.Categoria;  // Atualizando o campo de Categoria
+
+                _contatoRepositorio.Atualizar(contatoNoBanco);
+
+                TempData["MensagemSucesso"] = "Contato alterado com sucesso!";
                 return RedirectToAction("Index");
             }
-
+            catch (Exception erro)
+            {
+                TempData["MensagemErro"] = $"Ops, erro ao atualizar o contato. Detalhe: {erro.Message}";
+                return RedirectToAction("Index");
+            }
         }
+
+
+
+
+
+
+
     }
 }

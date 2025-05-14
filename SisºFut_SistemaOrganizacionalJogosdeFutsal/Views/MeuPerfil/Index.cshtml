@@ -28,11 +28,11 @@
 
     <!-- Container principal responsivo -->
     <div class="card p-2"
-         style="width: 80%;
+         style="width: 90%;
             max-width: 100%;
             min-width:  80%;
             height: auto;
-            border: 1px solid #000;
+            border: 2px solid #ccc;
             border-radius: 20px;
             margin: 20px auto 0;
             font-family: 'Courier New', Courier, monospace;">
@@ -54,7 +54,8 @@
                     <h2 style="font-weight: bold;
                           margin: 0;
                           overflow: hidden;
-                          text-overflow: ellipsis;">
+                          text-overflow: ellipsis;
+                          color: #37c3b4">
                         @Model.Usuario.Name
                     </h2>
                 </div>
@@ -66,65 +67,60 @@
 
                 <!-- Botão Editar -->
                 <a asp-area="" asp-controller="MeuPerfil" asp-action="Editar"
-                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center"
-                   style="border: 1px solid #000; font-weight: bold; width: 100%;">
+                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center btn-custom">
                     Editar
                 </a>
 
                 <!-- Botão Alterar Senha -->
                 <a asp-area="" asp-controller="AlterarSenha" asp-action="Index"
-                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center"
-                   style="border: 1px solid #000; font-weight: bold; width: 100%;">
+                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center btn-custom">
                     Alterar Senha
                 </a>
 
                 <!-- Botão Excluir Perfil -->
-                <a asp-area="" asp-controller="MeuPerfil" asp-action="ExcluirPerfil"
-                class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center"
-                   style="border: 1px solid #000; font-weight: bold; width: 100%;">
+                <button type="button"
+                        class="btn btn-outline-danger btn-sm rounded-pill py-1 text-center"
+                        style="border: 1px solid #dc3545; font-weight: bold; width: 100%;"
+                        onclick="abrirModalExcluir(@Model.Usuario.Id)">
                     Excluir Perfil
-                </a>
+                </button>
             </div>
+
         </div>
     </div>
 
 </form>
 
 
-<!-- CONTAINER DAS LISTAS DE JOGOS -->
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 50px;">
+<!-- CONTAINER DAS LISTAS E INFORMAÇÕES -->
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 40px;">
 
 
-
-
-
-    <div style="flex: 1; min-width: 300px; max-width: 450px; border: 1px solid #000; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
+    <!-- SEÇÃO DE JOGOS MARCADOS -->
+    <div style="flex: 1; min-width: 300px; max-width: 500px; border: 2px solid #ccc; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
         <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Marcados</h1>
 
-        <div style="max-height: 400px; overflow-y: auto;">
-            @if (Model.Marcados.Count > 0)
+        <div style="max-height: 600px; overflow-y: auto;">
+            @if (Model.Marcados != null && Model.Marcados.Count > 0)
             {
                 @foreach (var marcado in Model.Marcados)
                 {
-                    <!-- Link para cada jogo marcado - agora com classe clickable-card -->
                     <a asp-controller="MeuPerfil" asp-action="JogoMarcado" asp-route-id="@marcado.id"
                        class="clickable-card"
                        style="display: block;
-                           text-decoration: none;
-                           color: inherit;
-                           padding: 12px 20px;
-                           margin-bottom: 12px;
-                           border-radius: 20px;
-                           background-color: #f8f9fa;
-                           border: 1px solid #e0e0e0;
-                           transition: all 0.3s ease;
-                           max-width: 500px;
-                           margin-left: auto;
-                           margin-right: auto;">
+                              text-decoration: none;
+                              color: inherit;
+                              padding: 12px 20px;
+                              margin-bottom: 12px;
+                              border-radius: 20px;
+                              background-color: #f8f9fa;
+                              border: 1px solid #e0e0e0;
+                              transition: all 0.3s ease;
+                              max-width: 500px;
+                              margin-left: auto;
+                              margin-right: auto;">
 
-                        <!-- Container dos times -->
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <!-- Time 1 -->
                             <div style="text-align: center; width: 100px;">
                                 <img src="data:image/;base64,@marcado.FotoTime1"
                                      style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
@@ -133,12 +129,12 @@
 
                             <!-- Separador "X" -->
                             <div class="col-md-2 text-center my-3 my-md-0">
-                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <span class="fs-4 text-muted">VS</span>
+                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+                                     style="width: 50px; height: 50px;">
+                                    <span class="fs-4" style="color: #222;">VS</span>
                                 </div>
                             </div>
 
-                            <!-- Time 2 -->
                             <div style="text-align: center; width: 100px;">
                                 <img src="data:image/;base64,@marcado.FotoTime2"
                                      style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
@@ -146,56 +142,100 @@
                             </div>
                         </div>
 
-                        <!-- Informações do jogo -->
                         <div style="text-align: center;">
                             <p style="font-size: 13px; color: #555; margin: 0;">@marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora</p>
                         </div>
 
-                        <!-- Campo hidden com ID do jogo -->
                         <input type="hidden" value="@marcado.id" />
                     </a>
                 }
             }
             else
             {
-                <!-- Mensagem quando não há jogos marcados -->
                 <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
                     <h3 style="margin: 0; font-size: 16px;">Nenhum Jogo Marcado no Momento</h3>
                 </div>
             }
         </div>
-
     </div>
 
+    <!-- SEÇÃO DE INFORMAÇÕES DO USUÁRIO -->
+    <div style="flex: 1; min-width: 300px; max-width: 500px;  border: 2px solid #ccc; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
 
+        <h1 style="font-weight: bold; margin-bottom: 30px; color: #37c3b4; text-align: center; font-family: 'Courier New', Courier, monospace;">Informações </h1>
+        <div style="max-height: 600px; overflow-y: auto;">
+            <!-- Card de Usuário -->
+            <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; margin-bottom: 20px; border-left: 4px solid #37c3b4; box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);">
+                <h2 style="font-weight: bold; text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; margin-top: 0; margin-bottom: 15px; font-size:25px;">Usuário</h2>
 
+                <div class="form-group" style="padding: 3px;">
+                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Nome do Time</label>
+                    @Html.TextBoxFor(m => m.Usuario.Name, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                </div>
 
-    <div style="flex: 1; min-width: 300px; max-width: 450px; border: 1px solid #000; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
-        <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Informações</h1>
+                <div class="form-group" style="padding: 3px;">
+                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Usuário</label>
+                    @Html.TextBoxFor(m => m.Usuario.Login, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                </div>
 
+                <div class="form-group" style="padding: 3px;">
+                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Email</label>
+                    @Html.TextBoxFor(m => m.Usuario.Email, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                </div>
 
+                <div class="form-group" style="padding: 3px;">
+                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Data de Cadastro</label>
+                    @Html.TextBox("Usuario.DataCadastro", Model.Usuario.DataCadastro.ToString("dd/MM/yyyy"), new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                </div>
+            </div>
 
+            @if (Model.Quadra != null)
+            {
+                <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; border-left: 4px solid #37c3b4; box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);">
+                    <h2 style="font-weight: bold; margin: 0 0 15px 0; text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; font-size: 25px;">Quadra</h2>
 
-        @Html.TextBoxFor(m => m.Usuario.Name)
-        @Html.TextBoxFor(m => m.Usuario.Email)
-        @Html.TextBoxFor(m => m.Usuario.Login)
-        @Html.TextBoxFor(m => m.Usuario.DataCadastro)
+                    @if (string.IsNullOrEmpty(Model.Quadra.NM_Quadra) || string.IsNullOrEmpty(Model.Quadra.DS_Endereco))
+                    {
+                        <!-- Mensagem quando os campos estão vazios -->
+                        <div style="display: flex; justify-content: center; align-items: center; height: 150px;">
+                            <h3 style="margin: 0; font-size: 16px; color: #555;">Nenhuma Quadra Associada no Momento</h3>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Exibição dos dados da Quadra -->
+                        <div class="form-group" style="padding: 3px;">
+                            <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Nome da Quadra</label>
+                            @Html.TextBoxFor(m => m.Quadra.NM_Quadra, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                        </div>
 
+                        <div class="form-group" style="padding: 3px;">
+                            <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Endereço</label>
+                            @Html.TextBoxFor(m => m.Quadra.DS_Endereco, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                        </div>
+                    }
+                </div>
+            }
 
-
-
-        @if (Model.Quadra != null)
-        {
-
-            @Html.TextBoxFor(m => m.Quadra.NM_Quadra)
-            @Html.TextBoxFor(m => m.Quadra.DS_Endereco)
-
-
-        }
-
-
-
+        </div>
     </div>
-
-
 </div>
+
+
+<style>
+    .btn-custom {
+        border: 1px solid #37c3b4;
+        font-weight: bold;
+        width: 100%;
+        color: #37c3b4;
+        background-color: transparent;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #37c3b4;
+            color: white;
+        }
+</style>
+
+

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SisºFut_SistemaOrganizacionalJogosdeFutsal.Categoria;
+using System.ComponentModel.DataAnnotations;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 {
@@ -17,6 +18,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
         [Phone(ErrorMessage = "O Celular informado não é valido")]
         public string Celular { get; set; }
 
+        [Required(ErrorMessage = "Selecione uma Categoria")]
+        public CategoriaEnum? Categoria { get; set; }
 
     }
 }

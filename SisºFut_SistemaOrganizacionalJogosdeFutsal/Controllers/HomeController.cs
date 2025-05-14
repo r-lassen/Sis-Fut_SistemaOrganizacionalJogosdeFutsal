@@ -72,7 +72,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             List<DadosAgendamentos> dadosAbertos = new List<DadosAgendamentos>();
             List<DadosAgendamentos> dadosMarcados = new List<DadosAgendamentos>();
 
-            if(abertos.Count > 0)
+            if (abertos.Count > 0)
             {
                 foreach (var aberto in abertos)
                 {
@@ -164,25 +164,34 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         //---------------Essa carrega a view--------------
         public IActionResult Amistoso()
         {
+            var usuarioSessao = _sessao.BuscarSessaoDoUsuario();
 
-            var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
+            var quadra = _quadrasRepositorio.BuscarPorId(usuarioSessao.Id);
 
-            var UsuariosAll = _usuarioRepositorio.BuscarTodos();
+            // Verifica se a quadra existe e se possui dados obrigatórios
+            if (quadra != null &&
+                !string.IsNullOrWhiteSpace(quadra.NM_Quadra) &&
+                !string.IsNullOrWhiteSpace(quadra.DS_Endereco))
+            {
+                var usuariosAll = _usuarioRepositorio.BuscarTodos();
+                var usuarios = usuariosAll.Where(m => m.Id != usuarioSessao.Id).ToList();
 
-            var Usuarios = UsuariosAll.Where(m => m.Id != UsuarioSessao.Id).ToList();
+                ViewBag.UserList = new SelectList(usuarios, "Id", "Name");
 
-            ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
-
-
-
-            //var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
-
-            var Quadras = _quadrasRepositorio.BuscarPorId(UsuarioSessao.Id);
-
-            //ViewBag.UsuarioSessao = UsuarioSessao;
-
-            return View(new AgendamentosModel { Usuario = UsuarioSessao, id_Time2 = 0, Quadra = Quadras.NM_Quadra, id_Quadra = Quadras.Id, id_Time1 = UsuarioSessao.Id });
-
+                return View(new AgendamentosModel
+                {
+                    Usuario = usuarioSessao,
+                    id_Time1 = usuarioSessao.Id,
+                    id_Time2 = 0,
+                    id_Quadra = quadra.Id,
+                    Quadra = quadra.NM_Quadra
+                });
+            }
+            else
+            {
+                TempData["MensagemErro"] = "Para agendar um Amistoso, cadastre uma Quadra.";
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]

@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Usuario\_TabelaUsuários.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Intercom.Dotnet.Client" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
@@ -20,6 +24,7 @@
     <PackageReference Include="MySql.Data" Version="9.2.0" />
     <PackageReference Include="MySqlConnector" Version="2.4.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.4" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup>

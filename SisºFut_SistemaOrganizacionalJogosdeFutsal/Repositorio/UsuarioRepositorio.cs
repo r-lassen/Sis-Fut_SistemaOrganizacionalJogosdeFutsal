@@ -14,10 +14,22 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             this._bancoContext = bancoContext;
         }
 
+        public UsuarioModel BuscarPorEmail(string email)
+        {
+            return _bancoContext.Usuarios.FirstOrDefault(x => x.Email.ToUpper() == email.ToUpper());
+        }
+
         public UsuarioModel BuscarPorLogin(string login)
         {
             return _bancoContext.Usuarios.FirstOrDefault(x => x.Login.ToUpper() == login.ToUpper());
         }
+
+
+        public UsuarioModel BuscarPorNomeTime(string Name)
+        {
+            return _bancoContext.Usuarios.FirstOrDefault(x => x.Name.ToUpper() == Name.ToUpper());
+        }
+
 
         public UsuarioModel BuscarPorEmailELogin(string email, string login)
         {
@@ -28,6 +40,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         {
             return _bancoContext.Usuarios.FirstOrDefault(x => x.Id == id);
         }
+
 
         public List<UsuarioModel> BuscarTodos()
         {
@@ -47,7 +60,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         public UsuarioModel Atualizar(UsuarioModel usuario)
         {
             UsuarioModel usuarioDB = BuscarPorId(usuario.Id);
-            if (usuarioDB == null) throw new Exception("Erro na atualização do usuário");
+            if (usuarioDB == null) throw new Exception("Erro na atualização do Usuário");
 
             usuarioDB.Name = usuario.Name;
             usuarioDB.Email = usuario.Email;
@@ -86,7 +99,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         public bool Apagar(int id)
         {
             UsuarioModel usuarioDB = BuscarPorId(id);
-            if (usuarioDB == null) throw new Exception("Erro em apagar usuário");
+            if (usuarioDB == null) throw new Exception("Erro em Alterar a Senha.");
             _bancoContext.Usuarios.Remove(usuarioDB);
             _bancoContext.SaveChanges();
             return true;

@@ -19,6 +19,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult Index()
         {
+
+
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Index", "Home"); // Redireciona para login se não estiver logado
+            }
             return View();
         }
 

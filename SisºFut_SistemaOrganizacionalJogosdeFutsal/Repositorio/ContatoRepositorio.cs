@@ -32,6 +32,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         //    return contato;
         //}
 
+        public ContatoModel BuscarPorCelular(string celular)
+        {
+            return _bancoContext.Contatos.FirstOrDefault(c => c.Celular == celular);
+        }
+        public ContatoModel BuscarPorEmail(string email)
+        {
+            return _bancoContext.Contatos.FirstOrDefault(c => c.Email == email);
+        }
 
         public ContatoModel Adicionar(ContatoModel contato)
         {

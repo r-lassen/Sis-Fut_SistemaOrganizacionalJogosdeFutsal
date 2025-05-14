@@ -1,0 +1,60 @@
+﻿@model X.PagedList.IPagedList<UsuarioModel>
+
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">NOME</th>
+                <th scope="col">USUÁRIO</th>
+                <th scope="col">Email</th>
+                <th scope="col">PERFIL</th>
+                <th scope="col">DATA de CADASTRO</th>
+                <th scope="col" class="text-end">
+                    <a asp-controller="Usuario" asp-action="Criar"
+                       class="btn btn-sm rounded-pill py-1 text-center btn-custom text-nowrap"
+                       style="padding: 4px 10px;">
+                        Adicionar
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var usuario in Model)
+                {
+                    <tr>
+                        <td>@usuario.Name</td>
+                        <td>@usuario.Login</td>
+                        <td>@usuario.Email</td>
+                        <td>@(usuario.Perfil == SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums.PerfilEnum.Admin ? "Administrador" : "Padrao")</td>
+                        <td>@usuario.DataCadastro</td>
+                        <td>
+                            <div class="d-flex flex-row justify-content-center"
+                                 style="gap: 8px; min-width: 120px; width: 100%; max-width: 200px;">
+                                <a asp-controller="Usuario" asp-action="Editar" asp-route-id="@usuario.Id"
+                                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center btn-custom"
+                                   style="width: 100%;">Editar</a>
+
+                                <form asp-controller="Usuario" asp-action="ApagarConfirmacao" asp-route-id="@usuario.Id" method="get" style="width: 100%;">
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm rounded-pill py-1 text-center"
+                                            style="border: 1px solid #dc3545; font-weight: bold; width: 100%;">
+                                        Apagar
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum Usuario Encontrado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

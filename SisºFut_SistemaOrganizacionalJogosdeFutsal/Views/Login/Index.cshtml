@@ -5,7 +5,6 @@
     ViewData["Title"] = "Redefinir Senha";
 }
 
-
 @if (TempData["MensagemErro"] != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -22,31 +21,226 @@
     </div>
 }
 
-<form asp-controller="Login" asp-action="Entrar" method="post">
-    <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px;">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Courier New', Courier, monospace;
+    }
 
-        <div class="col-mb-4">
-            <label for="login" class="form-label">Login</label>
-            <input type="text" asp-for="Login" class="form-control" id="login">
-            @Html.ValidationMessageFor(x => x.Login)
+    .container-login {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        padding: 2rem;
+
+    }
+
+    .form-card {
+        width: 100%;
+        max-width: 450px;
+        background-color: white;
+        padding: 2rem;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+    }
+
+    .form-title {
+        font-family: Courier, monospace;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #37c3b4;
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        margin-bottom: 0.25rem;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .floating-input {
+        height: 50px;
+        padding: 12px 15px;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        font-size: 16px;
+        background-color: white;
+        width: 100%;
+        transition: border-color 0.15s ease-in-out;
+    }
+
+        .floating-input:focus {
+            border-color: #adb5bd;
+            box-shadow: none;
+            outline: none;
+            background-color: white;
+        }
+
+    .floating-label {
+        position: absolute;
+        top: 25px;
+        left: 15px;
+        transform: translateY(-50%);
+        color: #6c757d;
+        transition: all 0.2s ease-out;
+        pointer-events: none;
+        font-size: 16px;
+        background: transparent;
+        padding: 0 5px;
+    }
+
+    .floating-input:focus ~ .floating-label,
+    .floating-input:not(:placeholder-shown) ~ .floating-label,
+    .floating-input[data-filled] ~ .floating-label,
+    .floating-input:-webkit-autofill ~ .floating-label {
+        top: -10px;
+        left: 10px;
+        transform: translateY(0);
+        font-size: 13px;
+        color: #495057;
+        background: white;
+        padding: 0 5px;
+        z-index: 1;
+    }
+
+    .field-validation-error {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        padding-left: 5px;
+    }
+
+    .floating-input:-webkit-autofill,
+    .floating-input:-webkit-autofill:hover,
+    .floating-input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+        -webkit-text-fill-color: #495057;
+        border-radius: 10px;
+    }
+
+    .btn-login {
+        font-family: 'Courier New', Courier, monospace;
+        border-radius: 50px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        display: block;
+    }
+
+    .btn-entrar {
+        background-color: #37c3b4;
+        color: white;
+        border: none;
+    }
+
+        .btn-entrar:hover {
+            background-color: #2da89a;
+            color: white;
+        }
+
+    .btn-criar-conta {
+        color: #37c3b4;
+        border: 1px solid #37c3b4;
+        background-color: transparent;
+    }
+
+        .btn-criar-conta:hover {
+            color: #2da89a;
+            border-color: #2da89a;
+            background-color: transparent;
+        }
+
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+</style>
+
+<div class="container-login">
+    <form asp-controller="Login" asp-action="Entrar" method="post" class="form-card">
+
+        <h1 style="font-weight: bold; margin-bottom: 30px; color: #37c3b4; text-align: center; font-family: 'Courier New', Courier, monospace;">Acesse </h1>
+
+        <div class="col-mb-4 form-group">
+            <input type="text" asp-for="Login" class="form-control floating-input" id="login" placeholder=" " autocomplete="username">
+            <label for="login" class="floating-label">Usuário</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.Login)</span>
         </div>
 
-        <div class="col-mb-4">
-            <label for="senha" class="form-label">Senha</label>
-            <input type="password" asp-for="Senha" class="form-control" id="senha">
-            @Html.ValidationMessageFor(x => x.Senha)
+        <div class="col-mb-4 form-group">
+            <input type="password" asp-for="Senha" class="form-control floating-input" id="senha" placeholder=" " autocomplete="current-password">
+            <label for="senha" class="floating-label">Senha</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.Senha)</span>
         </div>
 
-        <p class="mb-4 text-sm-center mx-auto">
-            Esqueceu sua senha?
-            <a asp-action="RedefinirSenha" asp-controller="Login" class="text-primary text-gradient font-weight-bold">Redefinir minha senha</a>
-        </p>
-        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        <div class="btn-container">
+            <button type="submit" class="btn btn-login btn-entrar">Entrar</button>
+            <a asp-controller="CadastroPublico" asp-action="Cadastro" class="btn btn-login btn-criar-conta">Criar conta</a>
+        </div>
+    </form>
+</div>
 
-@*         <div class="mt-4">
-            <!-- Margem maior -->
-            <a class="btn btn-primary btn-block" asp-controller="Login" asp-action="Criar" role="button">Adicionar novo usuário</a>
-        </div> *@
-        <a class="btn btn-link" asp-controller="CadastroPublico" asp-action="Cadastro">Criar uma nova conta</a>
-    </div>
-</form>
+<script>
+    function checkAutoFill() {
+        document.querySelectorAll('.floating-input').forEach(input => {
+            const isAutoFilled = input.matches(':-webkit-autofill') || (input.value && input.value.trim() !== '');
+            if (isAutoFilled) {
+                input.setAttribute('data-filled', 'true');
+            } else {
+                input.removeAttribute('data-filled');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        checkAutoFill();
+
+        const autoFillCheckInterval = setInterval(checkAutoFill, 100);
+        setTimeout(() => {
+            clearInterval(autoFillCheckInterval);
+        }, 3000);
+
+        document.querySelectorAll('.floating-input').forEach(input => {
+            input.addEventListener('input', function () {
+                if (this.value.trim()) {
+                    this.setAttribute('data-filled', 'true');
+                } else {
+                    this.removeAttribute('data-filled');
+                }
+            });
+
+            input.addEventListener('change', function () {
+                if (this.value.trim()) {
+                    this.setAttribute('data-filled', 'true');
+                } else {
+                    this.removeAttribute('data-filled');
+                }
+            });
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            document.querySelectorAll('.floating-input').forEach(input => {
+                if (!input.value.trim()) {
+                    input.setAttribute('data-filled', 'true');
+                }
+            });
+        });
+    });
+</script>

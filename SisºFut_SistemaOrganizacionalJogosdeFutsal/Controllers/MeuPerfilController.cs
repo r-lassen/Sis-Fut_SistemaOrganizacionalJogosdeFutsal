@@ -35,6 +35,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         public IActionResult Index()
         {
             var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
+
+
+
             var time1 = _usuarioRepositorio.BuscarPorId(usuarioLogado.Id);
 
             var listaAgendamentos = new List<AgendamentosModel>();
@@ -138,72 +146,89 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             return View(home);
         }
 
-
         [HttpPost]
         public IActionResult Editar(HomeModel homemodel)
         {
-
-
             try
             {
                 var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
                 var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
 
-                var base64 = "";
+                // Verifica se o e-mail já está em uso por outro usuário
+                var emailExiste = _usuarioRepositorio.BuscarPorEmail(homemodel.Usuario.Email);
+                if (emailExiste != null && emailExiste.Id != homemodel.Usuario.Id)
+                {
+                    ModelState.AddModelError("Usuario.Email", "Este e-mail já está cadastrado por outro usuário.");
+                }
 
+                // Verifica se o login já está em uso por outro usuário
+                var loginExiste = _usuarioRepositorio.BuscarPorLogin(homemodel.Usuario.Login);
+                if (loginExiste != null && loginExiste.Id != homemodel.Usuario.Id)
+                {
+                    ModelState.AddModelError("Usuario.Login", "Este login já está em uso por outro usuário.");
+                }
+
+                // Verifica se o nome do time já está em uso por outro usuário
+                var nomeTimeExiste = _usuarioRepositorio.BuscarPorNomeTime(homemodel.Usuario.Name);
+                if (nomeTimeExiste != null && nomeTimeExiste.Id != homemodel.Usuario.Id)
+                {
+                    ModelState.AddModelError("Usuario.Name", "Este nome de time já está em uso por outro usuário.");
+                }
+
+                // Se houver erro de validação, retorna para a view de edição com os dados preenchidos
+                if (!ModelState.IsValid)
+                {
+                    return View(homemodel);
+                }
+
+                // Conversão da imagem para Base64, se houver
+                var base64 = string.Empty;
                 if (homemodel.Usuario.FotoArquivo != null && homemodel.Usuario.FotoArquivo.Length > 0)
                 {
                     base64 = ConverterParaBase64(homemodel.Usuario.FotoArquivo);
-
                 }
-                QuadrasModel quadra = null;
-                UsuarioModel usuario = null;
-                if (ModelState.IsValid)
+
+                // Atualiza os dados do usuário
+                var usuario = new UsuarioModel
                 {
-                    usuario = new UsuarioModel()
-                    {
-                        Id = homemodel.Usuario.Id,
-                        Name = homemodel.Usuario.Name == usuarioLogado.Name ? usuarioLogado.Name : homemodel.Usuario.Name,
-                        Login = homemodel.Usuario.Login == usuarioLogado.Login ? usuarioLogado.Login : homemodel.Usuario.Login,
-                        Email = homemodel.Usuario.Email == usuarioLogado.Email ? usuarioLogado.Email : homemodel.Usuario.Email,
-                        Perfil = homemodel.Usuario.Perfil,
-                        DataAtualização = DateTime.Now,
-                        DataCadastro = homemodel.Usuario.DataCadastro,
-                        Senha = homemodel.Usuario.Senha,
-                        Foto = string.IsNullOrEmpty(base64) ? usuarioLogado.Foto : base64
+                    Id = homemodel.Usuario.Id,
+                    Name = homemodel.Usuario.Name,
+                    Login = homemodel.Usuario.Login,
+                    Email = homemodel.Usuario.Email,
+                    Perfil = homemodel.Usuario.Perfil,
+                    DataCadastro = homemodel.Usuario.DataCadastro,
+                    DataAtualização = DateTime.Now,
+                    Senha = homemodel.Usuario.Senha,
+                    Foto = string.IsNullOrEmpty(base64) ? _usuarioRepositorio.BuscarPorId(usuarioLogado.Id).Foto : base64
+                };
 
-                    };
-
-
-                    quadra = new QuadrasModel()
+                // Atualiza os dados da quadra, somente se preencher
+                QuadrasModel quadra = null;
+                if (!string.IsNullOrEmpty(homemodel.Quadra?.DS_Endereco))
+                {
+                    quadra = new QuadrasModel
                     {
                         Id = homemodel.Quadra.Id,
-                        NM_Quadra = homemodel.Quadra.NM_Quadra == quadraOk.NM_Quadra ? quadraOk.NM_Quadra : homemodel.Quadra.NM_Quadra,
-                        DS_Endereco = homemodel.Quadra.DS_Endereco == quadraOk.DS_Endereco ? quadraOk.DS_Endereco : homemodel.Quadra.DS_Endereco,
+                        NM_Quadra = homemodel.Quadra.NM_Quadra,
+                        DS_Endereco = homemodel.Quadra.DS_Endereco,
                         id_Time = homemodel.Quadra.id_Time
-
-
                     };
-
-
-
-
-                    quadra = _quadrasRepositorio.Atualizar(quadra);
-
-                    usuario = _usuarioRepositorio.Atualizar(usuario);
-
-                    TempData["MensagemSucesso"] = "Usuário alterado com sucesso!";
-                    return RedirectToAction("Index", "MeuPerfil");
+                    _quadrasRepositorio.Atualizar(quadra);
                 }
-                return View("Index");
+
+                _usuarioRepositorio.Atualizar(usuario);
+                _sessao.CriarSessaoDoUsuario(usuario);
+
+                TempData["MensagemSucesso"] = "Usuário alterado com sucesso!";
+                return RedirectToAction("Index", "MeuPerfil");
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Ops, não conseguimos atualizar seu usuário, tente novamante, detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Ops, não conseguimos atualizar seu usuário, tente novamente. Detalhe: {erro.Message}";
                 return RedirectToAction("Index", "MeuPerfil");
             }
-
         }
+
 
 
         public string ConverterParaBase64(IFormFile arquivo)
@@ -218,8 +243,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return Convert.ToBase64String(bytes);
             }
         }
-
-
 
         public IActionResult JogoMarcado(int id)
         {
@@ -346,12 +369,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
         }
-
-
-
-
-
-
 
         public IActionResult ExcluirPerfil()
         {

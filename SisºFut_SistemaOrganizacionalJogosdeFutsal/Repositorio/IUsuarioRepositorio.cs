@@ -6,7 +6,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
 {
     public interface IUsuarioRepositorio
     {
+        UsuarioModel BuscarPorNomeTime(string Name);
 
+
+        UsuarioModel BuscarPorEmail(string email);
         UsuarioModel BuscarPorLogin(string login);
         UsuarioModel BuscarPorEmailELogin(string email, string login);
         List<UsuarioModel> BuscarTodos();

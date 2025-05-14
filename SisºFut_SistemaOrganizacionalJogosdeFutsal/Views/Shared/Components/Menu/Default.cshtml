@@ -1,52 +1,33 @@
 ﻿@model UsuarioModel
 
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-@* @if (!string.IsNullOrEmpty(Model.Name))
-{
-    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-        Olá, @Model.Name
-    </a>
-} *@
-
-@* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ola, @Model.Name</a> *@
-
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
+<!-- Botão do menu hamburguer -->
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
 </button>
 
-
-
-<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav" style="margin-left: 656px; font-family: 'Courier New', Courier, monospace;">
-        <!-- Alinhar à direita com CSS inline -->
-
-
+<!-- Menu colapsável -->
+<div class="collapse navbar-collapse justify-content-center justify-content-lg-end" id="navbarSupportedContent">
+    <ul class="navbar-nav text-center text-lg-start" style="font-family: 'Courier New', Courier, monospace;">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index" style="font-family: 'Courier New', Courier, monospace;">Contatos</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Contato" asp-action="Index">Contatos</a>
         </li>
 
         @if (Model.Perfil == SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums.PerfilEnum.Admin)
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index" style="font-family: 'Courier New', Courier, monospace;">Usuarios</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
             </li>
         }
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="MeuPerfil" asp-action="Index" style="font-family: 'Courier New', Courier, monospace;">Perfil</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="MeuPerfil" asp-action="Index">Perfil</a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair" style="font-family: 'Courier New', Courier, monospace;">
-                Sair
-                @*             <i class="fa-solid fa-right-from-bracket"></i> *@
-            </a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Sair">Sair</a>
         </li>
     </ul>
 </div>
-
-
-

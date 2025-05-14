@@ -6,9 +6,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
     public class UsuarioSemSenhaModel
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Digite o nome do usuário")]
+        [Required(ErrorMessage = "Digite o Nome do Time")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Digite o login do usuário")]
+        [Required(ErrorMessage = "Digite o login do Usuário")]
         public string Login { get; set; }
         [Required(ErrorMessage = "Digite o email do usuário")]
         [EmailAddress(ErrorMessage = "O email informado não é valido!")]

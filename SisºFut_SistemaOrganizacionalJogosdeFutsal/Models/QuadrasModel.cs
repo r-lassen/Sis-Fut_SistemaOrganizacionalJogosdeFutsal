@@ -5,7 +5,6 @@
         public int Id { get; set; }
         public string NM_Quadra { get; set; }
         public string DS_Endereco { get; set; }
-
         public int id_Time { get; set; }
 
     }

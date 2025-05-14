@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using X.PagedList;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
@@ -12,16 +16,50 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        public UsuarioController(IUsuarioRepositorio usuarioRepositorio)
+        private readonly IQuadrasRepositorio _quadrasRepositorio;
+
+
+        public UsuarioController(IUsuarioRepositorio usuarioRepositorio,
+             IQuadrasRepositorio quadras)
         {
             _usuarioRepositorio = usuarioRepositorio;
+            _quadrasRepositorio = quadras;
         }
-        public IActionResult Index()
+        public IActionResult Index(string filtro, int? page)
         {
-            List<UsuarioModel> usuarios = _usuarioRepositorio.BuscarTodos();
 
-            return View(usuarios);
+            int pageNumber = page ?? 1;
+            int pageSize = 10;
+
+            var usuarios = _usuarioRepositorio.BuscarTodos().AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtro))
+            {
+                usuarios = usuarios
+                    .Where(u => u.Name.Contains(filtro, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var usuariosPaginados = usuarios
+                .OrderBy(u => u.Name)
+                .ToPagedList(pageNumber, pageSize);
+
+            return View(usuariosPaginados);
         }
+
+
+        public IActionResult Filtrar(string filtro, int? page)
+        {
+            int pageNumber = page ?? 1;
+            int pageSize = 10;
+
+            var usuarios = _usuarioRepositorio.BuscarTodos()
+                                             .Where(u => string.IsNullOrEmpty(filtro) || u.Name.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                                             .OrderBy(u => u.Name)
+                                             .ToPagedList(pageNumber, pageSize);
+
+            return PartialView("_TabelaUsuarios", usuarios);
+        }
+
 
         public IActionResult Criar()
         {
@@ -30,8 +68,25 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult Editar(int id)
         {
-            UsuarioModel usuario = _usuarioRepositorio.BuscarPorId(id);
-            return View(usuario);
+            var usuario = _usuarioRepositorio.BuscarPorId(id);
+
+            if (usuario == null)
+            {
+                TempData["MensagemErro"] = "Usuário não encontrado.";
+                return RedirectToAction("Index");
+            }
+
+            // Mapeia os dados para a model sem senha
+            var usuarioSemSenha = new UsuarioSemSenhaModel
+            {
+                Id = usuario.Id,
+                Name = usuario.Name,
+                Login = usuario.Login,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil
+            };
+
+            return View(usuarioSemSenha);
         }
 
         public IActionResult ApagarConfirmacao(int id)
@@ -54,64 +109,134 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
-
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Criar(UsuarioModel usuario)
-
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    usuario = _usuarioRepositorio.Adicionar(usuario);
-                    TempData["MensagemSucesso"] = "Usuário cadastrado com sucesso";
+                    // Verifica se o e-mail já está cadastrado
+                    var emailExiste = _usuarioRepositorio.BuscarPorEmail(usuario.Email);
+                    if (emailExiste != null)
+                    {
+                        ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
+                    }
 
+                    // Verifica se o login já está cadastrado
+                    var loginExiste = _usuarioRepositorio.BuscarPorLogin(usuario.Login);
+                    if (loginExiste != null)
+                    {
+                        ModelState.AddModelError("Login", "Este login já está em uso.");
+                    }
+
+                    // Verifica se o nome do time já está cadastrado
+                    var nomeTimeExiste = _usuarioRepositorio.BuscarPorNomeTime(usuario.Name);
+                    if (nomeTimeExiste != null)
+                    {
+                        ModelState.AddModelError("Name", "Este nome de time já está em uso.");
+                    }
+
+                    // Se houver erros, retorna para a View com mensagens
+                    if (!ModelState.IsValid)
+                    {
+                        return View(usuario);
+                    }
+
+                    // Adiciona o usuário
+                    usuario = _usuarioRepositorio.Adicionar(usuario);
+
+                    // Cria a quadra associada ao novo time
+                    QuadrasModel quadra = new QuadrasModel
+                    {
+                        NM_Quadra = string.Empty,
+                        DS_Endereco = string.Empty,
+                        id_Time = usuario.Id
+                    };
+
+                    _quadrasRepositorio.Adicionar(quadra);
+
+                    TempData["MensagemSucesso"] = "Usuário cadastrado com sucesso!";
                     return RedirectToAction("Index");
                 }
 
                 return View(usuario);
-
             }
             catch (System.Exception erro)
             {
-                TempData["MensagemErro"] = $"Erro ao cadastrar seu usuário, tente novamente. Detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Erro ao cadastrar o usuário. Detalhes: {erro.Message}";
                 return RedirectToAction("Index");
             }
-
         }
 
+
+
         [HttpPost]
-        public IActionResult Editar(UsuarioSemSenhaModel usuarioSemSenhaModel)
+        public IActionResult Editar(UsuarioSemSenhaModel usuario)
         {
             try
             {
-                UsuarioModel usuario = null;
-                if (ModelState.IsValid)
+                // Valida se o ModelState está correto antes de qualquer outra coisa
+                if (!ModelState.IsValid)
                 {
-                    usuario = new UsuarioModel()
-                    {
-                        Id = usuarioSemSenhaModel.Id,
-                        Name = usuarioSemSenhaModel.Name,
-                        Login = usuarioSemSenhaModel.Login,
-                        Email = usuarioSemSenhaModel.Email,
-                        Perfil = usuarioSemSenhaModel.Perfil
-                    };
+                    return View(usuario);
+                }
 
-                    usuario = _usuarioRepositorio.Atualizar(usuario);
+                var usuarioNoBanco = _usuarioRepositorio.BuscarPorId(usuario.Id);
 
-                    TempData["MensagemSucesso"] = "Usuário alterado com sucesso!";
+                if (usuarioNoBanco == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não encontrado.";
                     return RedirectToAction("Index");
                 }
-                return View(usuario);
+
+                // Verifica se o e-mail já está em uso por outro usuário
+                var emailExiste = _usuarioRepositorio.BuscarPorEmail(usuario.Email);
+                if (emailExiste != null && emailExiste.Id != usuario.Id)
+                {
+                    ModelState.AddModelError("Email", "Este e-mail já está cadastrado por outro usuário.");
+                }
+
+                // Verifica se o login já está em uso por outro usuário
+                var loginExiste = _usuarioRepositorio.BuscarPorLogin(usuario.Login);
+                if (loginExiste != null && loginExiste.Id != usuario.Id)
+                {
+                    ModelState.AddModelError("Login", "Este login já está em uso por outro usuário.");
+                }
+
+                // Verifica se o nome do time já está em uso por outro usuário
+                var nomeTimeExiste = _usuarioRepositorio.BuscarPorNomeTime(usuario.Name);
+                if (nomeTimeExiste != null && nomeTimeExiste.Id != usuario.Id)
+                {
+                    ModelState.AddModelError("Name", "Este nome de time já está em uso por outro usuário.");
+                }
+
+                // Se houver erro de validação, retorna à view
+                if (!ModelState.IsValid)
+                {
+                    return View(usuario);
+                }
+
+                // Se tudo estiver ok, faz a atualização no banco
+                usuarioNoBanco.Name = usuario.Name;
+                usuarioNoBanco.Login = usuario.Login;
+                usuarioNoBanco.Email = usuario.Email;
+                usuarioNoBanco.Perfil = usuario.Perfil;
+
+                _usuarioRepositorio.Atualizar(usuarioNoBanco);
+
+                TempData["MensagemSucesso"] = "Usuário alterado com sucesso!";
+                return RedirectToAction("Index");
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Ops, não conseguimos atualizar seu usuário, tente novamante, detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Ops, erro ao atualizar o usuário. Detalhe: {erro.Message}";
                 return RedirectToAction("Index");
             }
-
         }
+
+
 
 
 

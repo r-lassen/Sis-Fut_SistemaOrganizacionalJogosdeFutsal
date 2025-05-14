@@ -1,0 +1,30 @@
+﻿<!-- Modal de Confirmação -->
+<div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="font-family: Courier, monospace;">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o contato <strong id="modalNomeContato"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="btnConfirmarExclusao" class="btn btn-danger">Confirmar Exclusão</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function abrirModalConfirmacao(id, nome) {
+        document.getElementById("modalNomeContato").innerText = nome;
+        const link = `/Contato/Apagar/${id}`;
+        document.getElementById("btnConfirmarExclusao").setAttribute("href", link);
+        const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+        modal.show();
+    }
+</script>

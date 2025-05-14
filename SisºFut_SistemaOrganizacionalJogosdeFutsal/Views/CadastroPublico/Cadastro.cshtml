@@ -1,98 +1,385 @@
 ﻿@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
 @model CadastroModel
 
-<div class="text-center" style="font-family: Courier, monospace;">
-    <h1 class="display-4"> Cadastro de Novo Usuário </h1>
-   
-</div>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-@* <div class="text-center">
+<style>
+    /* Layout fixo que evita vazamento */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
-    <h2>Cadastro de Novo Usuário</h2>
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
 
-</div>
- *@
+    .form-scroll-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem 0;
+    }
 
+    .form-card {
+        max-width: 600px;
+        margin: 0 auto;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+    }
+
+    .form-body {
+        padding: 1.5rem;
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+
+    .form-title {
+        font-family: Courier, monospace;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #37c3b4
+    }
+
+    .form-label {
+        font-family: 'Courier New', Courier, monospace;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        font-family: 'Courier New', Courier, monospace;
+        border-radius: 10px;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Ajustes para mobile */
+    @@media (max-width: 576px) {
+        .form-body {
+            padding: 1.25rem;
+            max-height: calc(100vh - 180px);
+        }
+    }
+</style>
 
 @{
     Layout = "_LayoutDeslogado";
     ViewData["Title"] = "Cadastrar Times";
 }
 
-
 @if (TempData["MensagemErro"] != null)
 {
-    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
+    <div class="alert alert-danger alert-dismissible fade show mx-2 mt-2 mb-2" role="alert">
+        @TempData["MensagemErro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
 @if (TempData["MensagemSucesso"] != null)
 {
-    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+    <div class="alert alert-success alert-dismissible fade show mx-2 mt-2 mb-2" role="alert">
+        @TempData["MensagemSucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
-<form asp-controller="CadastroPublico" asp-action="Cadastro" method="post" enctype="multipart/form-data">
-    <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px;">
+<div class="main-content">
+    <div class="form-scroll-container">
+        <div class="form-card">
+            <form asp-controller="CadastroPublico" asp-action="Cadastro" method="post" enctype="multipart/form-data" id="cadastroForm">
+                @*                 @Html.ValidationSummary(true, "", new { @class = "text-danger" }) *@
+                <div class="form-body">
+
+                    <h1 style="font-weight: bold; margin-bottom: 30px; color: #37c3b4; text-align: center; font-family: 'Courier New', Courier, monospace;">Cadastrar Time </h1>
 
 
+                    <!-- Logo do Time -->
+                    <div class="mb-2">
+                        <label for="foto" class="form-label">Logo do Time</label>
+                        <input type="file" asp-for="usuario.FotoArquivo" class="form-control" accept="image/*" required />
+                        <div class="invalid-feedback">Por favor, selecione uma imagem para o time.</div>
+                    </div>
 
-        <div class="form-group">
-            <label for="foto">Foto do Time</label>
-            <input type="file" asp-for="usuario.FotoArquivo" class="form-control" accept="image/*" />
+                    <!-- Nome do Time -->
+                    <div class="mb-2">
+                        <label class="form-label">Nome do Time</label>
+                        <input type="text" asp-for="usuario.Name" class="form-control" placeholder="Digite o nome" required />
+                        <span class="text-danger">@Html.ValidationMessageFor(x => x.usuario.Name)</span>
+                    </div>
+
+                    <!-- Login e Email -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Usuário</label>
+                            <input type="text" asp-for="usuario.Login" class="form-control" placeholder="Usuário" required />
+                            <span class="text-danger">@Html.ValidationMessageFor(x => x.usuario.Login)</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">E-mail</label>
+                            <input type="email" asp-for="usuario.Email" class="form-control" placeholder="Digite o email" required />
+                            <span class="text-danger">@Html.ValidationMessageFor(x => x.usuario.Email)</span>
+                        </div>
+                    </div>
+
+                    <!-- Possui Quadra? -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label mb-0" for="quadraSwitch">Possui Quadra?</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="quadraSwitch" data-bs-toggle="collapse" data-bs-target="#quadraFields" aria-checked="false">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campos da Quadra (condicional) -->
+                    <div class="collapse mb-2" id="quadraFields">
+                        <!-- Campo CEP -->
+                        <div class="mb-2">
+                            <label class="form-label">CEP</label>
+                            <div class="input-group">
+                                <input type="text" id="cep" class="form-control" placeholder="Digite o CEP"
+                                       maxlength="9" onkeyup="formatarCEP(this)" />
+                             @*    <button class="btn btn-outline-secondary" type="button" id="buscarcepbtn">
+                                    buscar
+                                </button> *@
+                            </div>
+                            <small class="text-muted">Digite o CEP para autopreencher o endereço</small>
+                        </div>
+
+                        <!-- Campos de Endereço -->
+
+                        <div class="mb-2">
+                            <label class="form-label">Endereço</label>
+                            <input type="text" asp-for="DS_Endereco" id="endereco" class="form-control" placeholder="Digite o endereço da Quadra" />
+                            @Html.ValidationMessageFor(x => x.DS_Endereco)
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Nome da Quadra</label>
+                            <input type="text" asp-for="NM_Quadra" id="nomeQuadra" class="form-control" placeholder="Digite o nome da Quadra" />
+                            @Html.ValidationMessageFor(x => x.NM_Quadra)
+                        </div>
+
+                    </div>
+
+                    <!-- Senha e Confirmação -->
+                    <div class="mb-2">
+                        <label class="form-label">Senha</label>
+                        <input type="password" asp-for="usuario.Senha" class="form-control" placeholder="Digite a Senha" required />
+                        @Html.ValidationMessageFor(x => x.usuario.Senha)
+                        <div class="invalid-feedback">Por favor, informe uma senha.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Confirmação de Senha</label>
+                        <input type="password" id="confirmacaoSenha" class="form-control" placeholder="Confirme a Senha" required />
+                        <div class="invalid-feedback">As senhas não coincidem.</div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="row mt-4" style="font-family: 'Courier New', Courier, monospace;">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-end">
+                                <div class="d-flex" style="gap: 1rem;">
+                                    <!-- Botão Voltar -->
+                                    <a class="btn btn-sm rounded-pill px-4"
+                                       asp-action="Index"
+                                       asp-controller="Usuario"
+                                       style="color: #37c3b4; border-color: #37c3b4; background-color: transparent;">
+                                        Voltar
+                                    </a>
+
+                                    <!-- Botão Cadastrar -->
+                                    <button type="submit"
+                                            class="btn btn-sm rounded-pill px-4"
+                                            style="background-color: #37c3b4; color: white; border: none;">
+                                        Cadastrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-      
-        <div class="form-group">
-            <label for="nome">Nome do Time</label>
-            <input type="text" asp-for="usuario.Name" class="form-control" placeholder="Digite o nome">
-            @Html.ValidationMessageFor(x => x.usuario.Name)
-        </div>
-
-        <div class="form-group">
-            <label for="nome">Nome da Quadra</label>
-            <input type="text" asp-for="NM_Quadra" class="form-control" placeholder="Digite o nome da Quadra">
-            @Html.ValidationMessageFor(x => x.NM_Quadra)
-        </div>
-
-        <div class="form-group">
-            <label for="nome">Endereço da Quadra</label>
-            <input type="text" asp-for="DS_Endereco" class="form-control" placeholder="Digite o endereço da Quadra">
-            @Html.ValidationMessageFor(x => x.DS_Endereco)
-        </div>
-
-        <div class="form-group">
-            <label for="email" class="form-label">E-mail</label>
-            <input type="text" asp-for="usuario.Email" class="form-control" placeholder="Digite o email">
-            @Html.ValidationMessageFor(x => x.usuario.Email)
-        </div>
-
-        <div class="form-group">
-            <label for="nome" class="form-label">Login</label>
-            <input type="text" asp-for="usuario.Login" class="form-control" placeholder="Digite o Login">
-            @Html.ValidationMessageFor(x => x.usuario.Login)
-        </div>
-
-@*         <div class="form-group">
-            <label for="name" class="form-label">Perfil</label>
-
-            <select asp-for="usuario.Perfil" class="form-control">
-                <option selected="">Selecione</option>
-                <option value="@PerfilEnum.Padrao">Padrao</option>
-            </select>
-
-            @Html.ValidationMessageFor(x => x.usuario.Perfil)
-        </div> *@
-
-        <div class="form-group">
-            <label for="name" class="form-label">Senha</label>
-            <input type="password" asp-for="usuario.Senha" class="form-control" placeholder="Digite a Senha">
-            @Html.ValidationMessageFor(x => x.usuario.Senha)
-        </div>
-
-        <br>
-
-        <a class="btn btn-secondary" asp-controller="Usuario" asp-action="Index" role="button">Voltar</a>
-        <button type="submit" class="btn btn-primary">Adicionar</button>
-
     </div>
-</form>
+</div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Busca CEP
+        // const buscarBtn = document.getElementById('buscarCepBtn');
+        // if (buscarBtn) {
+        //     buscarBtn.addEventListener('click', buscarCEP);
+        //     document.getElementById('cep').addEventListener('keypress', function (e) {
+        //         if (e.key === 'Enter') buscarCEP();
+        //     });
+        // }
+
+        // Validação de confirmação de senha
+        const senha = document.getElementById('usuario_Senha');
+        const confirmacaoSenha = document.getElementById('confirmacaoSenha');
+
+        if (senha && confirmacaoSenha) {
+            function validarSenha() {
+                if (senha.value !== confirmacaoSenha.value) {
+                    confirmacaoSenha.setCustomValidity("As senhas não coincidem");
+                    confirmacaoSenha.classList.add('is-invalid');
+                } else {
+                    confirmacaoSenha.setCustomValidity("");
+                    confirmacaoSenha.classList.remove('is-invalid');
+                }
+            }
+
+            senha.addEventListener('change', validarSenha);
+            confirmacaoSenha.addEventListener('keyup', validarSenha);
+        }
+
+        // Controle do switch da quadra
+        const quadraSwitch = document.getElementById('quadraSwitch');
+        const quadraFields = document.getElementById('quadraFields');
+
+        if (quadraSwitch && quadraFields) {
+            const quadraInputs = quadraFields.querySelectorAll('input[type="text"]');
+
+            function atualizarObrigatoriedade() {
+                if (quadraSwitch.checked) {
+                    quadraInputs.forEach(input => input.setAttribute('required', 'required'));
+                } else {
+                    quadraInputs.forEach(input => input.removeAttribute('required'));
+                }
+            }
+
+            // Quando o switch muda
+            quadraSwitch.addEventListener('change', atualizarObrigatoriedade);
+
+            // Quando a collapse abre/fecha
+            quadraFields.addEventListener('show.bs.collapse', function () {
+                quadraSwitch.checked = true;
+                atualizarObrigatoriedade();
+            });
+
+            quadraFields.addEventListener('hide.bs.collapse', function () {
+                quadraSwitch.checked = false;
+                atualizarObrigatoriedade();
+            });
+
+            // Executa logo ao carregar a página
+            atualizarObrigatoriedade();
+        }
+
+        // Validação do formulário
+        const form = document.getElementById('cadastroForm');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                // Atualiza a obrigatoriedade antes de validar
+                if (typeof atualizarObrigatoriedade === 'function') {
+                    atualizarObrigatoriedade();
+                }
+
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }
+
+        // Adiciona evento de input no campo CEP para busca automática
+        const cepInput = document.getElementById('cep');
+        if (cepInput) {
+            cepInput.addEventListener('input', function () {
+                // Remove o hífen para contar os dígitos
+                const cep = this.value.replace("-", "");
+                if (cep.length === 8) {
+                    buscarCEPAutomatico(this);
+                }
+            });
+        }
+    });
+
+    // Função para formatar CEP (99999-999)
+    function formatarCEP(input) {
+        let cep = input.value.replace(/\D/g, "");
+        if (cep.length > 5) {
+            cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
+        }
+        input.value = cep;
+
+        // Se o CEP estiver completo (8 dígitos), busca automaticamente
+        if (cep.replace("-", "").length === 8) {
+            buscarCEPAutomatico(input);
+        }
+    }
+
+    // Função para buscar CEP
+    function buscarCEP() {
+        const cepInput = document.getElementById('cep');
+        let cep = cepInput.value.replace("-", "");
+
+        if (cep.length !== 8) {
+            alert("CEP inválido. Digite os 8 dígitos.");
+            return;
+        }
+
+        document.getElementById('endereco').value = "Buscando...";
+        // document.getElementById('buscarCepBtn').disabled = true;
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) throw new Error("CEP não encontrado");
+
+                document.getElementById('endereco').value = data.logradouro || "";
+                document.getElementById('nomeQuadra').focus();
+            })
+            .catch(error => {
+                alert(error.message);
+                document.getElementById('endereco').value = "";
+                cepInput.focus();
+            })
+              .finally(() => {
+        const botao = document.getElementById('buscarCepBtn');
+        if (botao) botao.disabled = false;
+    });
+    }
+
+    // Função para buscar CEP automaticamente quando digitado
+    function buscarCEPAutomatico(cepInput) {
+        let cep = cepInput.value.replace("-", "");
+
+        // Só busca se tiver 8 dígitos
+        if (cep.length !== 8) {
+            return;
+        }
+
+        document.getElementById('endereco').value = "Buscando...";
+        // document.getElementById('buscarCepBtn').disabled = true;
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) throw new Error("CEP não encontrado");
+
+                // Preenche o campo de endereço automaticamente
+                document.getElementById('endereco').value = data.logradouro || "";
+
+                // Foca no próximo campo (Nome da Quadra)
+                document.getElementById('nomeQuadra').focus();
+            })
+            .catch(error => {
+                console.error("Erro ao buscar CEP:", error);
+                document.getElementById('endereco').value = "";
+            })
+              .finally(() => {
+        const botao = document.getElementById('buscarCepBtn');
+        if (botao) botao.disabled = false;
+    });
+    }
+</script>

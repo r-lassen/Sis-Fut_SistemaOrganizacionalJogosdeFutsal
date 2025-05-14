@@ -24,9 +24,10 @@
 
     <!-- CARD PARA ABRIR JOGO -->
     <div class="card clickable-card"
-         style="width: 82%;
+         style="width: 90%;
             height: auto;
-            border: 1px solid #000;
+            border: 2px solid #ccc;
+            color: #555;
             border-radius: 20px;
             text-align: center;
             cursor: pointer;
@@ -63,8 +64,8 @@
         <!-- SEÇÃO DE JOGOS ABERTOS -->
         <div style="flex: 1;
             min-width: 300px;
-            max-width: 450px;
-            border: 1px solid #000;
+            max-width: 500px;
+            border: 2px solid #ccc;
             border-radius: 15px;
             padding: 20px;
             font-family: 'Courier New', Courier, monospace;">
@@ -73,7 +74,7 @@
             <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Abertos</h1>
 
             <!-- Container com scroll para a lista -->
-            <div style="max-height: 400px; overflow-y: auto;">
+            <div style="max-height: 600px; overflow-y: auto;">
                 @if (Model.Abertos.Count > 0)
                 {
                     @foreach (var abertos in Model.Abertos)
@@ -140,19 +141,19 @@
                 {
                     <!-- Mensagem quando não há jogos abertos -->
                     <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-                        <h3 style="margin: 0;">Nenhum Jogo Aberto no Momento</h3>
+                        <h3 style="margin: 0; font-size: 16px;">Nenhum Jogo Aberto no Momento</h3>
                     </div>
                 }
             </div>
         </div>
 
         <!-- SEÇÃO DE JOGOS MARCADOS -->
-        <div style="flex: 1; min-width: 300px; max-width: 450px; border: 1px solid #000; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
+        <div style="flex: 1; min-width: 300px; max-width: 500px;  border: 2px solid #ccc; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
             <!-- Título da seção -->
             <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Marcados</h1>
 
             <!-- Container com scroll para a lista -->
-            <div style="max-height: 400px; overflow-y: auto;">
+            <div style="max-height: 600px; overflow-y: auto;">
                 @if (Model.Marcados.Count > 0)
                 {
                     @foreach (var marcado in Model.Marcados)
@@ -184,8 +185,9 @@
 
                                 <!-- Separador "X" -->
                                 <div class="col-md-2 text-center my-3 my-md-0">
-                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                        <span class="fs-4 text-muted">VS</span>
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+                                         style="width: 50px; height: 50px;">
+                                        <span class="fs-4" style="color: #222;">VS</span>
                                     </div>
                                 </div>
 

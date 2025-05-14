@@ -1,23 +1,8 @@
 ﻿@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
 @model AlterarSenhaModel
 @{
-    ViewData["Title"] = "Alterar Senha Usuario";
-}
-
-
-<div class="text-center" style="font-family: Courier, monospace;">
-    <h2 class="display-4">Alterar senha do usuário</h2>
-</div>
-
-
-
-
-@if (TempData["MensagemSucesso"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
-        @TempData["MensagemSucesso"]
-    </div>
+    Layout = "_LayoutDeslogado";
+    ViewData["Title"] = "Alterar Senha";
 }
 
 @if (TempData["MensagemErro"] != null)
@@ -28,27 +13,220 @@
     </div>
 }
 
-<form asp-controller="AlterarSenha" asp-action="Alterar" method="post">
-    <div class="col-sm-12 col-md-4 col-md-offset-4" style="border: 2px solid #ccc; padding: 20px; margin: auto; border-radius: 10px; margin-top: 30px" >
-        <div class="form-group">
-            <label for="senhaAtual" class="form-label">Senha Atual</label>
-            <input type="password" asp-for="SenhaAtual" class="form-control" placeholder="Digite a senha atual do usuário">
-            @Html.ValidationMessageFor(x => x.SenhaAtual)
-        </div>
-
-        <div class="form-group">
-            <label for="novaSenha" class="form-label">Nova Senha</label>
-            <input type="password" asp-for="NovaSenha" class="form-control" placeholder="Digite a nova senha do usuário">
-            @Html.ValidationMessageFor(x => x.NovaSenha)
-        </div>
-
-        <div class="form-group">
-            <label for="confirmarSenha" class="form-label">Confirmar Nova Senha</label>
-            <input type="password" asp-for="ConfirmarNovaSenha" class="form-control" placeholder="Confirme a nova senha do usuário.">
-            @Html.ValidationMessageFor(x => x.ConfirmarNovaSenha)
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-block">Alterar</button>
-        <a class="btn btn-secondary btn-block" asp-action="Index" asp-controller="MeuPerfil" role="button">Voltar</a>
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
+        @TempData["MensagemSucesso"]
     </div>
-</form>
+}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .container-login {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        padding: 2rem;
+    }
+
+    .form-card {
+        width: 100%;
+        max-width: 450px;
+        background-color: white;
+        padding: 2rem;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+    }
+
+    .form-title {
+        font-family: Courier, monospace;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #37c3b4;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .floating-input {
+        height: 50px;
+        padding: 12px 15px;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        font-size: 16px;
+        background-color: white;
+        width: 100%;
+        transition: border-color 0.15s ease-in-out;
+    }
+
+        .floating-input:focus {
+            border-color: #adb5bd;
+            box-shadow: none;
+            outline: none;
+            background-color: white;
+        }
+
+    .floating-label {
+        position: absolute;
+        top: 25px;
+        left: 15px;
+        transform: translateY(-50%);
+        color: #6c757d;
+        transition: all 0.2s ease-out;
+        pointer-events: none;
+        font-size: 16px;
+        background: transparent;
+        padding: 0 5px;
+    }
+
+    .floating-input:focus ~ .floating-label,
+    .floating-input:not(:placeholder-shown) ~ .floating-label,
+    .floating-input[data-filled] ~ .floating-label,
+    .floating-input:-webkit-autofill ~ .floating-label {
+        top: -10px;
+        left: 10px;
+        transform: translateY(0);
+        font-size: 13px;
+        color: #495057;
+        background: white;
+        padding: 0 5px;
+        z-index: 1;
+    }
+
+    .field-validation-error {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        padding-left: 5px;
+    }
+
+    .floating-input:-webkit-autofill,
+    .floating-input:-webkit-autofill:hover,
+    .floating-input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+        -webkit-text-fill-color: #495057;
+        border-radius: 10px;
+    }
+
+    .btn-login {
+        font-family: 'Courier New', Courier, monospace;
+        border-radius: 50px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+        display: block;
+    }
+
+    .btn-primary-custom {
+        background-color: #37c3b4;
+        color: white;
+        border: none;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #2da89a;
+            color: white;
+        }
+
+    .btn-secondary-custom {
+        color: #37c3b4;
+        border: 1px solid #37c3b4;
+        background-color: transparent;
+    }
+
+        .btn-secondary-custom:hover {
+            color: #2da89a;
+            border-color: #2da89a;
+            background-color: transparent;
+        }
+
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+</style>
+
+<div class="container-login">
+    <form asp-controller="AlterarSenha" asp-action="Alterar" method="post" class="form-card">
+        <h1 class="form-title">Alterar Senha</h1>
+
+        <div class="form-group">
+            <input type="password" asp-for="SenhaAtual" class="form-control floating-input" id="senhaAtual" placeholder=" ">
+            <label for="senhaAtual" class="floating-label">Senha Atual</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.SenhaAtual)</span>
+        </div>
+
+        <div class="form-group">
+            <input type="password" asp-for="NovaSenha" class="form-control floating-input" id="novaSenha" placeholder=" ">
+            <label for="novaSenha" class="floating-label">Nova Senha</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.NovaSenha)</span>
+        </div>
+
+        <div class="form-group">
+            <input type="password" asp-for="ConfirmarNovaSenha" class="form-control floating-input" id="confirmarSenha" placeholder=" ">
+            <label for="confirmarSenha" class="floating-label">Confirmar Nova Senha</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.ConfirmarNovaSenha)</span>
+        </div>
+
+        <div class="btn-container">
+            <button type="submit" class="btn btn-login btn-primary-custom">Alterar</button>
+            <a asp-action="Index" asp-controller="MeuPerfil" class="btn btn-login btn-secondary-custom">Voltar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inicializa os labels flutuantes
+        document.querySelectorAll('.floating-input').forEach(input => {
+            // Verifica se já tem valor ao carregar
+            if(input.value) {
+                input.setAttribute('data-filled', 'true');
+            }
+
+            // Atualiza quando o usuário digita
+            input.addEventListener('input', function() {
+                if(this.value) {
+                    this.setAttribute('data-filled', 'true');
+                } else {
+                    this.removeAttribute('data-filled');
+                }
+            });
+
+            // Força atualização se o campo for preenchido programaticamente
+            input.addEventListener('change', function() {
+                if(this.value) {
+                    this.setAttribute('data-filled', 'true');
+                } else {
+                    this.removeAttribute('data-filled');
+                }
+            });
+        });
+
+        // Validação ao tentar enviar o formulário
+        document.querySelector('form').addEventListener('submit', function(e) {
+            document.querySelectorAll('.floating-input').forEach(input => {
+                if(!input.value.trim()) {
+                    input.setAttribute('data-filled', 'true');
+                }
+            });
+        });
+    });
+</script>

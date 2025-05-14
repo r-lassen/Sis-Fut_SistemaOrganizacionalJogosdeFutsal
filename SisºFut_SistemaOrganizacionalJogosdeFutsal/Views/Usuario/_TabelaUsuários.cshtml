@@ -1,0 +1,62 @@
+﻿@model X.PagedList.IPagedList<UsuarioModel>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>NOME</th>
+                <th>CELULAR</th>
+                <th class="d-none d-md-table-cell">LOGIN</th>
+                <th class="d-none d-md-table-cell">PERFIL</th>
+                <th class="text-end">
+                    <a asp-controller="Usuario" asp-action="Criar"
+                       class="btn btn-sm rounded-pill py-1 btn-custom text-nowrap"
+                       style="padding: 4px 10px;">Adicionar</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var usuario in Model)
+                {
+                    <tr>
+                        <td>@usuario.Name</td>
+                        <td>@usuario.</td>
+                        <td class="d-none d-md-table-cell">@usuario.Login</td>
+                        <td class="d-none d-md-table-cell">@usuario.Perfil</td>
+                        <td>
+                            <div class="d-flex justify-content-center" style="gap: 8px;">
+                                <a asp-controller="Usuario" asp-action="Editar" asp-route-id="@usuario.Id"
+                                   class="btn btn-outline-dark btn-sm rounded-pill py-1 btn-custom d-none d-md-block"
+                                   style="width: 100px;">Editar</a>
+
+                                <a asp-controller="Usuario" asp-action="Editar" asp-route-id="@usuario.Id"
+                                   class="btn btn-outline-dark btn-sm rounded-circle d-block d-md-none"
+                                   title="Editar"><i class="bi bi-pencil"></i></a>
+
+                                <form asp-controller="Usuario" asp-action="ApagarConfirmacao" asp-route-id="@usuario.Id"
+                                      method="get" class="d-none d-md-block" style="width: 100px;">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill py-1" style="font-weight: bold;">
+                                        Apagar
+                                    </button>
+                                </form>
+
+                                <form asp-controller="Usuario" asp-action="ApagarConfirmacao" asp-route-id="@usuario.Id"
+                                      method="get" class="d-block d-md-none">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" title="Apagar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="5" class="text-center">Nenhum Usuário Encontrado</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

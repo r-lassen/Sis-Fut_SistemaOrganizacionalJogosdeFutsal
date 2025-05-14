@@ -1,0 +1,24 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
+{
+    public partial class AdicionarColunaCategoria : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<int>(
+                name: "Categoria",
+                table: "Contatos",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "Categoria",
+                table: "Contatos");
+        }
+    }
+}

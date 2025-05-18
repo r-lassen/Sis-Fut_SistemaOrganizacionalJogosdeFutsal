@@ -8,7 +8,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
     {
         UsuarioModel BuscarPorNomeTime(string Name);
 
-
+        UsuarioModel BuscarPorToken(string token);
         UsuarioModel BuscarPorEmail(string email);
         UsuarioModel BuscarPorLogin(string login);
         UsuarioModel BuscarPorEmailELogin(string email, string login);

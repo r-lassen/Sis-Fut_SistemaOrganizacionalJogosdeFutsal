@@ -34,6 +34,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
 
 
+
+        // CAMPOS PARA REDEFINIÇÃO DE SENHA
+        public string? TokenRedefinicaoSenha { get; set; }
+
+        public DateTime? TokenExpiracao { get; set; }
+
         public string Foto { get; set; }
 
         [NotMapped]

@@ -31,76 +31,76 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             return View();
         }
-
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Cadastro(CadastroModel cadastro)
         {
             try
             {
+                // 🔍 Verificações personalizadas de dados repetidos
+                if (_usuarioRepositorio.BuscarPorEmail(cadastro.usuario.Email) != null)
+                {
+                    ModelState.AddModelError("usuario.Email", "Este e-mail já está cadastrado.");
+                }
 
-                    // Verificar se já existe o mesmo e-mail
-                    var emailExiste = _usuarioRepositorio.BuscarPorEmail(cadastro.usuario.Email);
-                    if (emailExiste != null)
-                    {
-                        ModelState.AddModelError("usuario.Email", "Este e-mail já está cadastrado.");
-                    }
+                if (_usuarioRepositorio.BuscarPorLogin(cadastro.usuario.Login) != null)
+                {
+                    ModelState.AddModelError("usuario.Login", "Este login já está em uso.");
+                }
 
-                    // Verificar se já existe o mesmo login
-                    var loginExiste = _usuarioRepositorio.BuscarPorLogin(cadastro.usuario.Login);
-                    if (loginExiste != null)
-                    {
-                        ModelState.AddModelError("usuario.Login", "Este login já está em uso.");
-                    }
+                if (_usuarioRepositorio.BuscarPorNomeTime(cadastro.usuario.Name) != null)
+                {
+                    ModelState.AddModelError("usuario.Name", "Este nome de time já está em uso.");
+                }
 
-                    // Verificar se já existe o mesmo nome de time (usando login como base)
-                    var nomeTimeExiste = _usuarioRepositorio.BuscarPorNomeTime(cadastro.usuario.Name);
-                    if (nomeTimeExiste != null)
-                    {
-                        ModelState.AddModelError("usuario.Name", "Este nome de time já está em uso.");
-                    }
+                // Verifica se login e senha foram preenchidos
+                if (string.IsNullOrEmpty(cadastro.usuario.Login) || string.IsNullOrEmpty(cadastro.usuario.Senha))
+                {
+                    TempData["MensagemErro"] = "Login e senha são obrigatórios.";
+                    return View(cadastro);
+                }
 
-                    // Se alguma validação falhar, retorna a View
-                    if (!ModelState.IsValid)
-                    {
-                        return View(cadastro);
-                    }
+                // ✅ Só valida depois de adicionar todos os possíveis erros
+                if (!ModelState.IsValid)
+                {
+                    return View(cadastro);
+                }
 
-                    // Continua com o cadastro se não houver erros
-                    if (!string.IsNullOrEmpty(cadastro.usuario.Login) && !string.IsNullOrEmpty(cadastro.usuario.Senha))
-                    {
-                        var base64 = "";
+                // Se imagem enviada, converte para Base64
+                if (cadastro.usuario.FotoArquivo != null && cadastro.usuario.FotoArquivo.Length > 0)
+                {
+                    cadastro.usuario.Foto = ConverterParaBase64(cadastro.usuario.FotoArquivo);
+                }
 
-                        if (cadastro.usuario.FotoArquivo != null && cadastro.usuario.FotoArquivo.Length > 0)
-                        {
-                            base64 = ConverterParaBase64(cadastro.usuario.FotoArquivo);
-                            cadastro.usuario.Foto = base64;
-                        }
+                // Define perfil padrão
+                cadastro.usuario.Perfil = Enums.PerfilEnum.Padrao;
 
-                        cadastro.usuario.Perfil = Enums.PerfilEnum.Padrao;
-                        var a = _usuarioRepositorio.Adicionar(cadastro.usuario);
+                // Adiciona usuário ao banco
+                var usuarioCriado = _usuarioRepositorio.Adicionar(cadastro.usuario);
 
-                        QuadrasModel quadras = new QuadrasModel
-                        {
-                            DS_Endereco = cadastro.DS_Endereco ?? string.Empty,
-                            NM_Quadra = cadastro.NM_Quadra ?? string.Empty,
-                            id_Time = a.Id
-                        };
-                        _quadrasRepositorio.Adicionar(quadras);
+                // Cria quadra associada ao time (usuário)
+                var quadra = new QuadrasModel
+                {
+                    DS_Endereco = cadastro.quadras?.DS_Endereco ?? string.Empty,
+                    NM_Quadra = cadastro.quadras?.NM_Quadra ?? string.Empty,
+                    id_Time = usuarioCriado.Id
+                };
 
-                        TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
-                        return RedirectToAction("Index", "Login");
-                    }
+                _quadrasRepositorio.Adicionar(quadra);
 
-
-                return View(cadastro);
+                TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
+                return RedirectToAction("Index", "Login");
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Erro ao cadastrar usuário. Detalhe: {erro.Message}";
+                TempData["MensagemErro"] = $"Erro ao cadastrar usuário. Detalhes: {erro.Message}";
                 return View(cadastro);
             }
         }
+
+
+
+
 
 
 

@@ -42,7 +42,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 {
                     _usuarioRepositorio.AlterarSenha(alterarSenhaModel);
                     TempData["MensagemSucesso"] = "Senha alterada com sucesso!";
-                    return View("Index", alterarSenhaModel);
+                    return RedirectToAction("Index", "MeuPerfil");
                 }
 
                 return View("Index", alterarSenhaModel);

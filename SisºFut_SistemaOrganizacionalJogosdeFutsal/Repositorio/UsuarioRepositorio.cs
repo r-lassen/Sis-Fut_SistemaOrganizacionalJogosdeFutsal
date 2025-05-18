@@ -104,5 +104,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
             _bancoContext.SaveChanges();
             return true;
         }
+
+
+        public UsuarioModel BuscarPorToken(string token)
+        {
+            return _bancoContext.Usuarios.FirstOrDefault(x => x.TokenRedefinicaoSenha == token);
+        }
+
     }
 }

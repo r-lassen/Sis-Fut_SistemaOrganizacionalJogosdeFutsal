@@ -1,0 +1,20 @@
+﻿@model DefinirNovaSenhaModel
+
+@{
+    Layout = "_LayoutDeslogado";
+    ViewData["Title"] = "Definir Nova Senha";
+}
+
+<h3>Definir Nova Senha</h3>
+
+<form asp-action="SalvarNovaSenha" asp-controller="Login" method="post">
+    <input type="hidden" asp-for="Token" />
+
+    <div class="mb-3">
+        <label for="novaSenha" class="form-label">Nova Senha</label>
+        <input type="password" asp-for="NovaSenha" class="form-control" id="novaSenha" />
+        @Html.ValidationMessageFor(x => x.NovaSenha)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar Nova Senha</button>
+</form>

@@ -38,7 +38,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             if (usuarioLogado == null)
             {
-                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+                return RedirectToAction("Login", "Index"); // Redireciona para login se não estiver logado
             }
 
 

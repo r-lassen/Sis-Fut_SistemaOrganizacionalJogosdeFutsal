@@ -60,8 +60,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return View(cadastro);
                 }
 
-                // ✅ Só valida depois de adicionar todos os possíveis erros
-                if (!ModelState.IsValid)
+
+
+
+                //  Só valida depois de adicionar todos os possíveis erros
+                if (!ModelState.IsValid) 
                 {
                     return View(cadastro);
                 }
@@ -97,14 +100,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return View(cadastro);
             }
         }
-
-
-
-
-
-
-
-
 
         public string ConverterParaBase64(IFormFile arquivo)
         {

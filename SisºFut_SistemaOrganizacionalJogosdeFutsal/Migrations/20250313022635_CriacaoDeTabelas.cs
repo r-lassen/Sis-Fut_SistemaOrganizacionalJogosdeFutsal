@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 {
-    public partial class TabelasGabriel : Migration
+    public partial class CriacaoDeTabelas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

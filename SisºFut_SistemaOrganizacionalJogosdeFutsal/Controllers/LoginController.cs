@@ -50,24 +50,27 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 {
                     UsuarioModel usuario = _usuarioRepositorio.BuscarPorLogin(loginModel.Login);
 
-                    if (usuario != null)
+                    if (usuario == null)
                     {
-                        if (usuario.SenhaValida(loginModel.Senha))
-                        {
-                            _sessao.CriarSessaoDoUsuario(usuario);
-                            return RedirectToAction("Index", "Home");
-                        }
-
-                        TempData["MensagemErro"] = $"Senha do usuário é inválida, tente novamente.";
+                        ModelState.AddModelError("Login", "Usuário não encontrado.");
+                        return View("Index");
                     }
-                    TempData["MensagemErro"] = $"Usuário e/ou senha inválido(s). Por favor, tente novamente.";
+
+                    if (!usuario.SenhaValida(loginModel.Senha))
+                    {
+                        ModelState.AddModelError("Senha", "Senha inválida.");
+                        return View("Index");
+                    }
+
+                    _sessao.CriarSessaoDoUsuario(usuario);
+                    return RedirectToAction("Index", "Home");
                 }
 
                 return View("Index");
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Ops, não conseguimos realizar seu login, tente novamante, detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Ops, não conseguimos realizar seu login. Tente novamente. Detalhes: {erro.Message}";
                 return RedirectToAction("Index");
             }
         }
@@ -163,41 +166,51 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    UsuarioModel usuario = _usuarioRepositorio.BuscarPorEmailELogin(redefinirSenhaModel.Email, redefinirSenhaModel.Login);
+                    // Primeiro, procura pelo login
+                    UsuarioModel usuario = _usuarioRepositorio.BuscarPorLogin(redefinirSenhaModel.Login);
 
-                    if (usuario != null)
+                    if (usuario == null)
                     {
-                        string token = Guid.NewGuid().ToString();
-                        usuario.TokenRedefinicaoSenha = token;
-                        usuario.TokenExpiracao = DateTime.Now.AddHours(1);
-                        _usuarioRepositorio.Atualizar(usuario);
-
-                        string link = Url.Action("RedefinirSenha", "Login", new { token = token }, Request.Scheme);
-
-                        string assunto = "Redefinição de senha - SisºFut";
-                        string mensagem = $"Olá, {usuario.Name}!<br><br>" +
-                                          $"Clique no link abaixo para redefinir sua senha:<br>" +
-                                          $"<a href='{link}'>Redefinir Senha</a><br><br>" +
-                                          $"Esse link expirará em 1 hora.";
-
-                        bool emailEnviado = EmailHelper.Enviar(usuario.Email, assunto, mensagem);
-
-                        if (emailEnviado)
-                        {
-                            TempData["MensagemSucesso"] = "Enviamos um link para seu e-mail. Verifique sua caixa de entrada!";
-                        }
-                        else
-                        {
-                            TempData["MensagemErro"] = "Não conseguimos enviar o e-mail. Tente novamente mais tarde.";
-                        }
-
-                        return RedirectToAction("Index", "Login");
+                        ModelState.AddModelError("Login", "Login não encontrado.");
+                        return View("RedefinirSenha");
                     }
 
-                    TempData["MensagemErro"] = "Usuário não encontrado com os dados informados.";
+                    // Em seguida, valida se o e-mail bate com o do usuário
+                    if (!usuario.Email.Equals(redefinirSenhaModel.Email, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ModelState.AddModelError("Email", "O e-mail informado não corresponde ao login.");
+                        return View("RedefinirSenha");
+                    }
+
+                    // Login e email válidos — gerar token
+                    string token = Guid.NewGuid().ToString();
+                    usuario.TokenRedefinicaoSenha = token;
+                    usuario.TokenExpiracao = DateTime.Now.AddHours(1);
+                    _usuarioRepositorio.Atualizar(usuario);
+
+                    string link = Url.Action("RedefinirSenha", "Login", new { token = token }, Request.Scheme);
+
+                    string assunto = "Redefinição de senha - SisºFut";
+                    string mensagem = $"Olá, {usuario.Name}!<br><br>" +
+                                      $"Clique no link abaixo para redefinir sua senha:<br>" +
+                                      $"<a href='{link}'>Redefinir Senha</a><br><br>" +
+                                      $"Esse link expirará em 1 hora.";
+
+                    bool emailEnviado = EmailHelper.Enviar(usuario.Email, assunto, mensagem);
+
+                    if (emailEnviado)
+                    {
+                        TempData["MensagemSucesso"] = "Enviamos um link para seu e-mail. Verifique sua caixa de entrada!";
+                    }
+                    else
+                    {
+                        TempData["MensagemErro"] = "Não conseguimos enviar o e-mail. Tente novamente mais tarde.";
+                    }
+
+                    return RedirectToAction("Index", "Login");
                 }
 
-                return View("Index");
+                return View("RedefinirSenha");
             }
             catch (Exception erro)
             {
@@ -205,6 +218,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
+
 
         //public IActionResult Criar()
         //{

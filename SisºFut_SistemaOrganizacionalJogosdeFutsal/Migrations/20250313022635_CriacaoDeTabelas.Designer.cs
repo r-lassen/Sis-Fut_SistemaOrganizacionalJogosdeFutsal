@@ -9,8 +9,8 @@ using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    [Migration("20250313022635_TabelasGabriel")]
-    partial class TabelasGabriel
+    [Migration("20250313022635_CriacaoDeTabelas")]
+    partial class CriacaoDeTabelas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,9 +1,14 @@
 ﻿@model HomeModel
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<link rel="stylesheet" href="~/css/Home.css" asp-append-version="true">
+
 <!-- SEÇÃO DE MENSAGENS DE ALERTA -->
 @if (TempData["MensagemSucesso"] != null)
 {
-    <!-- Div de alerta de sucesso -->
     <div class="alert alert-success" role="alert">
         <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
         @TempData["MensagemSucesso"]
@@ -12,230 +17,86 @@
 
 @if (TempData["MensagemErro"] != null)
 {
-    <!-- Div de alerta de erro -->
     <div class="alert alert-danger" role="alert">
         <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
         @TempData["MensagemErro"]
     </div>
 }
 
-<!-- CONTAINER PRINCIPAL DE CARDS -->
-<div class="cards-container" style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 30px; justify-content: center;">
-
-    <!-- CARD PARA ABRIR JOGO -->
-    <div class="card clickable-card"
-         style="width: 90%;
-            height: auto;
-            border: 2px solid #ccc;
-            color: #555;
-            border-radius: 20px;
-            text-align: center;
-            cursor: pointer;
-            font-family: 'Courier New', Courier, monospace;"
-         onclick="window.location.href='@Url.Action("Amistoso", "Home")'">
-        <!-- Corpo do card -->
-        <div class="card-body">
-            <h1 style="font-weight: bold; margin-bottom: 5px; color: #37c3b4;">Abrir Jogo</h1>
+<!-- CONTAINER PRINCIPAL -->
+<div class="main-container">
+    <div class="cards-container">
+        <!-- CARD PARA ABRIR JOGO - COM NOVA COR -->
+        <div class="open-game-card" onclick="window.location.href='@Url.Action("Amistoso", "Home")'">
+            <h1>Abrir Jogo</h1>
         </div>
-    </div>
 
-    <!-- ESTILOS DE HOVER PARA OS CARDS -->
-    <style>
-        .clickable-card {
-            transition: all 0.3s ease;
-        }
-
-            .clickable-card:hover {
-                background-color: #f8f9fa;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                transform: translateY(-2px);
-                border-color: #37c3b4;
-            }
-
-            .clickable-card:active {
-                transform: translateY(-1px) scale(0.98);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-    </style>
-
-    <!-- CONTAINER DAS LISTAS DE JOGOS -->
-    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: inherit;">
-
-        <!-- SEÇÃO DE JOGOS ABERTOS -->
-        <div style="flex: 1;
-            min-width: 300px;
-            max-width: 500px;
-            border: 2px solid #ccc;
-            border-radius: 15px;
-            padding: 20px;
-            font-family: 'Courier New', Courier, monospace;">
-
-            <!-- Título da seção -->
-            <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Abertos</h1>
-
-            <!-- Container com scroll para a lista -->
-            <div style="max-height: 600px; overflow-y: auto;">
-                @if (Model.Abertos.Count > 0)
-                {
-                    @foreach (var abertos in Model.Abertos)
+        <!-- CONTAINER DAS LISTAS DE JOGOS -->
+        <div class="games-lists-container">
+            <!-- SEÇÃO DE JOGOS ABERTOS -->
+            <div class="games-section">
+                <h1>Jogos Abertos</h1>
+                <div class="games-list">
+                    @if (Model.Abertos.Count > 0)
                     {
-                        <!-- Link para cada jogo aberto - agora com classe clickable-card -->
-                        <a asp-controller="Home" asp-action="@(abertos.idTime1 == Model.Id ? "EditarJogoAberto" : "JogoAberto")" asp-route-id="@abertos.id" class="clickable-card"
-
-                           style="display: flex;
-                            align-items: center;
-                            text-decoration: none;
-                            color: inherit;
-                            padding: 12px;
-                            margin-bottom: 10px;
-                            border-radius: 20px;
-                            background-color: #f8f9fa;
-                            border: 1px solid #e0e0e0;
-                            transition: all 0.3s ease;
-                            gap: 12px;">
-
-                            <!-- Imagem do time 1 -->
-                            <img src="data:image/;base64,@abertos.FotoTime1"
-                                 style="width:80px;
-                            height: 80px;
-                            min-width: 80px;
-                            object-fit: cover;
-                            border-radius: 50%;" />
-
-                            <!-- Informações do jogo -->
-                            <div style="flex-grow: 1; min-width: 0;">
-                                <!-- Nome do time 1 -->
-                                <div style="font-weight: bold;
-                               white-space: nowrap;
-                               overflow: hidden;
-                               text-overflow: ellipsis;">
-                                    @abertos.Time1
+                        @foreach (var abertos in Model.Abertos)
+                        {
+                            <div class="game-card" onclick="window.location.href='@Url.Action(abertos.idTime1 == Model.Id ? "EditarJogoAberto" : "JogoAberto", "Home", new { id = abertos.id })'">
+                                <img src="data:image/;base64,@abertos.FotoTime1" class="team-logo" />
+                                <div class="game-info">
+                                    <div class="team-name">@abertos.Time1</div>
+                                    <div class="game-location">@abertos.Local</div>
+                                    <div class="game-date">@abertos.Data.ToString("dd/MM/yyyy") @abertos.Hora</div>
                                 </div>
-
-                                <!-- Local do jogo -->
-                                <div style="font-size: 0.9rem;
-                               color: #555;
-                               white-space: nowrap;
-                               overflow: hidden;
-                               text-overflow: ellipsis;">
-                                    @abertos.Local
-                                </div>
-
-                                <!-- Data e hora do jogo -->
-                                <div style="font-size: 0.9rem; color: #555;">
-                                    @abertos.Data.ToString("dd/MM/yyyy")
-                                    @abertos.Hora
-                                </div>
+                                <img src="https://cdn-icons-png.flaticon.com/512/20/20183.png" class="vs-icon" />
+                                <input type="hidden" value="@abertos.id" />
                             </div>
-
-                            <!-- Ícone de vs -->
-                            <img src="https://cdn-icons-png.flaticon.com/512/20/20183.png"
-                                 style="width: 50px; opacity: 0.7;" />
-
-                            <!-- Campo hidden com ID do jogo -->
-                            <input type="hidden" value="@abertos.id" />
-                        </a>
+                        }
                     }
-                }
-                else
-                {
-                    <!-- Mensagem quando não há jogos abertos -->
-                    <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-                        <h3 style="margin: 0; font-size: 16px;">Nenhum Jogo Aberto no Momento</h3>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <!-- SEÇÃO DE JOGOS MARCADOS -->
-        <div style="flex: 1; min-width: 300px; max-width: 500px;  border: 2px solid #ccc; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
-            <!-- Título da seção -->
-            <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Marcados</h1>
-
-            <!-- Container com scroll para a lista -->
-            <div style="max-height: 600px; overflow-y: auto;">
-                @if (Model.Marcados.Count > 0)
-                {
-                    @foreach (var marcado in Model.Marcados)
+                    else
                     {
-                        <!-- Link para cada jogo marcado - agora com classe clickable-card -->
-                        <a asp-controller="Home" asp-action="JogoMarcado" asp-route-id="@marcado.id"
-                           class="clickable-card"
-                           style="display: block;
-                           text-decoration: none;
-                           color: inherit;
-                           padding: 12px 20px;
-                           margin-bottom: 12px;
-                           border-radius: 20px;
-                           background-color: #f8f9fa;
-                           border: 1px solid #e0e0e0;
-                           transition: all 0.3s ease;
-                           max-width: 500px;
-                           margin-left: auto;
-                           margin-right: auto;">
+                        <div class="empty-message">
+                            <h3>Nenhum Jogo Aberto no Momento</h3>
+                        </div>
+                    }
+                </div>
+            </div>
 
-                            <!-- Container dos times -->
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <!-- Time 1 -->
-                                <div style="text-align: center; width: 100px;">
-                                    <img src="data:image/;base64,@marcado.FotoTime1"
-                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
-                                    <p style="margin-top: 5px; font-weight: bold;">@marcado.Time1</p>
-                                </div>
-
-                                <!-- Separador "X" -->
-                                <div class="col-md-2 text-center my-3 my-md-0">
-                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
-                                         style="width: 50px; height: 50px;">
-                                        <span class="fs-4" style="color: #222;">VS</span>
+            <!-- SEÇÃO DE JOGOS MARCADOS - COM CLIQUE -->
+            <div class="games-section">
+                <h1>Jogos Marcados</h1>
+                <div class="games-list">
+                    @if (Model.Marcados.Count > 0)
+                    {
+                        @foreach (var marcado in Model.Marcados)
+                        {
+                            <div class="scheduled-game-card" onclick="window.location.href='@Url.Action("JogoMarcado", "Home", new { id = marcado.id })'">
+                                <div class="teams-container">
+                                    <div class="team-card">
+                                        <img src="data:image/;base64,@marcado.FotoTime1" class="team-logo" />
+                                        <p class="team-name">@marcado.Time1</p>
+                                    </div>
+                                    <div class="vs-badge">VS</div>
+                                    <div class="team-card">
+                                        <img src="data:image/;base64,@marcado.FotoTime2" class="team-logo" />
+                                        <p class="team-name">@marcado.Time2</p>
                                     </div>
                                 </div>
-
-                                <!-- Time 2 -->
-                                <div style="text-align: center; width: 100px;">
-                                    <img src="data:image/;base64,@marcado.FotoTime2"
-                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
-                                    <p style="margin-top: 5px; font-weight: bold;">@marcado.Time2</p>
+                                <div class="game-details">
+                                    @marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora
                                 </div>
+                                <input type="hidden" value="@marcado.id" />
                             </div>
-
-                            <!-- Informações do jogo -->
-                            <div style="text-align: center;">
-                                <p style="font-size: 13px; color: #555; margin: 0;">@marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora</p>
-                            </div>
-
-                            <!-- Campo hidden com ID do jogo -->
-                            <input type="hidden" value="@marcado.id" />
-                        </a>
+                        }
                     }
-                }
-                else
-                {
-                    <!-- Mensagem quando não há jogos marcados -->
-                    <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-                        <h3 style="margin: 0; font-size: 16px;">Nenhum Jogo Marcado no Momento</h3>
-                    </div>
-                }
+                    else
+                    {
+                        <div class="empty-message">
+                            <h3>Nenhum Jogo Marcado no Momento</h3>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- ESTILOS PARA OS CARDS CLICÁVEIS -->
-    <style>
-        .clickable-card {
-            transition: all 0.3s ease;
-        }
-
-            .clickable-card:hover {
-                background-color: #f8f9fa;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                transform: translateY(-2px);
-                border-color: #37c3b4;
-            }
-
-            .clickable-card:active {
-                transform: translateY(-1px) scale(0.98);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-    </style>
 </div>

@@ -2,11 +2,12 @@
 
 @using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
 
-@* <div class="text-center">
+<!-- CSS do Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <h2>Meu Perfil</h2>
+<!-- JS do Bootstrap (deve vir depois do jQuery se estiver usando) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-</div> *@
 
 @{
     Layout = "_Layout";
@@ -81,7 +82,7 @@
                 <button type="button"
                         class="btn btn-outline-danger btn-sm rounded-pill py-1 text-center"
                         style="border: 1px solid #dc3545; font-weight: bold; width: 100%;"
-                        onclick="abrirModalExcluir(@Model.Usuario.Id)">
+                        onclick="abrirModalConfirmacao('@Model.Usuario.Name')">
                     Excluir Perfil
                 </button>
             </div>
@@ -91,6 +92,7 @@
 
 </form>
 
+@await Html.PartialAsync("_ModalExcluirPerfil")
 
 <!-- CONTAINER DAS LISTAS E INFORMAÇÕES -->
 <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 40px;">

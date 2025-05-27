@@ -1,26 +1,32 @@
-﻿@model UsuarioModel
-@{
-    ViewData["Title"] = "Confirmação apagar contatos";
-}
-
-<!-- Modal -->
-<div class="modal fade" id="_ModalExcluirPerfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Confirmação de Exclusão</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+﻿
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="font-family: Courier, monospace;">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
+         @*        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button> *@
             </div>
             <div class="modal-body">
-                Você realmente deseja excluir seu perfil?
+                <p>Tem certeza que deseja excluir o perfil de <strong id="modalNomeContato"></strong>?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-danger" asp-controller="MeuPerfil" asp-action="ExcluirPerfil" asp-route-id="@Model.Id">Confirmar Exclusão</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="btnConfirmarExclusao" class="btn btn-danger">Confirmar Exclusão</a>
             </div>
         </div>
     </div>
 </div>
-<div id="modalContainer"></div>
+
+
+
+<script>
+    function abrirModalConfirmacao(nome) {
+        document.getElementById("modalNomeContato").innerText = nome;
+        const link = `/MeuPerfil/ExcluirPerfil`; // sem ID aqui!
+        document.getElementById("btnConfirmarExclusao").setAttribute("href", link);
+
+        const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+        modal.show();
+    }
+</script>

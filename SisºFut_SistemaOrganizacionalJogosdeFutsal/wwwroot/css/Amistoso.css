@@ -1,0 +1,259 @@
+﻿/* ESTILOS GERAIS */
+:root {
+    --primary-color: #37c3b4;
+    --primary-hover: #2da89a;
+    --border-color: #ccc;
+    --text-color: #555;
+    --form-bg: #ffffff;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f8f9fa;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    flex: 1;
+    padding-bottom: 60px;
+}
+
+/* ALERTAS */
+.alert {
+    position: relative;
+    padding: 1rem 1.5rem;
+    margin: 1rem;
+    border-radius: 8px;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.close-alert {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+}
+
+/* TÍTULO */
+.page-title {
+    color: var(--primary-color);
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 2.5rem;
+}
+
+/* FORMULÁRIO */
+.form-container {
+    border: 2px solid var(--border-color);
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    background-color: var(--form-bg);
+    max-width: 800px;
+    width: 95%;
+}
+
+/* CAMPOS DO FORMULÁRIO */
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-color);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.form-control {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    transition: all 0.3s ease;
+    padding: 10px 12px;
+    min-height: 40px;
+    box-sizing: border-box;
+}
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(55, 195, 180, 0.25);
+        outline: none;
+    }
+
+    /* Estilos específicos para inputs de data e hora */
+    .form-control[type="date"],
+    .form-control[type="time"] {
+        appearance: none;
+        -webkit-appearance: none;
+        position: relative;
+        background-color: #fff;
+    }
+
+/* VS CENTRAL */
+.vs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.vs-badge {
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #222;
+}
+
+/* ESTILO ORIGINAL DO TIME 2 */
+.time2-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.time2-label {
+    font-weight: bold;
+    margin: 0;
+}
+
+/* BOTÕES */
+.btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.btn {
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+.btn-outline {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    background-color: transparent;
+}
+
+    .btn-outline:hover {
+        background-color: rgba(55, 195, 180, 0.1);
+    }
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .form-container {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .col-md-5, .col-md-6 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .vs-container {
+        margin: 15px 0;
+    }
+
+    .btn {
+        padding: 8px 16px;
+    }
+
+    /* ESTILOS PARA DATA/HORA EM TABLETS */
+    .row.mb-4 {
+        flex-direction: row;
+        gap: 15px;
+    }
+
+        .row.mb-4 .col-md-6 {
+            flex: 1;
+            margin-bottom: 0;
+        }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    .form-container {
+        padding: 12px;
+        margin: 10px auto;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    .time2-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    /* MELHORIAS PARA DATA/HORA EM MOBILE */
+    .row.mb-4 {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+        .row.mb-4 .col-md-6 {
+            width: 100%;
+        }
+
+    .form-control[type="date"],
+    .form-control[type="time"] {
+        padding: 12px 14px;
+        font-size: 16px;
+        min-height: 44px;
+    }
+
+        /* Melhora a aparência dos ícones */
+        .form-control[type="date"]::-webkit-calendar-picker-indicator,
+        .form-control[type="time"]::-webkit-calendar-picker-indicator {
+            padding: 4px;
+            opacity: 0.8;
+            transform: scale(1.2);
+        }
+}

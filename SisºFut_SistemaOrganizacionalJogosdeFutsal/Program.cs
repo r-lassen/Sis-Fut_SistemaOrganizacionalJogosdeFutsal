@@ -10,11 +10,23 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
             CreateHostBuilder(args).Build().Run();
         }
 
+        //public static IHostBuilder CreateHostBuilder(string[] args) =>
+        //    Host.CreateDefaultBuilder(args)
+        //        .ConfigureWebHostDefaults(webBuilder =>
+        //        {
+        //            webBuilder.UseStartup<Startup>();
+        //        });
+
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder
+                .UseUrls("http://0.0.0.0:5000") // ou "http://192.168.18.218:5000"
+                .UseStartup<Startup>();
+        });
+
+
+
     }
 }

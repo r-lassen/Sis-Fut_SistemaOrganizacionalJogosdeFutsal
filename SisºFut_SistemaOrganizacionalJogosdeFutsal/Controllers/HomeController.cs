@@ -214,15 +214,24 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
 
-                var Hora = agendamentos.HR_Agendamento.Split(":");
-
-                if (Convert.ToInt32(Hora[0]) > 24 || Convert.ToInt32(Hora[1]) > 60)
+                // Verifica se a hora está vazia/nula ou no formato inválido
+                if (string.IsNullOrEmpty(agendamentos.HR_Agendamento) || !agendamentos.HR_Agendamento.Contains(":"))
                 {
-                    var Usuarios = _usuarioRepositorio.BuscarTodos();
+                    ViewBag.UserList = new SelectList(_usuarioRepositorio.BuscarTodos(), "Id", "Name");
+                    TempData["MensagemErro"] = "Selecione uma hora válida (formato HH:MM).";
+                    return View(agendamentos);
+                }
 
-                    ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
-
-                    TempData["MensagemErro"] = "Selecione uma Hora Valida";
+                // Divide a hora e valida os valores
+                var partesHora = agendamentos.HR_Agendamento.Split(':');
+                if (partesHora.Length != 2 ||
+                    !int.TryParse(partesHora[0], out int horas) ||
+                    !int.TryParse(partesHora[1], out int minutos) ||
+                    horas < 0 || horas > 23 ||
+                    minutos < 0 || minutos > 59)
+                {
+                    ViewBag.UserList = new SelectList(_usuarioRepositorio.BuscarTodos(), "Id", "Name");
+                    TempData["MensagemErro"] = "Hora inválida. Use o formato HH:MM (ex: 14:30).";
                     return View(agendamentos);
                 }
 
@@ -447,13 +456,37 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
+                // Validação da Hora
+                if (string.IsNullOrEmpty(agendamentos.Agendar.Hora) || !agendamentos.Agendar.Hora.Contains(":"))
+                {
+                    TempData["MensagemErro"] = "Selecione uma hora válida (formato HH:MM).";
+                    return RedirectToAction("EditarJogoAberto");
+                }
+
+                var partesHora = agendamentos.Agendar.Hora.Split(':');
+                if (partesHora.Length != 2 ||
+                    !int.TryParse(partesHora[0], out int horas) ||
+                    !int.TryParse(partesHora[1], out int minutos) ||
+                    horas < 0 || horas > 23 ||
+                    minutos < 0 || minutos > 59)
+                {
+                    TempData["MensagemErro"] = "Hora inválida. Use o formato HH:MM (ex: 14:30).";
+                    return RedirectToAction("EditarJogoAberto");
+                }
+
+                // Validação da Data
+                if (agendamentos.Agendar.Data == default || agendamentos.Agendar.Data < DateTime.Today)
+                {
+                    TempData["MensagemErro"] = "Selecione uma data válida (não pode ser anterior ao dia atual).";
+                    return RedirectToAction("EditarJogoAberto");
+                }
+
                 var Agendado = _agendamentoRepositorio.BuscarPorId(agendamentos.Agendar.id);
 
                 var listaAgendamentos = new List<AgendamentosModel>();
 
                 var jaTemAgendadoTime1x1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime1);
                 listaAgendamentos.AddRange(jaTemAgendadoTime1x1);
-
 
                 if (agendamentos.id_Time2 > 0)
                 {
@@ -490,10 +523,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         if (a.DT_Agendamento == agendamentos.Agendar.Data)
                         {
                             jaExisteData = true;
-
                         }
                     }
-
                 }
 
                 if (!jaExisteData)
@@ -504,7 +535,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         Agendado.HR_Agendamento = agendamentos.Agendar.Hora == Agendado.HR_Agendamento ? Agendado.HR_Agendamento : agendamentos.Agendar.Hora;
                         Agendado.DT_Agendamento = agendamentos.Agendar.Data == Agendado.DT_Agendamento ? Agendado.DT_Agendamento : agendamentos.Agendar.Data;
                         Agendado.DS_Descricao = agendamentos.Agendar.DS_Descrição == Agendado.DS_Descricao ? Agendado.DS_Descricao : agendamentos.Agendar.DS_Descrição;
-
 
                         var resultado = _agendamentoRepositorio.Atualizar(Agendado);
                         TempData["MensagemSucesso"] = "Jogo editado com Sucesso";
@@ -519,17 +549,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 else
                 {
                     TempData["MensagemErro"] = "Já existe jogo marcado para essa data";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("EditarJogoAberto");
                 }
-
             }
             catch (System.Exception erro)
             {
                 TempData["MensagemErro"] = $"Erro ao cadastrar seu Jogo, tente novamente. Detalhe do erro: {erro.Message}";
                 return RedirectToAction("Index");
             }
-
-
         }
 
         //---------------Essa carrega a view--------------
@@ -575,13 +602,37 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
+                // Validação da Hora
+                if (string.IsNullOrEmpty(agendamentos.Agendar.Hora) || !agendamentos.Agendar.Hora.Contains(":"))
+                {
+                    TempData["MensagemErro"] = "Selecione uma hora válida (formato HH:MM).";
+                    return RedirectToAction("JogoMarcado");
+                }
+
+                var partesHora = agendamentos.Agendar.Hora.Split(':');
+                if (partesHora.Length != 2 ||
+                    !int.TryParse(partesHora[0], out int horas) ||
+                    !int.TryParse(partesHora[1], out int minutos) ||
+                    horas < 0 || horas > 23 ||
+                    minutos < 0 || minutos > 59)
+                {
+                    TempData["MensagemErro"] = "Hora inválida. Use o formato HH:MM (ex: 14:30).";
+                    return RedirectToAction("JogoMarcado");
+                }
+
+                // Validação da Data
+                if (agendamentos.Agendar.Data == default || agendamentos.Agendar.Data < DateTime.Today)
+                {
+                    TempData["MensagemErro"] = "Selecione uma data válida (não pode ser anterior ao dia atual).";
+                    return RedirectToAction("JogoMarcado");
+                }
+
                 var Agendado = _agendamentoRepositorio.BuscarPorId(agendamentos.Agendar.id);
 
                 var listaAgendamentos = new List<AgendamentosModel>();
 
                 var jaTemAgendadoTime1x1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.Agendar.idTime1);
                 listaAgendamentos.AddRange(jaTemAgendadoTime1x1);
-
 
                 if (agendamentos.Agendar.idTime2 > 0)
                 {
@@ -618,10 +669,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         if (a.DT_Agendamento == agendamentos.Agendar.Data)
                         {
                             jaExisteData = true;
-
                         }
                     }
-
                 }
 
                 if (!jaExisteData)
@@ -631,7 +680,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         Agendado.HR_Agendamento = agendamentos.Agendar.Hora == Agendado.HR_Agendamento ? Agendado.HR_Agendamento : agendamentos.Agendar.Hora;
                         Agendado.DT_Agendamento = agendamentos.Agendar.Data == Agendado.DT_Agendamento ? Agendado.DT_Agendamento : agendamentos.Agendar.Data;
                         Agendado.DS_Descricao = agendamentos.Agendar.DS_Descrição == Agendado.DS_Descricao ? Agendado.DS_Descricao : agendamentos.Agendar.DS_Descrição;
-
 
                         var resultado = _agendamentoRepositorio.Atualizar(Agendado);
                         TempData["MensagemSucesso"] = "Jogo editado com Sucesso";
@@ -646,18 +694,18 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 else
                 {
                     TempData["MensagemErro"] = "Já existe jogo marcado para essa data";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("JogoMarcado");
                 }
-
             }
             catch (System.Exception erro)
             {
                 TempData["MensagemErro"] = $"Erro ao cadastrar seu Jogo, tente novamente. Detalhe do erro: {erro.Message}";
                 return RedirectToAction("Index");
             }
-
-
         }
+
+
+
     }
 }
 

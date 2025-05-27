@@ -364,3 +364,5 @@ FodyWeavers.xsd
 /SisºFut_SistemaOrganizacionalJogosdeFutsal/Properties/launchSettings.json
 
 global.json
+
+appsettings.Development.json

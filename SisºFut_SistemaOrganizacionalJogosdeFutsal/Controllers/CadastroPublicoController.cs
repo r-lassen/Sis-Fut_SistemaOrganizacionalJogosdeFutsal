@@ -78,7 +78,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return View(cadastro);
                 }
 
-                // Valida antes de prosseguir
+                // ✅ Só valida depois de adicionar todos os possíveis erros
                 if (!ModelState.IsValid)
                 {
                     return View(cadastro);
@@ -111,7 +111,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return View(cadastro);
             }
         }
-
 
 
 

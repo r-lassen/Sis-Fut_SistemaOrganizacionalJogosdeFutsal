@@ -22,7 +22,7 @@
 <script>
     function abrirModalConfirmacao(id, nome) {
         document.getElementById("modalNomeContato").innerText = nome;
-        const link = `/Contato/Apagar/${id}`;
+        const link = `/Usuario/Apagar/${id}`;
         document.getElementById("btnConfirmarExclusao").setAttribute("href", link);
         const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
         modal.show();

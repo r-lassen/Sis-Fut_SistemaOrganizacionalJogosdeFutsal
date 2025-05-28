@@ -17,14 +17,18 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IQuadrasRepositorio _quadrasRepositorio;
+        private readonly IAgendamentoRepositorio _agendamentoRepositorio;
 
 
         public UsuarioController(IUsuarioRepositorio usuarioRepositorio,
-             IQuadrasRepositorio quadras)
+             IQuadrasRepositorio quadras,
+             IAgendamentoRepositorio agendamentoRepositorio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _quadrasRepositorio = quadras;
+            _agendamentoRepositorio = agendamentoRepositorio;
         }
+
         public IActionResult Index(string filtro, int? page)
         {
 
@@ -45,7 +49,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             return View(usuariosPaginados);
         }
-
 
         public IActionResult Filtrar(string filtro, int? page)
         {
@@ -99,16 +102,63 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
-                bool apagado = _usuarioRepositorio.Apagar(id);
-                if (apagado) TempData["MensagemSucesso"] = "Usuário apagado com sucesso!"; else TempData["MensagemErro"] = "Ops, não conseguimos apagar seu usuário, tente novamante!";
+                // Busca o usuário pelo ID (que o ADM quer excluir)
+                var usuario = _usuarioRepositorio.BuscarPorId(id);
+                if (usuario == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não encontrado.";
+                    return RedirectToAction("Index");
+                }
+
+                // Verifica se o usuário tem quadra associada
+                var quadraUsuario = _quadrasRepositorio.BuscarPorId(id);
+                if (quadraUsuario != null)
+                {
+                    var quadraExcluida = _quadrasRepositorio.Apagar(quadraUsuario.Id);
+                    if (!quadraExcluida)
+                    {
+                        TempData["MensagemErro"] = "Não foi possível excluir a quadra do usuário.";
+                        return RedirectToAction("Index");
+                    }
+                }
+
+                // Verifica agendamentos vinculados ao usuário (como time1 ou time2)
+                var agendamentosTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(id);
+                var agendamentosTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(id);
+                var todosAgendamentos = agendamentosTime1.Concat(agendamentosTime2).ToList();
+
+                if (todosAgendamentos.Count > 0)
+                {
+                    foreach (var agendamento in todosAgendamentos)
+                    {
+                        var agendamentoExcluido = _agendamentoRepositorio.Apagar(agendamento.Id);
+                        if (!agendamentoExcluido)
+                        {
+                            TempData["MensagemErro"] = "Não foi possível excluir um agendamento vinculado.";
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
+
+                // Exclui o usuário
+                var usuarioExcluido = _usuarioRepositorio.Apagar(id);
+                if (!usuarioExcluido)
+                {
+                    TempData["MensagemErro"] = "Não foi possível excluir o usuário.";
+                    return RedirectToAction("Index");
+                }
+
+                // Sucesso!
+                TempData["MensagemSucesso"] = "Usuário e todos os dados vinculados foram excluídos com sucesso!";
                 return RedirectToAction("Index");
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Ops, não conseguimos apagar seu usuário, tente novamante, detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Erro ao excluir usuário: {erro.Message}";
                 return RedirectToAction("Index");
             }
         }
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Criar(UsuarioModel usuario)
@@ -169,7 +219,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
-
 
 
         [HttpPost]

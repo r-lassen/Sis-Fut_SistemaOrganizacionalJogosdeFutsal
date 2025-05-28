@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>@ViewData["Title"] - Sis • Fut</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -28,9 +29,17 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer para telas maiores (a partir de 768px) -->
+    <footer class="border-top footer text-muted d-none d-md-block">
         <div class="container d-flex justify-content-center">
             &copy; 2025 <span style="color: #37c3b4; margin: 0 8px;">•</span> <strong>Sistema Organizacional Jogos de Futsal</strong>
+        </div>
+    </footer>
+
+    <!-- Footer para telas menores (até 767.98px) -->
+    <footer class="border-top footer text-muted d-block d-md-none">
+        <div class="container d-flex justify-content-center">
+            &copy; 2025 <span style="color: #37c3b4; margin: 0 8px;">•</span> <strong>SisºFut</strong>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

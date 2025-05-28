@@ -93,7 +93,7 @@
                 }
                 else
                 {
-                    @Html.TextBoxFor(model => model.Agendar.Data, new
+                    @Html.TextBoxFor(model => model.Agendar.Data, "{0:dd-MM-yyyy}", new
                         {
                             @readonly = "readonly",
                             @class = "form-control rounded-3",

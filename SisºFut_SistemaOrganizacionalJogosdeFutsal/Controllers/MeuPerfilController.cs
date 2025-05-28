@@ -123,8 +123,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             return View(home);
         }
 
-
-
         public IActionResult Editar()
         {
 
@@ -228,8 +226,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index", "MeuPerfil");
             }
         }
-
-
 
         public string ConverterParaBase64(IFormFile arquivo)
         {
@@ -370,55 +366,87 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         }
 
+        public IActionResult _ModalExcluirPerfil(int id)
+        {
+            UsuarioModel usuario = _usuarioRepositorio.BuscarPorId(id);
+            return View(usuario);
+        }
+
         public IActionResult ExcluirPerfil()
         {
-
-            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
-
-            var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
-
-            var usuariook = _usuarioRepositorio.BuscarPorId(usuarioLogado.Id);
-
-            var listaAgendamentos = new List<AgendamentosModel>();
-
-            var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(usuarioLogado.Id);
-            var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(usuarioLogado.Id);
-
-
-            if (jaTemAgendadoTime1.Count > 0)
+            try
             {
-                listaAgendamentos.AddRange(jaTemAgendadoTime1);
-            }
-
-            if (jaTemAgendadoTime2.Count > 0)
-            {
-                listaAgendamentos.AddRange(jaTemAgendadoTime2);
-
-            }
-
-            if (quadraOk != null)
-            {
-
-                var quadra = _quadrasRepositorio.Apagar(quadraOk.Id);
-
-            }
-
-            if (listaAgendamentos.Count > 0)
-            {
-                foreach (var lista in listaAgendamentos)
+                var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+                if (usuarioLogado == null)
                 {
-                    var lisstaAgendamento = _agendamentoRepositorio.Apagar(lista.Id);
+                    TempData["MensagemErro"] = "Usuário não encontrado na sessão.";
+                    return RedirectToAction("Index", "Login");
                 }
-            }
 
-            if (usuariook != null)
+                // Busca os dados do usuário, quadra e agendamentos
+                var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
+                var usuariook = _usuarioRepositorio.BuscarPorId(usuarioLogado.Id);
+
+                if (usuariook == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não encontrado no banco de dados.";
+                    return RedirectToAction("Index", "Perfil");
+                }
+
+                // Verifica agendamentos pendentes
+                var listaAgendamentos = new List<AgendamentosModel>();
+                var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(usuarioLogado.Id);
+                var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(usuarioLogado.Id);
+
+                if (jaTemAgendadoTime1.Count > 0) listaAgendamentos.AddRange(jaTemAgendadoTime1);
+                if (jaTemAgendadoTime2.Count > 0) listaAgendamentos.AddRange(jaTemAgendadoTime2);
+
+                // Tenta excluir quadra (se existir)
+                if (quadraOk != null)
+                {
+                    var quadraExcluida = _quadrasRepositorio.Apagar(quadraOk.Id);
+                    if (!quadraExcluida)
+                    {
+                        TempData["MensagemErro"] = "Não foi possível excluir a quadra associada.";
+                        return RedirectToAction("Index", "Perfil");
+                    }
+                }
+
+                // Tenta excluir agendamentos (se existirem)
+                if (listaAgendamentos.Count > 0)
+                {
+                    foreach (var agendamento in listaAgendamentos)
+                    {
+                        var agendamentoExcluido = _agendamentoRepositorio.Apagar(agendamento.Id);
+                        if (!agendamentoExcluido)
+                        {
+                            TempData["MensagemErro"] = "Não foi possível excluir um agendamento pendente.";
+                            return RedirectToAction("Index", "Perfil");
+                        }
+                    }
+                }
+
+                // Tenta excluir o usuário
+                var usuarioExcluido = _usuarioRepositorio.Apagar(usuariook.Id);
+                if (!usuarioExcluido)
+                {
+                    TempData["MensagemErro"] = "Não foi possível excluir o perfil.";
+                    return RedirectToAction("Index", "Perfil");
+                }
+
+                // Se tudo der certo:
+                _sessao.RemoverSessaoUsuario();
+                TempData["MensagemSucesso"] = "Perfil excluído com sucesso!";
+                return RedirectToAction("Index", "Login");
+            }
+            catch (Exception ex)
             {
-                var usuario = _usuarioRepositorio.Apagar(usuariook.Id);
+                // Log do erro (em produção, use um logger como Serilog, NLog, etc.)
+                Console.WriteLine($"Erro ao excluir perfil: {ex.Message}");
+
+                TempData["MensagemErro"] = "Ocorreu um erro ao tentar excluir o perfil. Tente novamente mais tarde.";
+                return RedirectToAction("Index", "Perfil");
             }
-
-
-            _sessao.RemoverSessaoUsuario();
-            return RedirectToAction("Index", "Login");
         }
 
 

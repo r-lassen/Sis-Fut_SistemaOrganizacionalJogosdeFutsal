@@ -86,7 +86,7 @@
                                                     onclick="abrirModalConfirmacao('@contato.Id', '@contato.Nome')">
                                                 Apagar
                                             </button>
-
+                                            @await Html.PartialAsync("_ModalApagar")
                                             <form asp-controller="Contato" asp-action="ApagarConfirmacao" asp-route-id="@contato.Id"
                                                   method="get" class="d-block d-md-none">
                                                 <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" title="Apagar">
@@ -157,7 +157,7 @@
     </div>
 </div>
 
-@await Html.PartialAsync("_ModalApagar")
+
 
 
 

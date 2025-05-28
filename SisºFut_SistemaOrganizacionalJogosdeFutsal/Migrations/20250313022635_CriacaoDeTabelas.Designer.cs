@@ -9,13 +9,10 @@ using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
 {
     [DbContext(typeof(BancoContext))]
-<<<<<<< HEAD
-    [Migration("20250313022635_TabelasGabriel")]
-    partial class TabelasGabriel
-=======
+
     [Migration("20250313022635_CriacaoDeTabelas")]
     partial class CriacaoDeTabelas
->>>>>>> 1e4fdd054b0afe67ce5960b9d72d94d74bd91c5f
+
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -12,8 +12,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Times");
 
             migrationBuilder.CreateTable(
                 name: "Agendamentos",
@@ -54,20 +52,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "TimexQuadras",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    id_Time = table.Column<int>(type: "int", nullable: false),
-                    id_Quadra = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TimexQuadras", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -78,27 +63,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
             migrationBuilder.DropTable(
                 name: "Quadras");
 
-            migrationBuilder.DropTable(
-                name: "TimexQuadras");
-
-            migrationBuilder.CreateTable(
-                name: "Times",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IMG_Time = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NM_Responsavel = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NM_Time = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Times", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
         }
     }
 }

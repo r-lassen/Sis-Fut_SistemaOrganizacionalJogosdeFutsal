@@ -19,22 +19,21 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     {
         private readonly ISessao _sessao;
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        private readonly ITimeXQuadrasRepositorio _timeXquadrasRepositorio;
         private readonly IQuadrasRepositorio _quadrasRepositorio;
         private readonly IAgendamentoRepositorio _agendamentoRepositorio;
-
+        private readonly IJogosEncerradosRepositorio _jogosEncerradosRepositorio;
         public HomeController(IUsuarioRepositorio usuarioRepositorio,
             ISessao sessao,
-            ITimeXQuadrasRepositorio timeXquadras,
             IQuadrasRepositorio quadras,
-            IAgendamentoRepositorio agendamentos)
+            IAgendamentoRepositorio agendamentos,
+            IJogosEncerradosRepositorio jogosEncerradosRepositorio)
 
         {
             _usuarioRepositorio = usuarioRepositorio;
             _sessao = sessao;
-            _timeXquadrasRepositorio = timeXquadras;
             _quadrasRepositorio = quadras;
             _agendamentoRepositorio = agendamentos;
+            _jogosEncerradosRepositorio = jogosEncerradosRepositorio;
         }
 
 
@@ -704,7 +703,92 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
         }
 
+        public IActionResult ModalPlacar(int id)
+        {
+            AgendamentosModel agendamentos = _agendamentoRepositorio.BuscarPorId(id);
+            return RedirectToAction("Index");
+        }
 
+
+        [HttpPost]
+        public IActionResult EncerrarJogo(int id, int golsTime1, int golsTime2, string descricao)
+        {
+            try
+            {
+                var agendamento = _agendamentoRepositorio.BuscarPorId(id);
+                if (agendamento == null)
+                {
+                    TempData["MensagemErro"] = "Jogo não encontrado para encerrar.";
+                    return RedirectToAction("Index");
+                }
+
+                // Validação dos gols (não negativos)
+                if (golsTime1 < 0 || golsTime2 < 0)
+                {
+                    TempData["MensagemErro"] = "Os gols não podem ser negativos.";
+                    return RedirectToAction("Index");
+                }
+
+                var jogoEncerrado = new JogosEncerradosModel
+                {
+                    IdTime1 = agendamento.id_Time1,
+                    IdTime2 = agendamento.id_Time2 ?? 0,
+                    GolsTime1 = golsTime1,
+                    GolsTime2 = golsTime2,
+                    IdQuadra = agendamento.id_Quadra,
+                    Descricao = descricao
+                };
+
+                var resultado = _jogosEncerradosRepositorio.Adicionar(jogoEncerrado);
+                if (resultado != null)
+                {
+                    _agendamentoRepositorio.Apagar(agendamento.Id);
+                    TempData["MensagemSucesso"] = "Jogo encerrado com sucesso!";
+                }
+                else
+                {
+                    TempData["MensagemErro"] = "Erro ao encerrar o jogo. Tente novamente.";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["MensagemErro"] = $"Erro ao encerrar o jogo. Detalhes: {ex.Message}";
+                return RedirectToAction("Index");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        //[HttpPost]
+        //public IActionResult EncerrarJogo(int IdJogo, int GolsTime1, int GolsTime2)
+        //{
+        //    var agendamento = _agendamentoRepositorio.BuscarPorId(IdJogo);
+
+        //    if (agendamento == null)
+        //    {
+        //        TempData["MensagemErro"] = "Jogo não encontrado.";
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    agendamento.GolsTime1 = GolsTime1;
+        //    agendamento.GolsTime2 = GolsTime2;
+        //    agendamento.Status = "Encerrado"; // ou outro campo de status
+
+        //    _agendamentoRepositorio.Atualizar(agendamento);
+
+        //    TempData["MensagemSucesso"] = "Jogo encerrado com sucesso!";
+        //    return RedirectToAction("Index");
+        //}
 
     }
 }

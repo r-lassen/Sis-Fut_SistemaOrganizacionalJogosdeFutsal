@@ -134,28 +134,58 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
 
-        [HttpPost]
-        public IActionResult SalvarNovaSenha(DefinirNovaSenhaModel model)
+        // GET: exibe a tela com o token vindo pela query string
+        [HttpGet]
+        public IActionResult DefinirNovaSenha(string token)
         {
-            if (!ModelState.IsValid) return View("DefinirNovaSenha", model);
-
-            var usuario = _usuarioRepositorio.BuscarPorToken(model.Token);
-
-            if (usuario == null || usuario.TokenExpiracao < DateTime.Now)
+            if (string.IsNullOrEmpty(token))
             {
-                TempData["MensagemErro"] = "Token inválido ou expirado.";
+                TempData["MensagemErro"] = "Token inválido.";
                 return RedirectToAction("Index");
             }
 
-            usuario.SetNovaSenha(model.NovaSenha);
-            usuario.TokenRedefinicaoSenha = null;
-            usuario.TokenExpiracao = null;
+            // Cria a model com o token preenchido
+            var model = new DefinirNovaSenhaModel
+            {
+                Token = token
+            };
 
-            _usuarioRepositorio.Atualizar(usuario);
-
-            TempData["MensagemSucesso"] = "Senha redefinida com sucesso. Faça login com a nova senha!";
-            return RedirectToAction("Index");
+            return View(model); // Passa a model para a view
         }
+
+        // POST: processa o envio da nova senha
+        [HttpPost]
+        public IActionResult SalvarNovaSenha(DefinirNovaSenhaModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View("DefinirNovaSenha", model);
+
+                var usuario = _usuarioRepositorio.BuscarPorToken(model.Token);
+
+                if (usuario == null || usuario.TokenExpiracao < DateTime.Now)
+                {
+                    TempData["MensagemErro"] = "Token inválido ou expirado.";
+                    return RedirectToAction("Index");
+                }
+
+                usuario.SetNovaSenha(model.NovaSenha);
+                usuario.TokenRedefinicaoSenha = null;
+                usuario.TokenExpiracao = null;
+
+                _usuarioRepositorio.Atualizar(usuario);
+
+                TempData["MensagemSucesso"] = "Senha redefinida com sucesso. Faça login com a nova senha!";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["MensagemErro"] = $"Ocorreu um erro ao redefinir a senha: {ex.Message}";
+                return View("DefinirNovaSenha", model);
+            }
+        }
+
 
 
 
@@ -188,7 +218,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     usuario.TokenExpiracao = DateTime.Now.AddHours(1);
                     _usuarioRepositorio.Atualizar(usuario);
 
-                    string link = Url.Action("RedefinirSenha", "Login", new { token = token }, Request.Scheme);
+                    string link = Url.Action("DefinirNovaSenha", "Login", new { token = token }, Request.Scheme);
 
                     string assunto = "Redefinição de senha - SisºFut";
                     string mensagem = $"Olá, {usuario.Name}!<br><br>" +

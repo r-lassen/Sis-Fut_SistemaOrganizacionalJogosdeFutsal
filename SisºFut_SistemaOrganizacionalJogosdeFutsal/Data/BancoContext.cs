@@ -17,9 +17,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Data
 
         public DbSet<AgendamentosModel> Agendamentos { get; set; }
 
-        public DbSet<TimeXQuadrasModel> TimexQuadras { get; set; }
-
-
+        public DbSet<JogosEncerradosModel> JogosEncerrados { get; set; }
     }
 
     public class Contatos

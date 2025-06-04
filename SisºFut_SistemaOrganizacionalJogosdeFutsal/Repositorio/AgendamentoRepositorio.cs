@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,14 +22,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         }
 
 
-
-
-
         public List<AgendamentosModel> BuscarTodos()
         {
             return _bancoContext.Agendamentos.ToList();
         }
-
 
         public List<AgendamentosModel> BuscarJogosAbertosPorIdTime1(int id)
         {
@@ -76,15 +73,15 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
 
         public bool Apagar(int id)
         {
-            AgendamentosModel AgendamentoDB = BuscarPorId(id);
-            if (AgendamentoDB == null)
-                throw new System.Exception("Erro em apagar contato");
+            var agendamentoEntity = _bancoContext.Agendamentos.Find(id);
+            if (agendamentoEntity == null)
+                throw new Exception("Agendamento não encontrado para apagar");
 
-            // Removendo o contato
-            _bancoContext.Agendamentos.Remove(AgendamentoDB);
+            _bancoContext.Agendamentos.Remove(agendamentoEntity);
             _bancoContext.SaveChanges();
 
             return true;
         }
+
     }
 }

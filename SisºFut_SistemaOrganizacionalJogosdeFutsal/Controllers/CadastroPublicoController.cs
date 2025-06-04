@@ -14,16 +14,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     public class CadastroPublicoController : Controller
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        private readonly ITimeXQuadrasRepositorio _timeXquadrasRepositorio;
         private readonly IQuadrasRepositorio _quadrasRepositorio;
 
         public CadastroPublicoController(IUsuarioRepositorio usuarioRepositorio,
 
-            ITimeXQuadrasRepositorio timeXquadras,
             IQuadrasRepositorio quadras)
         {
             _usuarioRepositorio = usuarioRepositorio;
-            _timeXquadrasRepositorio = timeXquadras;
             _quadrasRepositorio = quadras; 
         }
 

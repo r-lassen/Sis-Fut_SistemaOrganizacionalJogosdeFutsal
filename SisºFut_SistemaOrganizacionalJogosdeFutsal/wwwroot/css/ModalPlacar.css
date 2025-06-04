@@ -1,0 +1,133 @@
+﻿/* Estilos base */
+.placar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.time-placar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-width: 120px;
+}
+
+.nome-time {
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: #000; /* Garantindo que o texto fique preto */
+}
+
+.controle-placar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-placar {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    -moz-appearance: textfield;
+    background-color: #f8f9fa;
+}
+
+    .input-placar::-webkit-outer-spin-button,
+    .input-placar::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+.btn-placar {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #f0f0f0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+    .btn-placar:hover {
+        background: #37c3b4;
+        color: white;
+    }
+
+/* VS Badge */
+.vs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+/* Botão personalizado */
+.btn-encerrar {
+    background-color: #37c3b4;
+    color: white;
+    border: none;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    padding: 8px 20px;
+    transition: all 0.3s;
+}
+
+    .btn-encerrar:hover {
+        background-color: #2da89a;
+        color: white;
+    }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .vs-badge {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        margin: 15px 0;
+    }
+
+    .input-placar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .btn-placar {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .placar-container {
+        flex-direction: column;
+    }
+
+    .vs-badge {
+        margin: 10px 0;
+        transform: rotate(90deg);
+    }
+
+    .nome-time {
+        margin-bottom: 15px;
+    }
+}

@@ -1,0 +1,104 @@
+﻿<!-- Modal de Confirmação para Encerramento com Placar -->
+
+<link href="~/css/ModalPlacar.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="modal fade" id="modalEncerrarJogo" tabindex="-1" aria-labelledby="modalEncerrarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="font-family: 'Courier New', Courier, monospace;">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="modalEncerrarLabel">ENCERRAR JOGO</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Home" asp-action="EncerrarJogo" method="post">
+                <div class="modal-body">
+                    <p class="mb-4 text-center">PLACAR FINAL:</p>
+
+                    <div class="placar-container">
+                        <div class="time-placar">
+                            <div class="controle-placar">
+                                <button type="button" class="btn-placar menos">-</button>
+                                <input type="number" name="GolsTime1" class="input-placar" value="0" min="0" max="99" required>
+                                <button type="button" class="btn-placar mais">+</button>
+                            </div>
+                            <label id="labelTime1" class="nome-time"></label>
+                        </div>
+
+                        <!-- VS no meio -->
+                        <div class="vs-container">
+                            <div class="vs-badge">VS</div>
+                        </div>
+
+                        <div class="time-placar">
+                            <div class="controle-placar">
+                                <button type="button" class="btn-placar menos">-</button>
+                                <input type="number" name="GolsTime2" class="input-placar" value="0" min="0" max="99" required>
+                                <button type="button" class="btn-placar mais">+</button>
+                            </div>
+                            <label id="labelTime2" class="nome-time"></label>
+                        </div>
+                    </div>
+
+                    <!-- Campo de descrição adicionado aqui -->
+                    <div class="mt-4">
+                        <label for="descricaoJogo" class="form-label">Descrição (Opcional)</label>
+                        <textarea class="form-control" id="descricaoJogo" name="Descricao" rows="3"
+                                  placeholder="Adicione observações sobre o jogo..."></textarea>
+                    </div>
+
+                    <input type="hidden" name="id" id="idJogo">
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">CANCELAR</button>
+                    <button type="submit" class="btn btn-encerrar">SALVAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Função para abrir o modal
+    function abrirModalEncerrar(idJogo, time1, time2, descricao = '') {
+        document.getElementById("labelTime1").innerText = time1;
+        document.getElementById("labelTime2").innerText = time2;
+        document.getElementById("idJogo").value = idJogo;
+        document.getElementById("descricaoJogo").value = descricao;
+
+        // Resetar os valores do placar
+        document.querySelectorAll('.input-placar').forEach(input => {
+            input.value = 0;
+        });
+
+        const modal = new bootstrap.Modal(document.getElementById('modalEncerrarJogo'));
+        modal.show();
+    }
+
+    // Controles do placar
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-placar').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('.input-placar');
+                let value = parseInt(input.value);
+
+                if (this.classList.contains('mais')) {
+                    value = Math.min(value + 1, 99);
+                } else {
+                    value = Math.max(value - 1, 0);
+                }
+
+                input.value = value;
+                input.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // Validação dos inputs
+        document.querySelectorAll('.input-placar').forEach(input => {
+            input.addEventListener('change', function() {
+                let value = parseInt(this.value);
+                if (isNaN(value) || value < 0) this.value = 0;
+                if (value > 99) this.value = 99;
+            });
+        });
+    });
+</script>

@@ -42,25 +42,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Migrations
                     b.ToTable("Contatos");
                 });
 
-            modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.TimesModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
 
-                    b.Property<string>("IMG_Time")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NM_Responsavel")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NM_Time")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Times");
-                });
 
             modelBuilder.Entity("SisºFut_SistemaOrganizacionalJogosdeFutsal.Models.UsuarioModel", b =>
                 {

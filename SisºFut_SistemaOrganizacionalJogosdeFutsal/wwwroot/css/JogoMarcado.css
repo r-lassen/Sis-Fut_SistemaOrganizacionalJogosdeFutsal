@@ -5,6 +5,8 @@
     --border-color: #ccc;
     --text-color: #555;
     --form-bg: #ffffff;
+    --danger-color: #dc3545;
+    --danger-hover: #c82333;
 }
 
 body {
@@ -150,6 +152,9 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-primary {
@@ -174,58 +179,17 @@ body {
         background-color: rgba(55, 195, 180, 0.1);
     }
 
-/* ESTILOS PARA O DROPDOWN DO TIME 2 - ATUALIZADO */
-#dropdownTime2 {
-    text-align: center;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding: 10px 32px 10px 12px;
-    cursor: pointer;
-    line-height: normal;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
 }
 
-/* Adicionando um container especial para o dropdown para melhor controle */
-.dropdown-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-/* Estilo quando o dropdown está em foco */
-#dropdownTime2:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(55, 195, 180, 0.25);
-    outline: none;
-}
-
-/* Estilo para as opções do dropdown */
-#dropdownTime2 option {
-    text-align: left;
-    padding: 8px;
-}
-
-    /* Estilo para o placeholder (opção padrão) */
-    #dropdownTime2 option[value=""] {
-        color: #999;
-        text-align: center;
+    .btn-danger:hover {
+        background-color: var(--danger-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-
-/* Ajuste específico para telas grandes */
-@media (min-width: 769px) {
-    #dropdownTime2 {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-}
 
 /* RESPONSIVIDADE */
 @media (max-width: 768px) {
@@ -255,16 +219,9 @@ body {
         padding: 8px 16px;
     }
 
-    /* ESTILOS PARA DATA/HORA EM TABLETS */
-    .row.mb-4 {
-        flex-direction: row;
-        gap: 15px;
+    .btn-group {
+        gap: 12px;
     }
-
-        .row.mb-4 .col-md-6 {
-            flex: 1;
-            margin-bottom: 0;
-        }
 }
 
 @media (max-width: 480px) {
@@ -278,44 +235,19 @@ body {
     }
 
     .btn {
-        padding: 6px 12px;
+        padding: 8px 12px;
         font-size: 0.9rem;
+        width: 100%;
+        margin-bottom: 10px;
     }
 
-    /* MELHORIAS PARA DATA/HORA EM MOBILE */
-    .row.mb-4 {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-        .row.mb-4 .col-md-6 {
-            width: 100%;
-        }
-
-    .form-control[type="date"],
-    .form-control[type="time"] {
-        padding: 12px 14px;
-        font-size: 16px;
-        min-height: 44px;
-    }
-
-        /* Melhora a aparência dos ícones */
-        .form-control[type="date"]::-webkit-calendar-picker-indicator,
-        .form-control[type="time"]::-webkit-calendar-picker-indicator {
-            padding: 4px;
-            opacity: 0.8;
-            transform: scale(1.2);
-        }
-
-    /* BOTÕES EM MOBILE - UM AO LADO DO OUTRO */
     .btn-group {
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
         gap: 10px;
     }
 
-    .btn {
-        width: 48%;
+    .btn:last-child {
+        margin-bottom: 0;
     }
 }
 

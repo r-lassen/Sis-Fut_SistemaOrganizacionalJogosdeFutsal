@@ -161,25 +161,20 @@
                         <small id="feedbackConfirmacao" class="text-danger d-none mt-1">As senhas não coincidem.</small>
 
                         <!-- Botões -->
-                        <div class="row mt-4" style="font-family: 'Courier New', Courier, monospace;">
+                        <div class="row mt-4">
                             <div class="col-12">
-                                <div class="d-flex justify-content-end">
-                                    <div class="d-flex flex-wrap" style="gap: 1rem;">
-                                        <!-- Botão Voltar -->
-                                        <a class="btn btn-sm rounded-pill px-4"
-                                           asp-action="Index"
-                                           asp-controller="Usuario"
-                                           style="color: #37c3b4; border-color: #37c3b4; background-color: transparent;">
-                                            Voltar
-                                        </a>
+                                <div class="btn-group">
+                                    <!-- Botão Voltar -->
+                                    <a class="btn btn-outline"
+                                       asp-action="Index"
+                                       asp-controller="Usuario">
+                                        Voltar
+                                    </a>
 
-                                        <!-- Botão Cadastrar -->
-                                        <button type="submit"
-                                                class="btn btn-sm rounded-pill px-4"
-                                                style="background-color: #37c3b4; color: white; border: none;">
-                                            Cadastrar
-                                        </button>
-                                    </div>
+                                    <!-- Botão Cadastrar -->
+                                    <button type="submit" class="btn btn-primary">
+                                        Cadastrar
+                                    </button>
                                 </div>
                             </div>
                         </div>

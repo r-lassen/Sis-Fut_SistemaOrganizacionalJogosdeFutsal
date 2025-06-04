@@ -100,6 +100,17 @@ body {
         background-color: #fff;
     }
 
+/* LAYOUT DOS TIMES */
+.team-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team-image {
+    border: 2px solid #e9ecef;
+}
+
 /* VS CENTRAL */
 .vs-container {
     display: flex;
@@ -165,8 +176,21 @@ body {
         background-color: rgba(55, 195, 180, 0.1);
     }
 
-/* IMAGENS - Centralizadas em telas grandes */
+/* CENTRALIZAÇÃO DAS IMAGENS EM TELAS MAIORES */
 @media (min-width: 769px) {
+    .col-md-5 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+        .col-md-5 .form-control,
+        .col-md-5 .form-label {
+            width: 100%;
+            max-width: 300px;
+        }
+
     .team-image {
         display: block;
         margin-left: auto;
@@ -265,3 +289,4 @@ body {
         width: 48%; /* Deixa um pequeno espaço entre os botões */
     }
 }
+

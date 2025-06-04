@@ -32,9 +32,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal
 
             services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-            services.AddScoped<ITimeXQuadrasRepositorio, TimeXQuadrasRepositorio>();
             services.AddScoped<IQuadrasRepositorio, QuadrasRepositorio>();
             services.AddScoped<IAgendamentoRepositorio, AgendamentoRepositorio>();
+            services.AddScoped<IJogosEncerradosRepositorio, JogosEncerradosRepositorio>();
             services.AddScoped<ISessao, Sessao>();
 
             services.AddSession(o =>

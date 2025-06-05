@@ -1,12 +1,10 @@
 # SisºFut_SistemaOrganizacionalJogosdeFutsal
-
-Sobre o Projeto
-  Aplicativo Web que facilita o encontro de equipes de futsal feminino a marcar jogos de uma maneira mais fácil.
+  Aplicativo Web que facilita o encontro de equipes de futsal feminino a marcar jogos de uma maneira mais rápida.
 
 Contruido com
  - MVC (Model, view Controller)
  - C# .net
- - Mysql
+ - Mysql Workbench
 
 Autor
  - Rafaela Ranieri Lassen

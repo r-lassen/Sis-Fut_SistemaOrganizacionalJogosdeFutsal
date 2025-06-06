@@ -3,343 +3,202 @@
 @using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Listagem de contatos";
+    Layout = "_Layout";
 }
 
-<script src="~/Scripts/Index.js"></script>
+
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/IndexContatos.css" asp-append-version="true" />
 
-<div class="text-center" style="font-family: Courier, monospace;">
-    <br />
 
-    @if (TempData["MensagemSucesso"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
-            @TempData["MensagemSucesso"]
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
+        @TempData["MensagemErro"]
+    </div>
+}
+
+
+
+<div class="container-fluid" style="font-family: Courier, monospace; background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 30px; border: 2px solid #ddd; border-left: 4px solid #37c3b4; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+
+    <div class="position-relative text-center mb-4">
+        <div class="titulo-container">
+            <h1 class="titulo-centralizado">Contatos</h1>
         </div>
-    }
-
-    @if (TempData["MensagemErro"] != null)
-    {
-        <div class="alert alert-danger" role="alert">
-            <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
-            @TempData["MensagemErro"]
+        <div class="search-container">
+            <input type="text" id="searchInput" class="form-control form-control-sm campo-pesquisa" placeholder="Pesquisar por nome..." />
         </div>
-    }
+    </div>
 
-    <br />
-
-    <div class="container-fluid" style="font-family: Courier, monospace; background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 30px; border: 2px solid #ddd; border-left: 4px solid #37c3b4; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-
-        <div class="position-relative text-center mb-4">
-            <div class="titulo-container">
-                <h1 class="titulo-centralizado">Contatos</h1>
-            </div>
-            <div class="search-container">
-                <input type="text" id="searchInput" class="form-control form-control-sm campo-pesquisa" placeholder="Pesquisar por nome..." />
-            </div>
-        </div>
-
-        <div id="tabelaContatos">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">NOME DO TIME</th>
-                            <th scope="col">CELULAR</th>
-                            <th scope="col">E-MAIL</th>
-                            <th scope="col">CATEGORIA</th>
-                            <th scope="col" class="text-end">
-                                <a asp-controller="Contato" asp-action="Criar"
-                                   class="btn btn-sm rounded-pill py-1 text-center btn-custom text-nowrap"
-                                   style="padding: 4px 10px;"> Adicionar
-                                </a>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model != null && Model.Any())
-                        {
-                            foreach (var contato in Model)
-                            {
-                                <tr>
-                                    <td>@contato.Nome</td>
-                                    <td>@contato.Celular</td>
-                                    <td class="d-none d-md-table-cell">@contato.Email</td>
-                                    <td class="d-none d-md-table-cell">@contato.Categoria</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center" style="gap: 8px;">
-                                            <a asp-controller="Contato" asp-action="Editar" asp-route-id="@contato.Id"
-                                               class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center btn-custom d-none d-md-block"
-                                               style="width: 100px;">Editar</a>
-
-                                            <a asp-controller="Contato" asp-action="Editar" asp-route-id="@contato.Id"
-                                               class="btn btn-outline-dark btn-sm rounded-circle d-block d-md-none"
-                                               title="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-
-                                            <button type="button"
-                                                    class="btn btn-outline-danger btn-sm rounded-pill py-1 text-center d-none d-md-block"
-                                                    style="border: 1px solid #dc3545; font-weight: bold; width: 100px;"
-                                                    onclick="abrirModalConfirmacao('@contato.Id', '@contato.Nome')">
-                                                Apagar
-                                            </button>
-                                            @await Html.PartialAsync("_ModalApagar")
-                                            <form asp-controller="Contato" asp-action="ApagarConfirmacao" asp-route-id="@contato.Id"
-                                                  method="get" class="d-block d-md-none">
-                                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" title="Apagar">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
+    <div id="tabelaContatos">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">NOME DO TIME</th>
+                        <th scope="col">CELULAR</th>
+                        <th scope="col">E-MAIL</th>
+                        <th scope="col">CATEGORIA</th>
+                        <th scope="col" class="text-end">
+                            <a asp-controller="Contato" asp-action="Criar"
+                               class="btn btn-sm rounded-pill py-1 text-center btn-custom text-nowrap"
+                               style="padding: 4px 10px;">
+                                Adicionar
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var contato in Model)
                         {
                             <tr>
-                                <td colspan="5" class="text-center">Nenhum Contato Encontrado</td>
+                                <td>@contato.Nome</td>
+                                <td>@contato.Celular</td>
+                                <td class="d-none d-md-table-cell">@contato.Email</td>
+                                <td class="d-none d-md-table-cell">@contato.Categoria</td>
+                                <td>
+                                    <div class="d-flex justify-content-center" style="gap: 8px;">
+                                        <a asp-controller="Contato" asp-action="Editar" asp-route-id="@contato.Id"
+                                           class="btn btn-sm rounded-pill py-1 text-center btn-custom d-none d-md-block"
+                                           style="width: 100px;">Editar</a>
+
+                                        <a asp-controller="Contato" asp-action="Editar" asp-route-id="@contato.Id"
+                                           class="btn btn-outline-dark btn-sm rounded-circle d-block d-md-none"
+                                           title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm rounded-pill py-1 text-center d-none d-md-block"
+                                                style="border: 1px solid #dc3545; font-weight: bold; width: 100px;"
+                                                onclick="abrirModalConfirmacao('@contato.Id', '@contato.Nome')">
+                                            Apagar
+                                        </button>
+                                        @await Html.PartialAsync("_ModalApagar")
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm rounded-circle d-block d-md-none"
+                                                title="Apagat"
+                                                onclick="abrirModalConfirmacao('@contato.Id', '@contato.Nome')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                @if (Model.HasPreviousPage)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="?page=@(Model.PageNumber - 1)" aria-label="Anterior">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">&laquo;</span>
-                    </li>
-                }
-
-                @for (int i = 1; i <= Model.PageCount; i++)
-                {
-                    if (i == Model.PageNumber)
-                    {
-                        <li class="page-item active"><span class="page-link">@i</span></li>
                     }
                     else
                     {
-                        <li class="page-item"><a class="page-link" href="?page=@i">@i</a></li>
+                        <tr>
+                            <td colspan="5" class="text-center">Nenhum Contato Encontrado</td>
+                        </tr>
                     }
-                }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                @if (Model.HasNextPage)
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber - 1)" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                if (i == Model.PageNumber)
                 {
-                    <li class="page-item">
-                        <a class="page-link" href="?page=@(Model.PageNumber + 1)" aria-label="Próximo">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
+                    <li class="page-item active"><span class="page-link">@i</span></li>
                 }
                 else
                 {
-                    <li class="page-item disabled">
-                        <span class="page-link">&raquo;</span>
-                    </li>
+                    <li class="page-item"><a class="page-link" href="?page=@i">@i</a></li>
                 }
-            </ul>
-        </nav>
-    </div>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(Model.PageNumber + 1)" aria-label="Próximo">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>
 
 
 
+<script>
+    let timer;
+    document.getElementById("searchInput").addEventListener("input", function () {
+        clearTimeout(timer);
+        const filtro = this.value;
 
+        // Defina um tempo de espera de 500ms após o usuário parar de digitar
+        timer = setTimeout(function () {
+            fetch(`/Contato/Filtrar?filtro=${encodeURIComponent(filtro)}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("tabelaContatos").innerHTML = html;
+                });
+        }, 500);
+    });
 
-<style>
-    .btn-custom {
-        border: 1px solid #37c3b4;
-        font-weight: bold;
-        width: 100%;
-        color: #37c3b4;
-        background-color: transparent;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        border-radius: 20px;
-    }
-
-        .btn-custom:hover {
-            background-color: #37c3b4;
-            color: white;
-        }
-
-    .titulo-centralizado {
-        font-weight: bold;
-        color: #37c3b4;
-        font-family: 'Courier New', Courier, monospace;
-        margin: 0 auto;
-        text-align: center;
-        width: 100%;
-    }
-
-    #searchInput {
-        border-radius: 20px;
-        max-width: 250px;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .titulo-container {
-        position: relative;
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .search-container {
-        margin-top: 10px;
-    }
-
-    .pagination .page-link {
-        color: #37c3b4;
-        border-color: #37c3b4;
-    }
-
-        .pagination .page-link:hover {
-            background-color: #37c3b4;
-            color: white;
-        }
-
-    .pagination .page-item.active .page-link {
-        background-color: #37c3b4;
-        border-color: #37c3b4;
-        color: white;
-    }
-
-    .pagination .page-item.disabled .page-link {
-        color: #ccc;
-        border-color: #ccc;
-        background-color: #f8f9fa;
-    }
-
-    /* Responsividade */
-    @@media (max-width: 768px) {
-        .titulo-centralizado
-
-    {
-        font-size: 1.5rem;
-    }
-
-    .search-container {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    #searchInput {
-        width: 80%;
-        margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .table th:nth-child(3),
-    .table th:nth-child(4),
-    .table td:nth-child(3),
-    .table td:nth-child(4) {
-        display: none; /* Oculta Email e Categoria */
-    }
-
-    .btn-custom {
-        font-size: 0.8rem;
-    }
-
-    } 
-    @@media (min-width: 768px) and (max-width: 850px) {
-        .container-fluid
-
-    {
-        padding: 15px;
-    }
-
-    .table th,
-    .table td {
-        font-size: 0.85rem;
-        padding: 0.4rem;
-    }
-
-    .btn-custom {
-        font-size: 0.75rem;
-        padding: 3px 8px;
-    }
-
-    .titulo-centralizado {
-        font-size: 1.6rem;
-    }
-
-    .search-container {
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    #searchInput {
-        width: 75%;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-
-    .d-md-block {
-        display: none !important;
-    }
-
-    .d-md-none {
-        display: block !important;
-    }
-
-    }
-
-    @@media (max-width: 767.98px) {
-        /* Já oculta Email e Categoria em telas menores */
-        .table th:nth-child(3), .table th:nth-child(4), .table td:nth-child(3), .table td:nth-child(4)
-
-    {
-        display: none;
-    }
-
-    }
-
-    @@media (min-width: 768px) and (max-width: 768px) {
-        /* Mostra Email (3ª coluna), oculta Categoria (4ª coluna) */
-        .table th:nth-child(3), .table td:nth-child(3)
-
-    {
-        display: table-cell !important;
-    }
-
-    .table th:nth-child(4),
-    .table td:nth-child(4) {
-        display: none !important;
-    }
-
-    }
-</style>
-
-
-    <script>
-        let timer;
-        document.getElementById("searchInput").addEventListener("input", function () {
-            clearTimeout(timer);
-            const filtro = this.value;
-
-            // Defina um tempo de espera de 500ms após o usuário parar de digitar
-            timer = setTimeout(function () {
-                fetch(`/Contato/Filtrar?filtro=${encodeURIComponent(filtro)}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById("tabelaContatos").innerHTML = html;
-                    });
-            }, 500);
+        // Fecha o alerta ao clicar no botão X
+    document.querySelectorAll('.close-alert').forEach(btn => {
+        btn.addEventListener('click', function () {
+            this.parentElement.style.display = 'none';
         });
-    </script>
+    });
+
+    // Esconde alertas de sucesso após 4 segundos
+    setTimeout(() => {
+        document.querySelectorAll('.auto-dismiss').forEach(alert => {
+            alert.style.display = 'none';
+        });
+    }, 4000); // 4000ms = 4 segundos
+
+    @functions {
+        public string FormatarCelular(string celular)
+        {
+            if (string.IsNullOrWhiteSpace(celular) || celular.Length != 11)
+            {
+                return celular; // Retorna sem formatação se não tiver 11 dígitos
+            }
+
+            // Formata para (XX) XXXXX-XXXX
+            return $"({celular.Substring(0, 2)}) {celular.Substring(2, 5)}-{celular.Substring(7, 4)}";
+        }
+    }
+</script>

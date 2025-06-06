@@ -61,16 +61,17 @@
                     }
                 </div>
             </div>
-
-            <!-- SEÇÃO DE JOGOS MARCADOS - COM CLIQUE -->
+            <!-- SEÇÃO DE JOGOS MARCADOS -->
             <div class="games-section">
                 <h1>Jogos Marcados</h1>
                 <div class="games-list">
-                    @if (Model.Marcados.Count > 0)
+                    @if (Model.Marcados != null && Model.Marcados.Count > 0)
                     {
                         @foreach (var marcado in Model.Marcados)
                         {
-                            <div class="scheduled-game-card" onclick="window.location.href='@Url.Action("JogoMarcado", "Home", new { id = marcado.id })'">
+                            <a asp-controller="Home" asp-action="JogoMarcado" asp-route-id="@marcado.id"
+                               class="scheduled-game-card"
+                               style="text-decoration: none; color: inherit;">
                                 <div class="teams-container">
                                     <div class="team-card">
                                         <img src="data:image/;base64,@marcado.FotoTime1" class="team-logo" />
@@ -86,7 +87,7 @@
                                     @marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora
                                 </div>
                                 <input type="hidden" value="@marcado.id" />
-                            </div>
+                            </a>
                         }
                     }
                     else

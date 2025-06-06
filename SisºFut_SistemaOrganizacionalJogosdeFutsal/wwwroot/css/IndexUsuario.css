@@ -1,0 +1,144 @@
+﻿
+.btn-custom {
+    border: 1px solid #37c3b4;
+    font-weight: bold;
+    width: 100%;
+    color: #37c3b4;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 20px;
+}
+
+.btn-custom:hover {
+    background-color: #37c3b4;
+    color: white;
+}
+
+.titulo-centralizado {
+    font-weight: bold;
+    color: #37c3b4;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+
+#searchInput {
+    border-radius: 20px;
+    max-width: 250px;
+    width: 100%;
+    margin-top: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    #searchInput:focus {
+        border-color: #37c3b4;
+        box-shadow: 0 0 0 0.25rem rgba(55, 195, 180, 0.25);
+        outline: none;
+    }
+
+.titulo-container {
+    position: relative;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.search-container {
+    margin-top: 10px;
+}
+
+.pagination .page-link {
+    color: #37c3b4;
+    border-color: #37c3b4;
+}
+
+    .pagination .page-link:hover {
+        background-color: #37c3b4;
+        color: white;
+    }
+
+.pagination .page-item.active .page-link {
+    background-color: #37c3b4;
+    border-color: #37c3b4;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #ccc;
+    background-color: #f8f9fa;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .titulo-centralizado {
+        font-size: 1.5rem;
+    }
+
+    .search-container {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #searchInput {
+        width: 80%;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Ocultar Login, Email e DataCadastro */
+    .table th:nth-child(2),
+    .table th:nth-child(3),
+    .table th:nth-child(5),
+    .table td:nth-child(2),
+    .table td:nth-child(3),
+    .table td:nth-child(5) {
+        display: none;
+    }
+
+    .btn-custom {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .container-fluid {
+        padding: 15px;
+    }
+
+    .table th,
+    .table td {
+        font-size: 0.85rem;
+        padding: 0.4rem;
+    }
+
+    .btn-custom {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+    }
+
+    .titulo-centralizado {
+        font-size: 1.6rem;
+    }
+
+    .search-container {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    #searchInput {
+        width: 75%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .d-md-block {
+        display: none !important;
+    }
+
+    .d-md-none {
+        display: block !important;
+    }
+}
+
+

@@ -3,134 +3,258 @@
 
 @{
     ViewData["Title"] = "Criar Usuário";
+    Layout = "_LayoutDeslogado";
 }
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-<form asp-controller="Usuario" asp-action="Criar" method="post">
-    <div class="container-formulario">
-        <div class="form-card">
+<link rel="stylesheet" href="~/css/CriarUsuario.css" asp-append-version="true">
 
-            <div class="titulo-container">
-                <h1 class="titulo-centralizado">Cadastrar Usuário</h1>
-            </div>
-
-            <div class="form-group mb-4">
-                <label class="form-label">Nome do Time</label>
-                <input type="text" asp-for="Name" class="form-control custom-input" placeholder="Digite o Nome" />
-                <span class="text-danger">@Html.ValidationMessageFor(x => x.Name)</span>
-       
-            </div>
-
-            <div class="form-group mb-4">
-                <label class="form-label">E-mail</label>
-                <input type="email" asp-for="Email" class="form-control custom-input" placeholder="Digite o Email" />
-                <span class="text-danger">@Html.ValidationMessageFor(x => x.Email)</span>
-           
-            </div>
-
-            <div class="form-group mb-4">
-                <label class="form-label">Usuário</label>
-                <input type="text" asp-for="Login" class="form-control custom-input" placeholder="Usuário" />
-                <span class="text-danger">@Html.ValidationMessageFor(x => x.Login)</span>
-
-
-            </div>
-
-            <div class="form-group mb-4">
-                <label class="form-label">Tipo de Perfil</label>
-                <select asp-for="Perfil" class="form-control custom-input">
-                    <option selected>Selecione</option>
-                    <option value="@PerfilEnum.Admin">Administrador</option>
-                    <option value="@PerfilEnum.Padrao">Padrão</option>
-                </select>
-                <span class="text-danger">@Html.ValidationMessageFor(x => x.Perfil)</span>
-            </div>
-
-            <div class="form-group mb-4">
-                <label class="form-label">Senha</label>
-                <input type="password" asp-for="Senha" class="form-control custom-input" placeholder="Digite uma Senha" />
-                <span class="text-danger">@Html.ValidationMessageFor(x => x.Senha)</span>
-            </div>
-
-            <div class="d-flex justify-content-between mt-4 button-container">
-                <a class="btn btn-custom" asp-controller="Usuario" asp-action="Index">Voltar</a>
-                <button type="submit" class="btn btn-custom">Adicionar</button>
-            </div>
-
+<div class="main-container">
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+            @TempData["MensagemErro"]
         </div>
+    }
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    <div class="page-title">
+        <h1>Cadastrar Usuário</h1>
     </div>
-</form>
 
-<style>
-    body {
-        font-family: 'Courier New', Courier, monospace;
-    }
+    <form asp-controller="Usuario" asp-action="Criar" method="post" id="cadastroForm">
+        <div class="form-container">
+            <!-- Nome do Time -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <label class="form-label required-field">Nome do Time</label>
+                    <input type="text" asp-for="Name"
+                           class="form-control @(ViewData.ModelState["Name"]?.Errors.Count > 0 ? "is-invalid" : ViewData.ModelState["Name"]?.AttemptedValue != null ? "is-valid" : "")"
+                           placeholder="Digite o Nome" required />
+                    <span class="text-danger">@Html.ValidationMessageFor(x => x.Name)</span>
+                </div>
+            </div>
 
-    .container-formulario {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        width: 100%;
-    }
+            <!-- E-mail -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <label class="form-label required-field">E-mail</label>
+                    <input type="email" asp-for="Email"
+                           class="form-control @(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "is-invalid" : ViewData.ModelState["Email"]?.AttemptedValue != null ? "is-valid" : "")"
+                           placeholder="Digite o Email" required />
+                    <span class="text-danger">@Html.ValidationMessageFor(x => x.Email)</span>
+                </div>
+            </div>
 
-    .form-card {
-        border: 2px solid #ccc;
-        padding: 35px;
-        border-radius: 15px;
-        background-color: white;
-        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 650px;
-    }
+            <!-- Login e Perfil -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <label class="form-label required-field">Usuário</label>
+                    <input type="text" asp-for="Login"
+                           class="form-control @(ViewData.ModelState["Login"]?.Errors.Count > 0 ? "is-invalid" : ViewData.ModelState["Login"]?.AttemptedValue != null ? "is-valid" : "")"
+                           placeholder="Usuário" required />
+                    <span class="text-danger">@Html.ValidationMessageFor(x => x.Login)</span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required-field">Tipo de Perfil</label>
+                    @Html.DropDownListFor(model => model.Perfil,
+                             new SelectList(Enum.GetValues(typeof(PerfilEnum))),
+                             "Selecione",
+                             new
+                             {
+                                 @class = "form-control",
+                                 @id = "dropdownPerfil",
+                                 @required = "required"
+                             })
+                    <span class="text-danger">@Html.ValidationMessageFor(x => x.Perfil)</span>
+                </div>
+            </div>
 
-    .titulo-centralizado {
-        font-weight: bold;
-        color: #37c3b4;
-        text-align: center;
-        margin-bottom: 30px;
-    }
+            <!-- Senha -->
+            <div class="row mb-4 position-relative">
+                <div class="col-12">
+                    <label class="form-label required-field">Senha</label>
+                    <div class="position-relative">
+                        <input type="password" asp-for="Senha" id="senha"
+                               class="form-control @(ViewData.ModelState["Senha"]?.Errors.Count > 0 ? "is-invalid" : ViewData.ModelState["Senha"]?.AttemptedValue != null ? "is-valid" : "")"
+                               placeholder="Digite uma Senha" required />
+                        <i id="toggleSenha" class="bi bi-eye position-absolute text-muted d-none"
+                           style="top: 55%; right: 45px; transform: translateY(-50%); cursor: pointer; z-index: 10;"></i>
+                    </div>
+                    <span class="text-danger">@Html.ValidationMessageFor(x => x.Senha)</span>
 
-    .btn-custom {
-        border: 1px solid #37c3b4;
-        font-weight: bold;
-        color: #37c3b4;
-        background-color: transparent;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        border-radius: 20px;
-        padding: 10px 20px;
-        width: 48%;
-    }
+                    <small id="capsWarning" class="text-warning d-none mt-1 d-block">
+                        <i class="bi bi-capslock-fill"></i> Caps Lock está ativado!
+                    </small>
+                    <small id="senhaAviso" class="text-danger d-none mt-1 d-block">
+                        A senha deve ter no mínimo 6 caracteres, sem espaços ou caracteres especiais.
+                    </small>
 
-        .btn-custom:hover {
-            background-color: #37c3b4;
-            color: white;
+                    <div id="senhaForca" class="mt-2">
+                        <div class="progress" style="height: 6px;">
+                            <div id="barraForca" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmação de Senha -->
+            <div class="row mb-4 position-relative">
+                <div class="col-12">
+                    <label class="form-label required-field">Confirmação de Senha</label>
+                    <div class="position-relative">
+                        <input type="password" id="confirmacaoSenha"
+                               class="form-control"
+                               placeholder="Confirme a Senha" required />
+                        <i id="toggleConfirmacao" class="bi bi-eye position-absolute text-muted d-none"
+                           style="top: 55%; right: 45px; transform: translateY(-50%); cursor: pointer; z-index: 10;"></i>
+                    </div>
+                    <small id="feedbackConfirmacao" class="text-danger d-none mt-1">
+                        <i class="bi bi-exclamation-triangle-fill"></i> As senhas não coincidem.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="btn-group">
+                        <a class="btn btn-outline" asp-controller="Usuario" asp-action="Index">Voltar</a>
+                        <button type="submit" class="btn btn-cadastrar">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Validação de confirmação de senha
+        const senha = document.getElementById('senha');
+        const confirmacaoSenha = document.getElementById('confirmacaoSenha');
+        const feedbackConfirmacao = document.getElementById('feedbackConfirmacao');
+
+        if (senha && confirmacaoSenha) {
+            function validarSenha() {
+                if (senha.value !== confirmacaoSenha.value) {
+                    confirmacaoSenha.setCustomValidity("As senhas não coincidem");
+                    confirmacaoSenha.classList.add('is-invalid');
+                    feedbackConfirmacao.classList.remove('d-none');
+                } else {
+                    confirmacaoSenha.setCustomValidity("");
+                    confirmacaoSenha.classList.remove('is-invalid');
+                    feedbackConfirmacao.classList.add('d-none');
+                }
+            }
+
+            senha.addEventListener('change', validarSenha);
+            confirmacaoSenha.addEventListener('keyup', validarSenha);
         }
 
-    .custom-input {
-        border-radius: 10px !important;
-    }
+        // Mostrar/ocultar senha
+        function configurarToggleSenha(inputId, toggleId) {
+            const input = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
 
-    .button-container {
-        gap: 10px;
-    }
+            if (input && toggle) {
+                toggle.addEventListener('click', function () {
+                    const tipoAtual = input.getAttribute('type');
+                    input.setAttribute('type', tipoAtual === 'password' ? 'text' : 'password');
+                    toggle.classList.toggle('bi-eye');
+                    toggle.classList.toggle('bi-eye-slash');
+                });
 
-    @@media (max-width: 768px) {
-        .form-card {
-            padding: 20px;
+                input.addEventListener('input', function () {
+                    if (input.value.trim().length > 0) {
+                        toggle.classList.remove('d-none');
+                    } else {
+                        toggle.classList.add('d-none');
+                        input.setAttribute('type', 'password');
+                        toggle.classList.remove('bi-eye-slash');
+                        toggle.classList.add('bi-eye');
+                    }
+                });
+            }
         }
 
-        .btn-custom {
-            width: 100%;
-            margin-bottom: 10px;
+        configurarToggleSenha('senha', 'toggleSenha');
+        configurarToggleSenha('confirmacaoSenha', 'toggleConfirmacao');
+
+        // Validação do formulário com TRIM automático
+        const form = document.getElementById('cadastroForm');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                form.querySelectorAll('input').forEach(input => {
+                    const t = input.type;
+                    if ((t === 'text' || t === 'email' || t === 'password') && input.value) {
+                        input.value = input.value.trim();
+                    }
+                });
+
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
         }
 
-        .button-container {
-            flex-direction: column;
+        // Verificação de Caps Lock
+        const capsWarning = document.getElementById('capsWarning');
+        const senhaAviso = document.getElementById('senhaAviso');
+        const barraForca = document.getElementById('barraForca');
+
+        if (senha) {
+            function verificarCapsLock(e) {
+                const caps = e.getModifierState && e.getModifierState('CapsLock');
+                capsWarning.classList.toggle('d-none', !caps);
+            }
+
+            function validarConteudoSenha() {
+                const valor = senha.value;
+                const regex = /^[A-Za-z0-9]{6,}$/;
+
+                if (!regex.test(valor)) {
+                    senha.setCustomValidity("Senha inválida");
+                    senha.classList.add('is-invalid');
+                    senhaAviso.classList.remove('d-none');
+                } else {
+                    senha.setCustomValidity("");
+                    senha.classList.remove('is-invalid');
+                    senhaAviso.classList.add('d-none');
+                }
+
+                // Medidor de força
+                let forca = 0;
+                if (valor.length >= 6) forca += 1;
+                if (/[A-Z]/.test(valor)) forca += 1;
+                if (/[0-9]/.test(valor)) forca += 1;
+
+                let largura = (forca / 3) * 100;
+                barraForca.style.width = `${largura}%`;
+
+                barraForca.className = 'progress-bar';
+                if (forca === 1) barraForca.classList.add('bg-danger');
+                else if (forca === 2) barraForca.classList.add('bg-warning');
+                else if (forca === 3) barraForca.classList.add('bg-success');
+            }
+
+            senha.addEventListener('input', validarConteudoSenha);
+            senha.addEventListener('keyup', verificarCapsLock);
+            senha.addEventListener('focus', verificarCapsLock);
         }
-    }
-</style>
+    });
+</script>

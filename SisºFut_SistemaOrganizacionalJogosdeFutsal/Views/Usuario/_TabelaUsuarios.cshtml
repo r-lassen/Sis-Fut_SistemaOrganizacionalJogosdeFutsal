@@ -29,7 +29,8 @@
                         <td>@usuario.Login</td>
                         <td>@usuario.Email</td>
                         <td>@(usuario.Perfil == SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums.PerfilEnum.Admin ? "Administrador" : "Padrao")</td>
-                        <td>@usuario.DataCadastro</td>
+                        <td class="d-none d-md-table-cell">@usuario.DataCadastro.ToString("d")</td>
+
                         <td>
                             <div class="d-flex flex-row justify-content-center"
                                  style="gap: 8px; min-width: 120px; width: 100%; max-width: 200px;">

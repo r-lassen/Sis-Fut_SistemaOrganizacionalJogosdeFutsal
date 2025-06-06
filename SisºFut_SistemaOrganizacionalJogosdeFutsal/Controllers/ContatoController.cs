@@ -145,7 +145,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         //}
 
-
         [HttpPost]
         public IActionResult Criar(ContatoModel contato)
         {
@@ -153,6 +152,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //// Remove máscara do celular, deixando só números
+                    //if (!string.IsNullOrEmpty(contato.Celular))
+                    //{
+                    //    contato.Celular = new string(contato.Celular.Where(char.IsDigit).ToArray());
+                    //}
+
                     // Verifica se o número de celular já está cadastrado
                     var celularExistente = _contatoRepositorio.BuscarPorCelular(contato.Celular);
                     if (celularExistente != null)
@@ -167,7 +172,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
                     }
 
-                    // Se houver erros, retorna para a View com mensagens
                     if (!ModelState.IsValid)
                     {
                         return View(contato);

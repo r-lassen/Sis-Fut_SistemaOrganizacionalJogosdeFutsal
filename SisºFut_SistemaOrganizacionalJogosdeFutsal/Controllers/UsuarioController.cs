@@ -165,6 +165,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
+                // Remove espaços em branco dos campos de texto
+                usuario.Name = usuario.Name?.Trim();
+                usuario.Email = usuario.Email?.Trim();
+                usuario.Login = usuario.Login?.Trim();
+                usuario.Senha = usuario.Senha?.Trim();
+
                 if (ModelState.IsValid)
                 {
                     // Verifica se o e-mail já está cadastrado
@@ -213,7 +219,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
                 return View(usuario);
             }
-            catch (System.Exception erro)
+            catch (Exception erro)
             {
                 TempData["MensagemErro"] = $"Erro ao cadastrar o usuário. Detalhes: {erro.Message}";
                 return RedirectToAction("Index");
@@ -221,12 +227,18 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
 
+
         [HttpPost]
         public IActionResult Editar(UsuarioSemSenhaModel usuario)
         {
             try
             {
-                // Valida se o ModelState está correto antes de qualquer outra coisa
+                // Limpa espaços em branco dos campos antes de validar
+                usuario.Name = usuario.Name?.Trim();
+                usuario.Email = usuario.Email?.Trim();
+                usuario.Login = usuario.Login?.Trim();
+
+                // Valida se o ModelState está correto
                 if (!ModelState.IsValid)
                 {
                     return View(usuario);
@@ -267,7 +279,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return View(usuario);
                 }
 
-                // Se tudo estiver ok, faz a atualização no banco
+                // Atualiza os dados
                 usuarioNoBanco.Name = usuario.Name;
                 usuarioNoBanco.Login = usuario.Login;
                 usuarioNoBanco.Email = usuario.Email;
@@ -284,6 +296,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
+
 
 
 

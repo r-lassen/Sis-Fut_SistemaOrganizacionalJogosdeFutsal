@@ -9,10 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
-@{
-    Layout = "_Layout";
-}
-
 
 @if (TempData["MensagemErro"] != null)
 {
@@ -67,13 +63,13 @@
 
                 <!-- Botão Editar -->
                 <a asp-area="" asp-controller="MeuPerfil" asp-action="Editar"
-                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center btn-custom">
+                   class="btn btn-outline btn-sm rounded-pill py-1 text-center btn-custom">
                     Editar
                 </a>
 
                 <!-- Botão Alterar Senha -->
                 <a asp-area="" asp-controller="AlterarSenha" asp-action="Index"
-                   class="btn btn-outline-dark btn-sm rounded-pill py-1 text-center btn-custom">
+                   class="btn btn-outline btn-sm rounded-pill py-1 text-center btn-custom">
                     Alterar Senha
                 </a>
 
@@ -96,55 +92,148 @@
 <!-- CONTAINER DAS LISTAS E INFORMAÇÕES -->
 <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 40px;">
 
-
     <!-- SEÇÃO DE JOGOS MARCADOS -->
-    <div style="flex: 1; min-width: 300px; max-width: 500px; border: 2px solid #ccc; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
-        <h1 style="font-weight: bold; margin-bottom: 20px; color: #37c3b4; text-align: center;">Jogos Marcados</h1>
+    <div class="scheduled-games-section">
 
-        <div style="max-height: 600px; overflow-y: auto;">
+        <style>
+            /* CONTAINER PRINCIPAL */
+            .scheduled-games-section {
+                flex: 1;
+                min-width: 300px;
+                max-width: 500px;
+                border: 2px solid #ccc;
+                border-radius: 15px;
+                padding: 20px;
+                font-family: 'Courier New', Courier, monospace;
+            }
+
+            .scheduled-games-title {
+                font-weight: bold;
+                margin-bottom: 20px;
+                color: #37c3b4;
+                text-align: center;
+            }
+
+            .scheduled-games-container {
+                max-height: 600px;
+                overflow-y: auto;
+            }
+
+            /* CARDS DE JOGOS */
+            .game-card {
+                display: block;
+                text-decoration: none;
+                color: inherit; /* Herda a cor do elemento pai */
+                padding: 12px 20px;
+                margin-bottom: 12px;
+                border-radius: 20px;
+                background-color: #f8f9fa;
+                border: 1px solid #e0e0e0;
+                transition: all 0.3s ease;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+                .game-card,
+                .game-card:link,
+                .game-card:visited,
+                .game-card:hover,
+                .game-card:active {
+                    color: inherit; /* Mantém a mesma cor em todos os estados */
+                    text-decoration: none; /* Remove sublinhado */
+                }
+
+                    .game-card:hover {
+                        background-color: #e9ecef;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        transform: translateY(-2px);
+                        border-color: #37c3b4;
+                    }
+
+            .teams-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .team-info {
+                text-align: center;
+                width: 100px;
+            }
+
+            .team-logo {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+            .team-name {
+                margin-top: 5px;
+                font-weight: bold;
+            }
+
+            .vs-container {
+                text-align: center;
+            }
+
+            .vs-badge {
+                background-color: #f1f1f1;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                color: #222;
+            }
+
+            .game-details {
+                text-align: center;
+                font-size: 13px;
+                color: #555;
+                margin: 0;
+            }
+
+            .no-games-message {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 200px;
+                margin: 0;
+                font-size: 16px;
+            }
+        </style>
+        <h1 class="scheduled-games-title">Jogos Marcados</h1>
+
+        <div class="scheduled-games-container">
             @if (Model.Marcados != null && Model.Marcados.Count > 0)
             {
                 @foreach (var marcado in Model.Marcados)
                 {
                     <a asp-controller="MeuPerfil" asp-action="JogoMarcado" asp-route-id="@marcado.id"
-                       class="clickable-card"
-                       style="display: block;
-                              text-decoration: none;
-                              color: inherit;
-                              padding: 12px 20px;
-                              margin-bottom: 12px;
-                              border-radius: 20px;
-                              background-color: #f8f9fa;
-                              border: 1px solid #e0e0e0;
-                              transition: all 0.3s ease;
-                              max-width: 500px;
-                              margin-left: auto;
-                              margin-right: auto;">
+                       class="game-card">
 
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="text-align: center; width: 100px;">
-                                <img src="data:image/;base64,@marcado.FotoTime1"
-                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
-                                <p style="margin-top: 5px; font-weight: bold;">@marcado.Time1</p>
+                        <div class="teams-container">
+                            <div class="team-info">
+                                <img src="data:image/;base64,@marcado.FotoTime1" class="team-logo" />
+                                <p class="team-name">@marcado.Time1</p>
                             </div>
 
-                            <!-- Separador "X" -->
-                            <div class="col-md-2 text-center my-3 my-md-0">
-                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
-                                     style="width: 50px; height: 50px;">
-                                    <span class="fs-4" style="color: #222;">VS</span>
-                                </div>
+                            <div class="vs-container">
+                                <div class="vs-badge">VS</div>
                             </div>
 
-                            <div style="text-align: center; width: 100px;">
-                                <img src="data:image/;base64,@marcado.FotoTime2"
-                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
-                                <p style="margin-top: 5px; font-weight: bold;">@marcado.Time2</p>
+                            <div class="team-info">
+                                <img src="data:image/;base64,@marcado.FotoTime2" class="team-logo" />
+                                <p class="team-name">@marcado.Time2</p>
                             </div>
                         </div>
 
-                        <div style="text-align: center;">
-                            <p style="font-size: 13px; color: #555; margin: 0;">@marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora</p>
+                        <div>
+                            <p class="game-details">@marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora</p>
                         </div>
 
                         <input type="hidden" value="@marcado.id" />
@@ -153,8 +242,8 @@
             }
             else
             {
-                <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
-                    <h3 style="margin: 0; font-size: 16px;">Nenhum Jogo Marcado no Momento</h3>
+                <div class="no-games-message">
+                    <h3>Nenhum Jogo Marcado no Momento</h3>
                 </div>
             }
         </div>
@@ -167,12 +256,12 @@
         <div style="max-height: 600px; overflow-y: auto;">
             <!-- Card de Usuário -->
             <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; margin-bottom: 20px; border-left: 4px solid #37c3b4; box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);">
-                <h2 style="font-weight: bold; text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; margin-top: 0; margin-bottom: 15px; font-size:25px;">Usuário</h2>
+                <h2 style="text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; margin-top: 0; margin-bottom: 15px; font-size:25px;">Usuário</h2>
 
-                <div class="form-group" style="padding: 3px;">
+@*                 <div class="form-group" style="padding: 3px;">
                     <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Nome do Time</label>
                     @Html.TextBoxFor(m => m.Usuario.Name, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
-                </div>
+                </div> *@
 
                 <div class="form-group" style="padding: 3px;">
                     <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Usuário</label>
@@ -193,7 +282,7 @@
             @if (Model.Quadra != null)
             {
                 <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; border-left: 4px solid #37c3b4; box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);">
-                    <h2 style="font-weight: bold; margin: 0 0 15px 0; text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; font-size: 25px;">Quadra</h2>
+                    <h2 style="margin: 0 0 15px 0; text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; font-size: 25px;">Quadra</h2>
 
                     @if (string.IsNullOrEmpty(Model.Quadra.NM_Quadra) || string.IsNullOrEmpty(Model.Quadra.DS_Endereco))
                     {

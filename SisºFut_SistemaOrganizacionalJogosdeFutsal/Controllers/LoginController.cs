@@ -20,7 +20,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             //se o usuario estiver logado, redirecionar para a tela home
 
-            if (_sessao.BuscarSessaoDoUsuario() != null) return RedirectToAction("Index", "Home");
+            if (_sessao.BuscarSessaoDoUsuario() != null) return RedirectToAction("Index", "Login");
 
             return View();
         }

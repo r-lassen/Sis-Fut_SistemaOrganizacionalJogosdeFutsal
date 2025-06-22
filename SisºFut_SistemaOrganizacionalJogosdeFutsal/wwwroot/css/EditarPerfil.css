@@ -109,19 +109,6 @@ body {
     content: " *";
     color: var(--error-color);
 }
-
-/* ===== ALERTAS ===== */
-.alert {
-    border-radius: 8px;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
-    font-size: clamp(0.9rem, 3vw, 1rem);
-}
-
-.alert-dismissible .btn-close {
-    padding: 0.75rem 1.25rem;
-}
-
 /* ===== BOTÕES ===== */
 .btn-group {
     display: flex;

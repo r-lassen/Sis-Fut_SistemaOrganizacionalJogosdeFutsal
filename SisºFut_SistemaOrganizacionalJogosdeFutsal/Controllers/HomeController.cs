@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Cms;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
@@ -173,9 +174,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 !string.IsNullOrWhiteSpace(quadra.DS_Endereco))
             {
                 var usuariosAll = _usuarioRepositorio.BuscarTodos();
-                var usuarios = usuariosAll.Where(m => m.Id != usuarioSessao.Id).ToList();
 
-                ViewBag.UserList = new SelectList(usuarios, "Id", "Name");
+                // Filtra para não incluir o próprio usuário e nem Admins
+                var usuariosFiltrados = usuariosAll
+                    .Where(m => m.Id != usuarioSessao.Id && m.Perfil != PerfilEnum.Admin)
+                    .ToList();
+
+                ViewBag.UserList = new SelectList(usuariosFiltrados, "Id", "Name");
 
                 return View(new AgendamentosModel
                 {
@@ -193,30 +198,26 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
         }
 
+
         [HttpPost]
         public IActionResult Amistoso(AgendamentosModel agendamentos)
         {
-
             try
             {
+                // Carrega a lista de usuários excluindo Admins, uma única vez
+                var usuarios = _usuarioRepositorio.BuscarTodos();
+                var usuariosFiltrados = usuarios.Where(u => u.Perfil != PerfilEnum.Admin).ToList();
+                ViewBag.UserList = new SelectList(usuariosFiltrados, "Id", "Name");
 
                 if (agendamentos.DT_Agendamento < DateTime.Now)
                 {
-
-                    var Usuarios = _usuarioRepositorio.BuscarTodos();
-
-                    ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
-
                     TempData["MensagemErro"] = "Selecione um data Valida";
                     return View(agendamentos);
                 }
 
-
-
                 // Verifica se a hora está vazia/nula ou no formato inválido
                 if (string.IsNullOrEmpty(agendamentos.HR_Agendamento) || !agendamentos.HR_Agendamento.Contains(":"))
                 {
-                    ViewBag.UserList = new SelectList(_usuarioRepositorio.BuscarTodos(), "Id", "Name");
                     TempData["MensagemErro"] = "Selecione uma hora válida (formato HH:MM).";
                     return View(agendamentos);
                 }
@@ -229,7 +230,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     horas < 0 || horas > 23 ||
                     minutos < 0 || minutos > 59)
                 {
-                    ViewBag.UserList = new SelectList(_usuarioRepositorio.BuscarTodos(), "Id", "Name");
                     TempData["MensagemErro"] = "Hora inválida. Use o formato HH:MM (ex: 14:30).";
                     return View(agendamentos);
                 }
@@ -237,13 +237,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.id_Time1);
                 var jaExisteData = false;
 
-
                 foreach (var a in jaTemAgendadoTime1)
                 {
                     if (a.DT_Agendamento == agendamentos.DT_Agendamento)
                     {
                         jaExisteData = true;
-
                     }
                 }
 
@@ -255,10 +253,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         if (a.DT_Agendamento == agendamentos.DT_Agendamento)
                         {
                             jaExisteData = true;
-
                         }
                     }
-
                 }
 
                 if (!jaExisteData)
@@ -272,19 +268,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     TempData["MensagemErro"] = "Já existe jogo marcado para essa data";
                     return RedirectToAction("Amistoso");
                 }
-
-
-
             }
             catch (System.Exception erro)
             {
                 TempData["MensagemErro"] = $"Erro ao cadastrar seu Jogo, tente novamente. Detalhe do erro: {erro.Message}";
                 return RedirectToAction("Index");
             }
-
-
         }
-
 
 
         //---------------Essa carrega a view--------------
@@ -382,10 +372,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 }
 
 
-
-
-
-
             }
             catch (System.Exception erro)
             {
@@ -402,41 +388,32 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             var Agendamento = _agendamentoRepositorio.BuscarPorId(id);
 
             var time1 = _usuarioRepositorio.BuscarPorId(Agendamento.id_Time1);
-            // var time2 = _usuarioRepositorio.BuscarPorId(UsuarioSessao.Id);
-
             var quadra = _quadrasRepositorio.BuscarPorIdQuadra(Agendamento.id_Quadra);
 
             DadosAgendamentos dadosAbertos = new DadosAgendamentos()
             {
                 Time1 = time1.Name,
-                //Time2 = time2.Name,
                 Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
                 Data = Agendamento.DT_Agendamento,
                 DS_Descrição = Agendamento.DS_Descricao,
                 Hora = Agendamento.HR_Agendamento,
                 id = Agendamento.Id,
                 FotoTime1 = time1.Foto,
-                // FotoTime2 = time2.Foto,
-                idTime1 = time1.Id,
-                // idTime2 = time2.Id,
+                idTime1 = time1.Id
             };
-
 
             var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
 
-            var UsuariosAll = _usuarioRepositorio.BuscarTodos();
+            var usuariosAll = _usuarioRepositorio.BuscarTodos();
 
-            var Usuarios = UsuariosAll.Where(m => m.Id != UsuarioSessao.Id).ToList();
+            // Filtra para excluir o próprio usuário e perfis Admin
+            var usuariosFiltrados = usuariosAll
+                .Where(m => m.Id != UsuarioSessao.Id && m.Perfil != PerfilEnum.Admin)
+                .ToList();
 
-            ViewBag.UserList = new SelectList(Usuarios, "Id", "Name");
-
-
-
-            //var TimeXQuadras = _timeXquadrasRepositorio.BuscarPorTime(UsuarioSessao.Id);
+            ViewBag.UserList = new SelectList(usuariosFiltrados, "Id", "Name");
 
             var Quadras = _quadrasRepositorio.BuscarPorId(UsuarioSessao.Id);
-
-            //ViewBag.UsuarioSessao = UsuarioSessao;
 
             return View(new AgendamentosModel
             {
@@ -447,8 +424,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 id_Quadra = Quadras.Id,
                 id_Time1 = UsuarioSessao.Id
             });
-
         }
+
 
         [HttpPost]
         public IActionResult EditarJogoAberto(AgendamentosModel agendamentos)

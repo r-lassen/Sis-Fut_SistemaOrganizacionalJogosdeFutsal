@@ -1,30 +1,45 @@
-﻿
-<!-- Modal de Confirmação -->
+﻿<!-- Modal de Confirmação -->
+<link href="~/css/ModalApagarUsuarios.css" rel="stylesheet" asp-append-version="true" />
+
 <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="font-family: Courier, monospace;">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
-         @*        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button> *@
-            </div>
-            <div class="modal-body">
-                <p>Tem certeza que deseja excluir o perfil de <strong id="modalNomeContato"></strong>?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="btnConfirmarExclusao" class="btn btn-danger">Confirmar Exclusão</a>
-            </div>
+
+            <form asp-controller="MeuPerfil" asp-action="ExcluirPerfil" method="post">
+                @Html.AntiForgeryToken()
+                @* Se precisar mesmo de ID (ex: admin excluindo outro usuário) use o hidden abaixo *@
+                <input type="hidden" name="id" id="contatoIdParaExcluir" />
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
+                </div>
+
+                <div class="modal-body text-center">
+                    <p>
+                        Tem certeza que deseja excluir o perfil de <strong id="modalNomeContato"></strong>?<br />
+                        <span class="text-danger">Todos os jogos abertos ou marcados vinculados a este perfil também serão excluídos.</span>
+                    </p>
+
+                </div>
+
+                <div class="modal-footer border-top-0 justify-content-center">
+                    <div class="btn-group w-100">
+                        <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal">CANCELAR</button>
+                        <button type="submit" class="btn btn-danger">CONFIRMAR EXCLUSÃO</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
 
-
-
 <script>
     function abrirModalConfirmacao(nome) {
         document.getElementById("modalNomeContato").innerText = nome;
-        const link = `/MeuPerfil/ExcluirPerfil`; // sem ID aqui!
-        document.getElementById("btnConfirmarExclusao").setAttribute("href", link);
+
+        // Se você não precisa passar ID, pode ignorar isso
+        // document.getElementById("contatoIdParaExcluir").value = algumValor;
 
         const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
         modal.show();

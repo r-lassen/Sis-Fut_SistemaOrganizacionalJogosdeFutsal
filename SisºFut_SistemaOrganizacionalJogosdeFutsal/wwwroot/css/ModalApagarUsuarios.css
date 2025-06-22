@@ -1,0 +1,48 @@
+﻿/* ESTILOS GERAIS */
+:root {
+    --primary-color: #37c3b4;
+    --primary-hover: #2da89a;
+    --border-color: #ccc;
+    --text-color: #555;
+    --form-bg: #ffffff;
+    --danger-color: #dc3545;
+    --danger-hover: #c82333;
+}
+
+
+/* BOTÕES */
+.btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.btn {
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+
+.btn-cancelar {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    background-color: transparent;
+}
+
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+}
+
+    .btn-danger:hover {
+        background-color: var(--danger-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }

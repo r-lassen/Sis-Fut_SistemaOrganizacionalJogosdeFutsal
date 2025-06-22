@@ -14,22 +14,21 @@
 
 <link rel="stylesheet" href="~/css/CriarContatos.css" asp-append-version="true">
 
-<div class="main-container">
-    @if (TempData["MensagemErro"] != null)
-    {
-        <div class="alert alert-danger" role="alert">
-            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
-            @TempData["MensagemErro"]
-        </div>
-    }
+<!-- SEÇÃO DE MENSAGENS DE ALERTA -->
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div id="alertSucesso" class="alert alert-success text-center" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
 
-    @if (TempData["MensagemSucesso"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
-            @TempData["MensagemSucesso"]
-        </div>
-    }
+@if (TempData["MensagemErro"] != null)
+{
+    <div id="alertErro" class="alert alert-danger text-center" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
 
     <div class="page-title">
         <h1>Adicionar Contato</h1>
@@ -97,7 +96,7 @@
             </div>
         </div>
     </form>
-</div>
+
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -108,5 +107,29 @@
                 clearIfNotMatch: true
             });
         });
+
+                    // Desaparecer automaticamente os alertas
+        const alertSucesso = document.getElementById('alertSucesso');
+        const alertErro = document.getElementById('alertErro');
+
+        if (alertSucesso) {
+            setTimeout(() => {
+                alertSucesso.style.transition = "opacity 0.5s ease";
+                alertSucesso.style.opacity = "0";
+                setTimeout(() => {
+                    alertSucesso.style.display = "none";
+                }, 500);
+            }, 8000); // 8 segundos
+        }
+
+        if (alertErro) {
+            setTimeout(() => {
+                alertErro.style.transition = "opacity 0.5s ease";
+                alertErro.style.opacity = "0";
+                setTimeout(() => {
+                    alertErro.style.display = "none";
+                }, 500);
+            }, 15000); // 15 segundos
+        }
     </script>
 }

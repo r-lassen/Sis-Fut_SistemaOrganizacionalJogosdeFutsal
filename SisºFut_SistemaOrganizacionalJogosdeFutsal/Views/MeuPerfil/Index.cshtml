@@ -7,15 +7,23 @@
 
 <link rel="stylesheet" href="~/css/IndexPerfil.css" asp-append-version="true">
 
-@if (TempData["MensagemErro"] != null)
-{
-    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
-}
 
+<!-- SEÇÃO DE MENSAGENS DE ALERTA -->
 @if (TempData["MensagemSucesso"] != null)
 {
-    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+    <div id="alertSucesso" class="alert alert-success text-center" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
 }
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div id="alertErro" class="alert alert-danger text-center" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+
 
 <form asp-controller="CadastroPublico" asp-action="Cadastro" method="post">
     <div class="card p-2 profile-card">
@@ -161,4 +169,28 @@
             });
         });
     });
+
+            // Desaparecer automaticamente os alertas
+    const alertSucesso = document.getElementById('alertSucesso');
+    const alertErro = document.getElementById('alertErro');
+
+    if (alertSucesso) {
+        setTimeout(() => {
+            alertSucesso.style.transition = "opacity 0.5s ease";
+            alertSucesso.style.opacity = "0";
+            setTimeout(() => {
+                alertSucesso.style.display = "none";
+            }, 500);
+        }, 8000); // 8 segundos
+    }
+
+    if (alertErro) {
+        setTimeout(() => {
+            alertErro.style.transition = "opacity 0.5s ease";
+            alertErro.style.opacity = "0";
+            setTimeout(() => {
+                alertErro.style.display = "none";
+            }, 500);
+        }, 15000); // 15 segundos
+    }
 </script>

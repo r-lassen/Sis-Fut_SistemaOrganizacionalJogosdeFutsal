@@ -5,19 +5,18 @@
     ViewData["Title"] = "Redefinir Senha";
 }
 
-@if (TempData["MensagemErro"] != null)
+<!-- SEÇÃO DE MENSAGENS DE ALERTA -->
+@if (TempData["MensagemSucesso"] != null)
 {
-    <div class="alert alert-danger" role="alert">
-        <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
-        @TempData["MensagemErro"]
+    <div id="alertSucesso" class="alert alert-success text-center" role="alert">
+        @TempData["MensagemSucesso"]
     </div>
 }
 
-@if (TempData["MensagemSucesso"] != null)
+@if (TempData["MensagemErro"] != null)
 {
-    <div class="alert alert-success" role="alert">
-        <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
-        @TempData["MensagemSucesso"]
+    <div id="alertErro" class="alert alert-danger text-center" role="alert">
+        @TempData["MensagemErro"]
     </div>
 }
 
@@ -173,4 +172,28 @@
             });
         }, 100);
     });
+
+            // Desaparecer automaticamente os alertas
+    const alertSucesso = document.getElementById('alertSucesso');
+    const alertErro = document.getElementById('alertErro');
+
+    if (alertSucesso) {
+        setTimeout(() => {
+            alertSucesso.style.transition = "opacity 0.5s ease";
+            alertSucesso.style.opacity = "0";
+            setTimeout(() => {
+                alertSucesso.style.display = "none";
+            }, 500);
+        }, 8000); // 8 segundos
+    }
+
+    if (alertErro) {
+        setTimeout(() => {
+            alertErro.style.transition = "opacity 0.5s ease";
+            alertErro.style.opacity = "0";
+            setTimeout(() => {
+                alertErro.style.display = "none";
+            }, 500);
+        }, 15000); // 15 segundos
+    }
 </script>

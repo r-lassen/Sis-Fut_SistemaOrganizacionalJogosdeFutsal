@@ -25,20 +25,6 @@ body {
     flex-direction: column;
 }
 
-.alert {
-    position: relative;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-    border-radius: 8px;
-}
-
-.close-alert {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    line-height: 1;
-}
 
 .container-login {
     display: flex;

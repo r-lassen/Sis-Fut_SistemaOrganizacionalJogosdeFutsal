@@ -1,29 +1,38 @@
 ﻿<!-- Modal de Confirmação -->
+<link href="~/css/ModalApagarContatos.css" rel="stylesheet" asp-append-version="true"/>
+
 <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="font-family: Courier, monospace;">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="modalLabel">Confirmar Exclusão</h5>
+                <h5 class="modal-title" id="modalLabel">CONFIRMAR EXCLUSÃO</h5>
                 @* <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button> *@
             </div>
-            <div class="modal-body">
-                <p>Tem certeza que deseja excluir o contato <strong id="modalNomeContato"></strong>?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="btnConfirmarExclusao" class="btn btn-danger">Confirmar Exclusão</a>
-            </div>
+
+            <form asp-controller="Contato" asp-action="Apagar" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="contatoIdParaExcluir" />
+
+                <div class="modal-body text-center">
+                    <p>Tem certeza que deseja excluir o contato <strong id="modalNomeContato"></strong>?</p>
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal">CANCELAR</button>
+                        <button type="submit" class="btn btn-danger">CONFIRMAR EXCLUSÃO</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-
-
 <script>
     function abrirModalConfirmacao(id, nome) {
         document.getElementById("modalNomeContato").innerText = nome;
-        const link = `/Contato/Apagar/${id}`;
-        document.getElementById("btnConfirmarExclusao").setAttribute("href", link);
+        document.getElementById("contatoIdParaExcluir").value = id;
+
         const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
         modal.show();
     }

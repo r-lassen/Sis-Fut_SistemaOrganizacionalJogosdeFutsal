@@ -23,28 +23,6 @@ body {
     padding-bottom: 60px;
 }
 
-/* ALERTAS */
-.alert {
-    position: relative;
-    padding: 1rem 1.5rem;
-    margin: 1rem;
-    border-radius: 8px;
-}
-
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-.close-alert {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    line-height: 1;
-}
-
 /* TÍTULO */
 .page-title {
     color: var(--primary-color);
@@ -147,13 +125,13 @@ body {
     font-size: 1rem;
 }
 
-.btn-primary {
+.btn-editar {
     background-color: var(--primary-color);
     color: white;
     border: none;
 }
 
-    .btn-primary:hover {
+    .btn-editar:hover {
         background-color: var(--primary-hover);
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -168,6 +146,19 @@ body {
     .btn-outline:hover {
         background-color: rgba(55, 195, 180, 0.1);
     }
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+}
+
+    .btn-danger:hover {
+        background-color: var(--danger-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
 
 /* RESPONSIVIDADE */
 @media (max-width: 768px) {

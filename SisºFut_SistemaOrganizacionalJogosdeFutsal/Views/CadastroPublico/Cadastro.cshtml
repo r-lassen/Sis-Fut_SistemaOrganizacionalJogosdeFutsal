@@ -13,24 +13,25 @@
 }
 
 
+<!-- SEÇÃO DE MENSAGENS DE ALERTA -->
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div id="alertSucesso" class="alert alert-success text-center" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div id="alertErro" class="alert alert-danger text-center" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
-            @if (TempData["MensagemErro"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show mx-2 mt-2 mb-3" role="alert">
-                    @TempData["MensagemErro"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-
-            @if (TempData["MensagemSucesso"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show mx-2 mt-2 mb-3" role="alert">
-                    @TempData["MensagemSucesso"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
 
             <h1 class="form-title" style="font-weight: bold;">Cadastrar Time</h1>
 
@@ -417,6 +418,31 @@
                 const botao = document.getElementById('buscarCepBtn');
                 if (botao) botao.disabled = false;
             });
+    }
+
+
+            // Desaparecer automaticamente os alertas
+    const alertSucesso = document.getElementById('alertSucesso');
+    const alertErro = document.getElementById('alertErro');
+
+    if (alertSucesso) {
+        setTimeout(() => {
+            alertSucesso.style.transition = "opacity 0.5s ease";
+            alertSucesso.style.opacity = "0";
+            setTimeout(() => {
+                alertSucesso.style.display = "none";
+            }, 500);
+        }, 8000); // 8 segundos
+    }
+
+    if (alertErro) {
+        setTimeout(() => {
+            alertErro.style.transition = "opacity 0.5s ease";
+            alertErro.style.opacity = "0";
+            setTimeout(() => {
+                alertErro.style.display = "none";
+            }, 500);
+        }, 15000); // 15 segundos
     }
 
 </script>

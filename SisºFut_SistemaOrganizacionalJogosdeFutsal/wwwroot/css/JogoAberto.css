@@ -54,6 +54,12 @@ body {
     font-size: 2.5rem;
 }
 
+
+    .page-title h1 {
+        font-weight: bold;
+        margin: 0; /* Remove margens padrão do h1 */
+    }
+
 /* FORMULÁRIO */
 .form-container {
     border: 2px solid var(--border-color);
@@ -154,13 +160,13 @@ body {
     font-size: 1rem;
 }
 
-.btn-primary {
+.btn-salvar {
     background-color: var(--primary-color);
     color: white;
     border: none;
 }
 
-    .btn-primary:hover {
+    .btn-salvar:hover {
         background-color: var(--primary-hover);
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -289,4 +295,3 @@ body {
         width: 48%; /* Deixa um pequeno espaço entre os botões */
     }
 }
-

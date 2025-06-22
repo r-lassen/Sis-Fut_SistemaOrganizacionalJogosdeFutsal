@@ -9,11 +9,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
         public string Time2 { get; set; }
 
-
         public int idTime1 { get; set; }
 
         public int idTime2 { get; set; }
 
+        public int GolsTime1 { get; set; }
+        public int GolsTime2 { get; set; }
         public int id { get; set; }
 
         public DateTime Data { get; set; }

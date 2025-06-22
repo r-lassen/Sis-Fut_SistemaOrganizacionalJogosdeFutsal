@@ -703,11 +703,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
         }
 
-        public IActionResult ModalPlacar(int id)
-        {
-            AgendamentosModel agendamentos = _agendamentoRepositorio.BuscarPorId(id);
-            return RedirectToAction("Index");
-        }
+        //public IActionResult ModalPlacar(int id)
+        //{
+        //    AgendamentosModel agendamentos = _agendamentoRepositorio.BuscarPorId(id);
+        //    return RedirectToAction("Index");
+        //}
 
 
         [HttpPost]
@@ -760,6 +760,49 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult ExcluirJogo(int id)
+        {
+            try
+            {
+                var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+                if (usuarioLogado == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não encontrado na sessão.";
+                    return RedirectToAction("Index", "Login");
+                }
+
+                var jogo = _agendamentoRepositorio.BuscarPorId(id); // Certifique-se de que tem esse método no repositório
+                if (jogo == null)
+                {
+                    TempData["MensagemErro"] = "Jogo não encontrado.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                if (jogo.id_Time1 != usuarioLogado.Id)
+                {
+                    TempData["MensagemErro"] = "Você não tem permissão para excluir este jogo.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                bool apagado = _agendamentoRepositorio.Apagar(id);
+                if (apagado)
+                {
+                    TempData["MensagemSucesso"] = "Jogo excluído com sucesso!";
+                }
+                else
+                {
+                    TempData["MensagemErro"] = "Não foi possível excluir o jogo.";
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception erro)
+            {
+                TempData["MensagemErro"] = $"Erro ao excluir o jogo: {erro.Message}";
+                return RedirectToAction("Index", "Home");
+            }
+        }
 
 
 
@@ -769,26 +812,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
 
 
-        //[HttpPost]
-        //public IActionResult EncerrarJogo(int IdJogo, int GolsTime1, int GolsTime2)
-        //{
-        //    var agendamento = _agendamentoRepositorio.BuscarPorId(IdJogo);
 
-        //    if (agendamento == null)
-        //    {
-        //        TempData["MensagemErro"] = "Jogo não encontrado.";
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    agendamento.GolsTime1 = GolsTime1;
-        //    agendamento.GolsTime2 = GolsTime2;
-        //    agendamento.Status = "Encerrado"; // ou outro campo de status
-
-        //    _agendamentoRepositorio.Atualizar(agendamento);
-
-        //    TempData["MensagemSucesso"] = "Jogo encerrado com sucesso!";
-        //    return RedirectToAction("Index");
-        //}
 
     }
 }

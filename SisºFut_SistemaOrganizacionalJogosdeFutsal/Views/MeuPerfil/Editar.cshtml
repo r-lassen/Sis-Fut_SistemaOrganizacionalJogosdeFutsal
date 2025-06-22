@@ -1,165 +1,156 @@
 ﻿@model HomeModel
 @{
     ViewData["Title"] = "Editar Usuario";
-    Layout = "_LayoutDeslogado";
+    Layout = "_Layout";
 }
 
-@if (TempData["MensagemErro"] != null)
-{
-    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
-}
-
-@if (TempData["MensagemSucesso"] != null)
-{
-    <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
-}
+@using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/EditarPerfil.css" asp-append-version="true">
 
-<style>
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
-
-    .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    .form-scroll-container {
-        flex: 1;
-        overflow-y: auto;
-        padding: 1rem 0;
-    }
-
-    .form-card {
-        max-width: 600px;
-        margin: 0 auto;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
-    }
-
-    .form-body {
-        padding: 1.5rem;
-        max-height: calc(100vh - 200px);
-        overflow-y: auto;
-    }
-
-    .form-title {
-        font-family: Courier, monospace;
-        font-size: clamp(1.5rem, 5vw, 2rem);
-        margin-bottom: 1.5rem;
-        text-align: center;
-        color: #37c3b4;
-    }
-
-    .form-label, .form-control {
-        font-family: 'Courier New', Courier, monospace;
-    }
-
-    .form-control {
-        border-radius: 10px;
-        margin-bottom: 0.75rem;
-    }
-</style>
-
-<div class="main-content">
-    <div class="form-scroll-container">
-        <div class="form-card">
-            <form id="cadastroForm" asp-controller="MeuPerfil" asp-action="Editar" method="post" enctype="multipart/form-data">
-                <div class="form-body">
-
-                    <h1 class="form-title">Editar Usuário</h1>
-
-                    @Html.HiddenFor(m => m.Id)
-                    @Html.HiddenFor(m => m.Usuario.Id)
-                    @Html.HiddenFor(m => m.Usuario.DataCadastro)
-                    @Html.HiddenFor(m => m.Usuario.DataAtualização)
-                    @Html.HiddenFor(m => m.Usuario.Foto)
-                    @Html.HiddenFor(m => m.Usuario.Senha)
-                    @Html.HiddenFor(m => m.Usuario.Perfil)
-
-                    <div class="mb-3">
-                        <label class="form-label">Foto do Time</label>
-                        <input type="file" asp-for="Usuario.FotoArquivo" class="form-control" accept="image/*" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Nome</label>
-                        @Html.TextBoxFor(m => m.Usuario.Name, new { @class = "form-control", placeholder = "Nome do usuário" })
-                        <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.Name)</span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">E-mail</label>
-                        @Html.TextBoxFor(m => m.Usuario.Email, new { @class = "form-control", placeholder = "Email" })
-                        <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.Email)</span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Usuário</label>
-                        @Html.TextBoxFor(m => m.Usuario.Login, new { @class = "form-control", placeholder = "Login" })
-                        <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.Login)</span>
-                    </div>
-
-                    <!-- Possui Quadra? -->
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label class="form-label mb-0" for="quadraSwitch">Possui Quadra?</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="quadraSwitch" data-bs-toggle="collapse" data-bs-target="#quadraFields" aria-checked="false" @(Model.Quadra?.DS_Endereco != null ? "checked" : "")>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="collapse mb-2 @(Model.Quadra?.DS_Endereco != null ? "show" : "")" id="quadraFields">
-                        <div class="mb-2">
-                            <label class="form-label">CEP</label>
-                            <div class="input-group">
-                                <input type="text" id="cep" class="form-control" placeholder="Digite o CEP" maxlength="9" onkeyup="formatarCEP(this)" />
-                            </div>
-                            <small class="text-muted">Digite o CEP para autopreencher o endereço</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Endereço da Quadra</label>
-                            @Html.TextBoxFor(m => m.Quadra.DS_Endereco, new { @class = "form-control", placeholder = "Endereço", id = "Quadra_DS_Endereco" })
-                            @Html.ValidationMessageFor(x => x.Quadra.DS_Endereco)
-
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Nome da Quadra</label>
-                            @Html.TextBoxFor(m => m.Quadra.NM_Quadra, new { @class = "form-control", placeholder = "Nome da Quadra", id = "Quadra_NM_Quadra" })
-                            @Html.ValidationMessageFor(x => x.Quadra.NM_Quadra)
-                            @Html.HiddenFor(m => m.Quadra.id_Time)
-                            @Html.HiddenFor(m => m.Quadra.Id)
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end mt-4" style="gap: 1rem;">
-                        <a class="btn btn-sm rounded-pill px-4"
-                           asp-action="Index"
-                           asp-controller="MeuPerfil"
-                           style="color: #37c3b4; border-color: #37c3b4; background-color: transparent;">
-                            Voltar
-                        </a>
-
-                        <button type="submit"
-                                class="btn btn-sm rounded-pill px-4"
-                                style="background-color: #37c3b4; color: white; border: none;">
-                            Editar
-                        </button>
-                    </div>
-
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mx-2 mt-2 mb-3" role="alert">
+                    @TempData["MensagemErro"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </form>
+            }
+
+            @if (TempData["MensagemSucesso"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mx-2 mt-2 mb-3" role="alert">
+                    @TempData["MensagemSucesso"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <h1 class="form-title" style="font-weight: bold;">Editar Usuário</h1>
+
+            <div class="form-card">
+                <form asp-controller="MeuPerfil" asp-action="Editar" method="post" enctype="multipart/form-data" id="cadastroForm">
+                    <div class="form-body">
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.HiddenFor(m => m.Usuario.Id)
+                        @Html.HiddenFor(m => m.Usuario.DataCadastro)
+                        @Html.HiddenFor(m => m.Usuario.DataAtualização)
+                        @Html.HiddenFor(m => m.Usuario.Foto)
+                        @Html.HiddenFor(m => m.Usuario.Senha)
+                        @Html.HiddenFor(m => m.Usuario.Perfil)
+
+                        <!-- Foto do Time -->
+                        <div class="mb-3">
+                            <label class="form-label">Foto do Time</label>
+                            <input type="file" asp-for="Usuario.FotoArquivo"
+                                   class="form-control @(ViewData.ModelState["Usuario.FotoArquivo"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                                   accept="image/*" />
+                            <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.FotoArquivo)</span>
+                        </div>
+
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label class="form-label required-field">Nome</label>
+                            @Html.TextBoxFor(m => m.Usuario.Name,
+                                     new
+                                     {
+                                         @class = $"form-control {(@ViewData.ModelState["Usuario.Name"]?.Errors.Count > 0 ? "is-invalid" : "")}",
+                                         placeholder = "Nome do usuário",
+                                         required = "required"
+                                     })
+                            <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.Name)</span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label required-field">E-mail</label>
+                            @Html.TextBoxFor(m => m.Usuario.Email,
+                                     new
+                                     {
+                                         @class = $"form-control {(@ViewData.ModelState["Usuario.Email"]?.Errors.Count > 0 ? "is-invalid" : "")}",
+                                         placeholder = "Email",
+                                         required = "required"
+                                     })
+                            <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.Email)</span>
+                        </div>
+
+                        <!-- Usuário -->
+                        <div class="mb-3">
+                            <label class="form-label required-field">Usuário</label>
+                            @Html.TextBoxFor(m => m.Usuario.Login,
+                                     new
+                                     {
+                                         @class = $"form-control {(@ViewData.ModelState["Usuario.Login"]?.Errors.Count > 0 ? "is-invalid" : "")}",
+                                         placeholder = "Login",
+                                         required = "required"
+                                     })
+                            <span class="text-danger">@Html.ValidationMessageFor(x => x.Usuario.Login)</span>
+                        </div>
+
+                        <!-- Possui Quadra? -->
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label mb-0" for="quadraSwitch">Possui Quadra?</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="quadraSwitch"
+                                    @(Model.Quadra?.DS_Endereco != null ? "checked" : "")>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campos da Quadra -->
+                        <div class="collapse mb-2 @(Model.Quadra?.DS_Endereco != null ? "show" : "")" id="quadraFields">
+                            <div class="mb-2">
+                                <label class="form-label quadra-required">CEP</label>
+                                <div class="input-group">
+                                    <input type="text" id="cep" class="form-control" placeholder="Digite o CEP" maxlength="9" onkeyup="formatarCEP(this)" />
+                                </div>
+                                <small class="text-muted">Digite o CEP para autopreencher o endereço</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label quadra-required">Endereço da Quadra</label>
+                                @Html.TextBoxFor(m => m.Quadra.DS_Endereco,
+                                         new
+                                         {
+                                             @class = $"form-control {(@ViewData.ModelState["Quadra.DS_Endereco"]?.Errors.Count > 0 ? "is-invalid" : "")}",
+                                             placeholder = "Endereço",
+                                             id = "Quadra_DS_Endereco"
+                                         })
+                                @Html.ValidationMessageFor(x => x.Quadra.DS_Endereco)
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label quadra-required">Nome da Quadra</label>
+                                @Html.TextBoxFor(m => m.Quadra.NM_Quadra,
+                                         new
+                                         {
+                                             @class = $"form-control {(@ViewData.ModelState["Quadra.NM_Quadra"]?.Errors.Count > 0 ? "is-invalid" : "")}",
+                                             placeholder = "Nome da Quadra",
+                                             id = "Quadra_NM_Quadra"
+                                         })
+                                @Html.ValidationMessageFor(x => x.Quadra.NM_Quadra)
+                                @Html.HiddenFor(m => m.Quadra.id_Time)
+                                @Html.HiddenFor(m => m.Quadra.Id)
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="btn-group">
+                                    <a class="btn btn-outline" asp-action="Index" asp-controller="MeuPerfil"> Voltar </a>
+                                    <button type="submit" class="btn btn-editar"> Editar </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -168,40 +159,56 @@
     document.addEventListener("DOMContentLoaded", function () {
         const quadraSwitch = document.getElementById('quadraSwitch');
         const quadraFields = document.getElementById('quadraFields');
-        const quadraInputs = quadraFields.querySelectorAll('input[type="text"]');
-
-        function atualizarObrigatoriedade() {
-            quadraInputs.forEach(input => {
-                if (quadraSwitch.checked) {
-                    input.setAttribute('required', 'required');
-                } else {
-                    input.removeAttribute('required');
-                }
+        if (quadraSwitch && quadraFields) {
+            const quadraInputs = quadraFields.querySelectorAll('input[type="text"]');
+            const collapseQuadra = new bootstrap.Collapse(quadraFields, {
+                toggle: false
             });
+
+            function atualizarObrigatoriedade() {
+                if (quadraSwitch.checked) {
+                    quadraInputs.forEach(input => input.setAttribute('required', 'required'));
+                    document.querySelectorAll('.quadra-required').forEach(label => {
+                        label.classList.add('required-field');
+                    });
+                } else {
+                    quadraInputs.forEach(input => input.removeAttribute('required'));
+                    document.querySelectorAll('.quadra-required').forEach(label => {
+                        label.classList.remove('required-field');
+                    });
+                }
+            }
+
+            quadraSwitch.addEventListener('change', function () {
+                if (quadraSwitch.checked) {
+                    collapseQuadra.show();
+                } else {
+                    collapseQuadra.hide();
+                }
+                atualizarObrigatoriedade();
+            });
+
+            atualizarObrigatoriedade();
         }
-
-        quadraSwitch.addEventListener('change', atualizarObrigatoriedade);
-
-        quadraFields.addEventListener('show.bs.collapse', () => {
-            quadraSwitch.checked = true;
-            atualizarObrigatoriedade();
-        });
-
-        quadraFields.addEventListener('hide.bs.collapse', () => {
-            quadraSwitch.checked = false;
-            atualizarObrigatoriedade();
-        });
 
         const form = document.getElementById('cadastroForm');
         if (form) {
             form.addEventListener('submit', function (event) {
-                atualizarObrigatoriedade();
+                if (typeof atualizarObrigatoriedade === 'function') {
+                    atualizarObrigatoriedade();
+                }
+
+                form.querySelectorAll('input').forEach(input => {
+                    const t = input.type;
+                    if ((t === 'text' || t === 'email') && input.value) {
+                        input.value = input.value.trim();
+                    }
+                });
 
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
                 }
-
                 form.classList.add('was-validated');
             }, false);
         }
@@ -217,33 +224,31 @@
         }
     });
 
+    function formatarCEP(input) {
+        let cep = input.value.replace(/\D/g, "");
+        if (cep.length > 5) {
+            cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
+        }
+        input.value = cep;
+    }
+
     function buscarCEPAutomatico(cepInput) {
-        const cep = cepInput.value.replace("-", "");
+        let cep = cepInput.value.replace("-", "");
         if (cep.length !== 8) return;
 
-        const enderecoInput = document.getElementById('Quadra_DS_Endereco');
-        enderecoInput.value = "Buscando...";
+        document.getElementById('Quadra_DS_Endereco').value = "Buscando...";
 
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
             .then(response => response.json())
             .then(data => {
                 if (data.erro) throw new Error("CEP não encontrado");
-                enderecoInput.value = data.logradouro || "";
+
+                document.getElementById('Quadra_DS_Endereco').value = data.logradouro || "";
                 document.getElementById('Quadra_NM_Quadra').focus();
             })
-            .catch(() => {
-                enderecoInput.value = "";
-                cepInput.focus();
-                alert("Erro ao buscar o CEP. Verifique se está correto.");
+            .catch(error => {
+                console.error("Erro ao buscar CEP:", error);
+                document.getElementById('Quadra_DS_Endereco').value = "";
             });
-    }
-
-    function formatarCEP(input) {
-        let value = input.value.replace(/\D/g, '');
-        if (value.length > 5) {
-            input.value = value.slice(0, 5) + '-' + value.slice(5, 8);
-        } else {
-            input.value = value;
-        }
     }
 </script>

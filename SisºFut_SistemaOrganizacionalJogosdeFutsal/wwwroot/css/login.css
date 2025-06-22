@@ -7,18 +7,23 @@
     --primary-hover: #2da89a;
     --error-color: #dc3545;
     --border-color: #ced4da;
-    --text-color: #495057;
+    --text-color: #555;
     --text-muted: #6c757d;
     --shadow-sm: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    --card-bg: #f8f9fa;
+}
+
+/* APLICAR FONTE PARA TODOS OS ELEMENTOS */
+* {
+    font-family: 'Courier New', Courier, monospace !important;
+    box-sizing: border-box;
 }
 
 /* ===== ESTILOS BASE ===== */
 body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Courier New', Courier, monospace;
-    background-color: #f8f9fa;
+    background-color: var(--card-bg);
     color: var(--text-color);
 }
 
@@ -37,13 +42,13 @@ body {
     background-color: white;
     padding: 2rem;
     border: 2px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 20px;
     box-shadow: var(--shadow-sm);
     margin: 1rem;
+    transition: all 0.3s ease;
 }
 
 .form-title {
-    font-family: Courier, monospace;
     font-size: clamp(1.75rem, 5vw, 2rem);
     margin-bottom: 2rem;
     text-align: center;
@@ -66,7 +71,6 @@ body {
     background-color: white;
     width: 100%;
     transition: all 0.2s ease-out;
-    font-family: inherit;
 }
 
     .floating-input:focus {
@@ -116,7 +120,6 @@ body {
 }
 
 .btn-login {
-    font-family: inherit;
     border-radius: 50px;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -158,19 +161,25 @@ body {
 .floating-input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0 1000px white inset !important;
     -webkit-text-fill-color: var(--text-color) !important;
-    font-family: inherit !important;
     border-radius: 10px;
     transition: background-color 5000s ease-in-out 0s !important;
 }
 
 /* ===== RESPONSIVIDADE ===== */
-@media (max-width: 576px) {
-    .container-login {
-        padding: 0.5rem;
-    }
 
+/* Telas pequenas (tablets e celulares em landscape) */
+@media (max-width: 992px) {
+    .form-card {
+        max-width: 500px;
+    }
+}
+
+/* Telas médias (tablets em portrait) */
+@media (max-width: 768px) {
     .form-card {
         padding: 1.5rem;
+        margin: 0.75rem;
+        max-width: 450px;
     }
 
     .form-title {
@@ -187,24 +196,105 @@ body {
     }
 }
 
-@media (max-width: 400px) {
+/* Telas pequenas (celulares) */
+@media (max-width: 576px) {
     .form-card {
         padding: 1.25rem;
         margin: 0.5rem;
+        border-radius: 15px;
     }
 
     .floating-input {
         height: 48px;
         padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .floating-label {
+        font-size: 0.9rem;
+        left: 1rem;
+    }
+
+    .floating-input:focus ~ .floating-label,
+    .floating-input:not(:placeholder-shown) ~ .floating-label,
+    .floating-input[data-filled] ~ .floating-label {
+        font-size: 0.75rem;
     }
 
     .btn-login {
         padding: 0.625rem 1.25rem;
+        font-size: 0.9rem;
     }
 
-    /* Borda verde quando válido */
-    .is-valid {
-        border-color: #28a745 !important;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    .container-login {
+        padding: 0.5rem;
     }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 400px) {
+    .form-card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .floating-input {
+        height: 44px;
+        padding: 0.625rem 0.875rem;
+    }
+
+    .btn-login {
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Telas grandes (desktops) */
+@media (min-width: 1200px) {
+    .form-card {
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 2.5rem;
+    }
+
+    .form-title {
+        font-size: 2.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .floating-input {
+        height: 60px;
+        font-size: 1.1rem;
+    }
+
+    .floating-label {
+        font-size: 1.1rem;
+        left: 1.5rem;
+        top: 1.1rem;
+    }
+
+    .floating-input:focus ~ .floating-label,
+    .floating-input:not(:placeholder-shown) ~ .floating-label,
+    .floating-input[data-filled] ~ .floating-label {
+        font-size: 0.9rem;
+        left: 1.2rem;
+    }
+
+    .btn-container {
+        margin-top: 2.5rem;
+    }
+}
+
+/* Telas muito grandes (full HD e superiores) */
+@media (min-width: 1600px) {
+    .form-card {
+        max-width: 550px;
+        padding: 3rem;
+    }
+}
+
+/* Borda verde quando válido */
+.is-valid {
+    border-color: #28a745 !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }

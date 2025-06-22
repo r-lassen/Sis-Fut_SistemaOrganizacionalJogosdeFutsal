@@ -40,6 +40,24 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    // Buscar o usuário completo no banco para verificar a senha
+                    UsuarioModel usuarioBanco = _usuarioRepositorio.BuscarPorId(usuarioLogado.Id);
+
+                    // Verifica se a senha atual está correta
+                    if (!usuarioBanco.SenhaValida(alterarSenhaModel.SenhaAtual))
+                    {
+                        TempData["MensagemErro"] = "Senha atual incorreta.";
+                        return View("Index", alterarSenhaModel);
+                    }
+
+                    // Verifica se a nova senha é igual à atual
+                    if (usuarioBanco.SenhaValida(alterarSenhaModel.NovaSenha))
+                    {
+                        TempData["MensagemErro"] = "A nova senha não pode ser igual à senha atual.";
+                        return View("Index", alterarSenhaModel);
+                    }
+
+                    // Troca a senha
                     _usuarioRepositorio.AlterarSenha(alterarSenhaModel);
                     TempData["MensagemSucesso"] = "Senha alterada com sucesso!";
                     return RedirectToAction("Index", "MeuPerfil");
@@ -49,9 +67,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Ops, não conseguimos alterar sua senha, tente novamante, detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Ops, não conseguimos alterar sua senha. Tente novamente. Detalhe do erro: {erro.Message}";
                 return View("Index", alterarSenhaModel);
             }
         }
+
+
+
+
+
     }
 }

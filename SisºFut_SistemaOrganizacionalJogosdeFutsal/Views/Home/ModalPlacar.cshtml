@@ -1,6 +1,6 @@
 ﻿<!-- Modal de Confirmação para Encerramento com Placar -->
 
-<link href="~/css/ModalPlacar.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/css/ModalPlacar.css" rel="stylesheet" asp-append-version="true"/>
 
 <div class="modal fade" id="modalEncerrarJogo" tabindex="-1" aria-labelledby="modalEncerrarLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -47,10 +47,16 @@
 
                     <input type="hidden" name="id" id="idJogo">
                 </div>
+
+
                 <div class="modal-footer border-top-0">
-                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">CANCELAR</button>
-                    <button type="submit" class="btn btn-encerrar">SALVAR</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">CANCELAR</button>
+                        <button type="submit" class="btn btn-encerrar">SALVAR</button>
+                    </div>
                 </div>
+
+
             </form>
         </div>
     </div>

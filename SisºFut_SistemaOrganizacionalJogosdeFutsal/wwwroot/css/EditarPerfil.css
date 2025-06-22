@@ -1,5 +1,5 @@
-﻿/* wwwroot/css/cadastro.css */
-/* Estilos para a página de cadastro de times */
+﻿/* wwwroot/css/EditarPerfil.css */
+/* Estilos totalmente responsivos para edição de usuário */
 
 /* ===== VARIÁVEIS ===== */
 :root {
@@ -26,6 +26,17 @@ body {
     padding: 1rem 0;
 }
 
+.container-fluid {
+    width: 100%;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.row.justify-content-center {
+    margin: 0 auto;
+    width: 100%;
+}
+
 /* ===== TÍTULO ===== */
 .form-title {
     font-family: Courier, monospace;
@@ -45,12 +56,12 @@ body {
     border-radius: 10px;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     background-color: white;
-    margin-top: 0.5rem; /* Espaço entre título e card */
+    margin-top: 0.5rem;
 }
 
 .form-body {
     padding: 1.5rem;
-    max-height: calc(100vh - 250px); /* Ajustado para título externo */
+    max-height: calc(100vh - 250px);
     overflow-y: auto;
 }
 
@@ -60,20 +71,25 @@ body {
     margin-bottom: 0.5rem;
     display: block;
     font-weight: 600;
+    font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
 .form-control {
     font-family: 'Courier New', Courier, monospace;
-    border-radius: 10px;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
     margin-bottom: 0.75rem;
     border: 1px solid var(--border-color);
-    padding: 0.5rem 0.75rem;
-    min-height: 44px; /* Melhor acessibilidade para touch */
+    border-radius: 10px;
+    font-size: clamp(0.9rem, 3vw, 1rem);
+    min-height: 44px;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
     .form-control:focus {
         border-color: var(--primary-color);
         box-shadow: 0 0 0 0.25rem rgba(55, 195, 180, 0.25);
+        outline: none;
     }
 
 /* ===== SWITCH ===== */
@@ -94,22 +110,25 @@ body {
     color: var(--error-color);
 }
 
-/* ===== BARRA DE FORÇA DA SENHA ===== */
-#senhaForca .progress {
-    background-color: #e9ecef;
-    border-radius: 5px;
-    height: 6px;
+/* ===== ALERTAS ===== */
+.alert {
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
-#senhaForca .progress-bar {
-    transition: width 0.4s ease;
+.alert-dismissible .btn-close {
+    padding: 0.75rem 1.25rem;
 }
 
-/* BOTÕES */
+/* ===== BOTÕES ===== */
 .btn-group {
     display: flex;
     justify-content: flex-end;
     gap: 16px;
+    margin-top: 1.5rem;
+    flex-wrap: wrap; /* Permite que os botões quebrem linha se necessário */
 }
 
 .btn {
@@ -120,52 +139,35 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1rem;
+    min-width: 120px;
+    text-align: center;
+    border: 1px solid transparent;
+    flex-shrink: 0; /* Impede que os botões encolham demais */
 }
 
-.btn-cadastrar {
-    background-color: #37c3b4; /* ou use var(--primary-color) se definido */
+.btn-editar {
+    background-color: var(--primary-color);
     color: white;
-    border: none;
 }
 
-    .btn-cadastrar:hover {
-        background-color: #2da89a; /* ou var(--primary-hover) */
+    .btn-editar:hover {
+        background-color: #2da89a;
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
 .btn-outline {
-    color: #37c3b4; /* ou var(--primary-color) */
-    border: 1px solid #37c3b4; /* ou var(--primary-color) */
+    color: var(--primary-color);
+    border-color: var(--primary-color);
     background-color: transparent;
 }
 
     .btn-outline:hover {
-        background-color: rgba(55, 195, 180, 0.1); /* ou use a variável se definida */
+        background-color: rgba(55, 195, 180, 0.1);
         transform: translateY(-2px);
     }
 
-/* ===== ÍCONES DE SENHA ===== */
-.password-toggle-icon {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    z-index: 10;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-}
-
 /* ===== VALIDAÇÃO ===== */
-.invalid-feedback {
-    display: block;
-    width: 100%;
-    margin-top: 0.25rem;
-    font-size: 0.875em;
-    color: var(--error-color);
-}
-
 .is-invalid {
     border-color: var(--error-color);
 }
@@ -174,6 +176,19 @@ body {
         border-color: var(--error-color);
         box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
     }
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: var(--error-color);
+}
+
+/* ===== QUADRA FIELDS ===== */
+#quadraFields {
+    transition: all 0.3s ease;
+}
 
 /* ===== LAYOUT RESPONSIVO ===== */
 @media (max-width: 767px) {
@@ -187,13 +202,15 @@ body {
         margin-bottom: 1rem;
     }
 
-    .form-card {
-        border-radius: 8px;
+    .btn-group {
+        flex-direction: row; /* Mantém os botões lado a lado */
+        justify-content: flex-end; /* Alinha à direita */
+        gap: 12px; /* Espaço menor entre botões */
     }
 
-    .btn-custom {
-        width: 100%;
-        margin-bottom: 0.75rem;
+    .btn {
+        min-width: auto; /* Permite que os botões se ajustem */
+        padding: 8px 16px; /* Padding menor */
     }
 }
 
@@ -209,12 +226,23 @@ body {
     .form-control {
         padding: 0.5rem;
     }
+
+    .btn-group {
+        gap: 8px; /* Espaço ainda menor entre botões */
+    }
 }
 
-/* Ajuste para dispositivos muito pequenos */
 @media (max-width: 400px) {
     .form-title {
         font-size: 1.4rem;
+    }
+
+    .btn-group {
+        justify-content: space-between; /* Distribui o espaço igualmente */
+    }
+
+    .btn {
+        flex-grow: 1; /* Faz os botões ocuparem espaço igual */
     }
 }
 

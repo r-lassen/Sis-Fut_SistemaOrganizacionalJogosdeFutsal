@@ -15,8 +15,13 @@
 }
 
 <div class="main-container">
-    <h1 class="page-title">Editar Jogo Aberto</h1>
 
+    <div class="page-title">
+        <h1>Editar Jogo Aberto</h1>
+    </div>
+
+
+    @await Html.PartialAsync("ModalApagarJogo")
     <form asp-controller="Home" asp-action="EditarJogoAberto" method="post">
         <div class="form-container">
             <!-- Times -->
@@ -106,16 +111,14 @@
                 <div class="col-12">
                     <div class="btn-group">
                         <!-- Botão Voltar -->
-                        <a class="btn btn-outline"
-                           asp-action="Index"
-                           asp-controller="Home">
-                            Voltar
-                        </a>
+                        <a class="btn btn-outline" asp-action="Index" asp-controller="Home"> Voltar </a>
+
+                        <button type="button" class="btn btn-danger"onclick="abrirModalConfirmacao('@Model.Agendar.id')">
+                            Excluir Jogo
+                        </button>
 
                         <!-- Botão Editar -->
-                        <button type="submit" class="btn btn-primary">
-                            Editar
-                        </button>
+                        <button type="submit" class="btn btn-editar"> Editar </button>
                     </div>
                 </div>
             </div>

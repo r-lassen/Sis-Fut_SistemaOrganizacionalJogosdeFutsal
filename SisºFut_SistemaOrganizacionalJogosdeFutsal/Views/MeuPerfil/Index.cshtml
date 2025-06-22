@@ -1,14 +1,11 @@
 ﻿@model HomeModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 @using SisºFut_SistemaOrganizacionalJogosdeFutsal.Enums
 
-<!-- CSS do Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- JS do Bootstrap (deve vir depois do jQuery se estiver usando) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
+<link rel="stylesheet" href="~/css/IndexPerfil.css" asp-append-version="true">
 
 @if (TempData["MensagemErro"] != null)
 {
@@ -21,39 +18,14 @@
 }
 
 <form asp-controller="CadastroPublico" asp-action="Cadastro" method="post">
-
-    <!-- Container principal responsivo -->
-    <div class="card p-2"
-         style="width: 90%;
-            max-width: 100%;
-            min-width:  80%;
-            height: auto;
-            border: 2px solid #ccc;
-            border-radius: 20px;
-            margin: 20px auto 0;
-            font-family: 'Courier New', Courier, monospace;">
-
-        <!-- Layout flexível para diferentes telas -->
-        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between" style="gap: 15px; padding: 10px;">
-
-            <!-- Imagem + Nome (alinha à esquerda) -->
-            <div class="d-flex align-items-center" style="gap: 15px; max-width: 100%; overflow: hidden;">
-                <!-- Imagem responsiva -->
-                <div style="text-align: center; width: 100px;">
-                    <img src="data:image/;base64,@Model.Usuario.Foto"
-                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" />
-
+    <div class="card p-2 profile-card">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between profile-header">
+            <div class="d-flex align-items-center">
+                <div class="profile-image-container">
+                    <img src="data:image/;base64,@Model.Usuario.Foto" class="profile-image" />
                 </div>
-
-                <!-- Nome do time responsivo -->
-                <div style="overflow: hidden;">
-                    <h2 style="font-weight: bold;
-                          margin: 0;
-                          overflow: hidden;
-                          text-overflow: ellipsis;
-                          color: #37c3b4">
-                        @Model.Usuario.Name
-                    </h2>
+                <div>
+                    <h2 class="profile-name">@Model.Usuario.Name</h2>
                 </div>
             </div>
 
@@ -81,251 +53,112 @@
                     Excluir Perfil
                 </button>
             </div>
-
         </div>
     </div>
-
 </form>
 
 @await Html.PartialAsync("_ModalExcluirPerfil")
 
-<!-- CONTAINER DAS LISTAS E INFORMAÇÕES -->
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 40px;">
-
-    <!-- SEÇÃO DE JOGOS MARCADOS -->
-    <div class="scheduled-games-section">
-
-        <style>
-            /* CONTAINER PRINCIPAL */
-            .scheduled-games-section {
-                flex: 1;
-                min-width: 300px;
-                max-width: 500px;
-                border: 2px solid #ccc;
-                border-radius: 15px;
-                padding: 20px;
-                font-family: 'Courier New', Courier, monospace;
-            }
-
-            .scheduled-games-title {
-                font-weight: bold;
-                margin-bottom: 20px;
-                color: #37c3b4;
-                text-align: center;
-            }
-
-            .scheduled-games-container {
-                max-height: 600px;
-                overflow-y: auto;
-            }
-
-            /* CARDS DE JOGOS */
-            .game-card {
-                display: block;
-                text-decoration: none;
-                color: inherit; /* Herda a cor do elemento pai */
-                padding: 12px 20px;
-                margin-bottom: 12px;
-                border-radius: 20px;
-                background-color: #f8f9fa;
-                border: 1px solid #e0e0e0;
-                transition: all 0.3s ease;
-                max-width: 500px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-                .game-card,
-                .game-card:link,
-                .game-card:visited,
-                .game-card:hover,
-                .game-card:active {
-                    color: inherit; /* Mantém a mesma cor em todos os estados */
-                    text-decoration: none; /* Remove sublinhado */
-                }
-
-                    .game-card:hover {
-                        background-color: #e9ecef;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                        transform: translateY(-2px);
-                        border-color: #37c3b4;
-                    }
-
-            .teams-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .team-info {
-                text-align: center;
-                width: 100px;
-            }
-
-            .team-logo {
-                width: 80px;
-                height: 80px;
-                object-fit: cover;
-                border-radius: 50%;
-            }
-
-            .team-name {
-                margin-top: 5px;
-                font-weight: bold;
-            }
-
-            .vs-container {
-                text-align: center;
-            }
-
-            .vs-badge {
-                background-color: #f1f1f1;
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                color: #222;
-            }
-
-            .game-details {
-                text-align: center;
-                font-size: 13px;
-                color: #555;
-                margin: 0;
-            }
-
-            .no-games-message {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 200px;
-                margin: 0;
-                font-size: 16px;
-            }
-        </style>
-        <h1 class="scheduled-games-title">Jogos Marcados</h1>
-
-        <div class="scheduled-games-container">
+<div class="info-container">
+    <div class="games-section">
+        <h1>Jogos Marcados</h1>
+        <div class="games-list">
             @if (Model.Marcados != null && Model.Marcados.Count > 0)
             {
                 @foreach (var marcado in Model.Marcados)
                 {
                     <a asp-controller="MeuPerfil" asp-action="JogoMarcado" asp-route-id="@marcado.id"
-                       class="game-card">
-
+                       class="scheduled-game-card">
                         <div class="teams-container">
-                            <div class="team-info">
+                            <div class="team-card">
                                 <img src="data:image/;base64,@marcado.FotoTime1" class="team-logo" />
                                 <p class="team-name">@marcado.Time1</p>
                             </div>
-
-                            <div class="vs-container">
-                                <div class="vs-badge">VS</div>
-                            </div>
-
-                            <div class="team-info">
+                            <div class="vs-badge">VS</div>
+                            <div class="team-card">
                                 <img src="data:image/;base64,@marcado.FotoTime2" class="team-logo" />
                                 <p class="team-name">@marcado.Time2</p>
                             </div>
                         </div>
-
-                        <div>
-                            <p class="game-details">@marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora</p>
+                        <div class="game-details">
+                            @marcado.Local - @marcado.Data.ToString("d") - @marcado.Hora
                         </div>
-
                         <input type="hidden" value="@marcado.id" />
                     </a>
                 }
             }
             else
             {
-                <div class="no-games-message">
+                <div class="empty-message">
                     <h3>Nenhum Jogo Marcado no Momento</h3>
                 </div>
             }
         </div>
     </div>
 
-    <!-- SEÇÃO DE INFORMAÇÕES DO USUÁRIO -->
-    <div style="flex: 1; min-width: 300px; max-width: 500px;  border: 2px solid #ccc; border-radius: 15px; padding: 20px; font-family: 'Courier New', Courier, monospace;">
+    <div class="user-info-section">
+        <div class="user-info-content">
+        <h1>Informções</h1>
+            <div class="info-card">
+                <h2>Usuário</h2>
 
-        <h1 style="font-weight: bold; margin-bottom: 30px; color: #37c3b4; text-align: center; font-family: 'Courier New', Courier, monospace;">Informações </h1>
-        <div style="max-height: 600px; overflow-y: auto;">
-            <!-- Card de Usuário -->
-            <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; margin-bottom: 20px; border-left: 4px solid #37c3b4; box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);">
-                <h2 style="text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; margin-top: 0; margin-bottom: 15px; font-size:25px;">Usuário</h2>
-
-@*                 <div class="form-group" style="padding: 3px;">
-                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Nome do Time</label>
-                    @Html.TextBoxFor(m => m.Usuario.Name, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
-                </div> *@
-
-                <div class="form-group" style="padding: 3px;">
-                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Usuário</label>
-                    @Html.TextBoxFor(m => m.Usuario.Login, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                <div class="form-group">
+                    <label class="form-label">Usuário</label>
+                    @Html.TextBoxFor(m => m.Usuario.Login, new { @class = "form-control", @readonly = "readonly" })
                 </div>
 
-                <div class="form-group" style="padding: 3px;">
-                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Email</label>
-                    @Html.TextBoxFor(m => m.Usuario.Email, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    @Html.TextBoxFor(m => m.Usuario.Email, new { @class = "form-control", @readonly = "readonly" })
                 </div>
 
-                <div class="form-group" style="padding: 3px;">
-                    <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Data de Cadastro</label>
-                    @Html.TextBox("Usuario.DataCadastro", Model.Usuario.DataCadastro.ToString("dd/MM/yyyy"), new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                <div class="form-group">
+                    <label class="form-label">Data de Cadastro</label>
+                    @Html.TextBox("Usuario.DataCadastro", Model.Usuario.DataCadastro.ToString("dd/MM/yyyy"), new { @class = "form-control", @readonly = "readonly" })
                 </div>
             </div>
 
             @if (Model.Quadra != null)
             {
-                <div style="background: #f8f9fa; border-radius: 10px; padding: 15px; border-left: 4px solid #37c3b4; box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);">
-                    <h2 style="margin: 0 0 15px 0; text-align: center; color: #37c3b4; font-family: 'Courier New', Courier, monospace; font-size: 25px;">Quadra</h2>
+                <div class="info-card">
+                    <h2>Quadra</h2>
 
                     @if (string.IsNullOrEmpty(Model.Quadra.NM_Quadra) || string.IsNullOrEmpty(Model.Quadra.DS_Endereco))
                     {
-                        <!-- Mensagem quando os campos estão vazios -->
-                        <div style="display: flex; justify-content: center; align-items: center; height: 150px;">
-                            <h3 style="margin: 0; font-size: 16px; color: #555;">Nenhuma Quadra Associada no Momento</h3>
+                        <div class="empty-message">
+                            <h3>Nenhuma Quadra Associada no Momento</h3>
                         </div>
                     }
                     else
                     {
-                        <!-- Exibição dos dados da Quadra -->
-                        <div class="form-group" style="padding: 3px;">
-                            <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Nome da Quadra</label>
-                            @Html.TextBoxFor(m => m.Quadra.NM_Quadra, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                        <div class="form-group">
+                            <label class="form-label">Nome da Quadra</label>
+                            @Html.TextBoxFor(m => m.Quadra.NM_Quadra, new { @class = "form-control", @readonly = "readonly" })
                         </div>
 
-                        <div class="form-group" style="padding: 3px;">
-                            <label style="display: block; margin-bottom: 3px; color: #555; font-weight: 600; font-family: 'Courier New', Courier, monospace;">Endereço</label>
-                            @Html.TextBoxFor(m => m.Quadra.DS_Endereco, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #f1f1f1; color: #333; font-family: 'Courier New', Courier, monospace;", @readonly = "readonly" })
+                        <div class="form-group">
+                            <label class="form-label">Endereço</label>
+                            @Html.TextBoxFor(m => m.Quadra.DS_Endereco, new { @class = "form-control", @readonly = "readonly" })
                         </div>
                     }
                 </div>
             }
-
         </div>
     </div>
 </div>
 
-
-<style>
-    .btn-custom {
-        border: 1px solid #37c3b4;
-        font-weight: bold;
-        width: 100%;
-        color: #37c3b4;
-        background-color: transparent;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-        .btn-custom:hover {
-            background-color: #37c3b4;
-            color: white;
-        }
-</style>
-
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#37c3b4';
+                this.style.boxShadow = '0 0 0 0.2rem rgba(55, 195, 180, 0.25)';
+            });
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#ddd';
+                this.style.boxShadow = 'none';
+            });
+        });
+    });
+</script>

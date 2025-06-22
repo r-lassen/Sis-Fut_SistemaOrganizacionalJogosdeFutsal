@@ -1,0 +1,25 @@
+﻿.modal-footer {
+    padding: 1.5rem;
+    gap: 16px;
+    border: none;
+}
+
+    /* Garantir que o btn-group dentro do modal tenha o mesmo estilo */
+    .modal-footer .btn-group {
+        width: 100%;
+        justify-content: center; /* Centraliza os botões */
+    }
+
+/* Ajustes para telas pequenas */
+@media (max-width: 576px) {
+    .modal-footer .btn-group {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .modal-footer .btn {
+        flex: 1;
+        min-width: auto;
+        padding: 8px 12px;
+    }
+}

@@ -35,11 +35,20 @@
                 </span>
             </div>
 
-            <div class="btn-container">
-                <button type="submit" class="btn btn-primary btn-redefinir">Redefinir Senha</button>
 
-                <a asp-action="" asp-controller="Login" class="btn btn-secondary btn-redefinir">Voltar</a>
+            <!-- Botões -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="btn-group">
+                        <!-- Botão Voltar -->
+                        <a class="btn btn-outline-custom" asp-action="" asp-controller="Login"> Voltar </a>
+
+                        <!-- Botão Alterar -->
+                        <button type="submit" class="btn btn-primary-custom">Redefinir Senha </button>
+                    </div>
+                </div>
             </div>
+
         </form>
     </div>
 </div>

@@ -1,1 +1,369 @@
-﻿
+﻿/* APLICAR FONTE PARA TODOS OS ELEMENTOS */
+* {
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+/* ESTILOS GERAIS */
+:root {
+    --primary-color: #37c3b4;
+    --text-color: #555;
+    --card-bg: #f8f9fa;
+    --border-color: #ccc;
+}
+
+/* ESTILOS DO CARD PRINCIPAL */
+.profile-card {
+    width: 90%;
+    max-width: 100%;
+    min-width: 80%;
+    height: auto;
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    margin: 20px auto 0;
+    transition: all 0.3s ease;
+}
+
+    .profile-card:hover {
+        transform: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-color: var(--primary-color);
+    }
+
+/* ESTILOS DO HEADER DO PERFIL */
+.profile-header {
+    gap: 15px;
+    padding: 10px;
+}
+
+.profile-image-container {
+    text-align: center;
+    width: 100px;
+}
+
+.profile-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-name {
+    font-weight: bold;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--primary-color);
+}
+
+/* ESTILOS DOS BOTÕES - MODIFICADO */
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Aumentei de 8px para 12px */
+    min-width: 120px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.btn-custom {
+    border: 1px solid var(--primary-color);
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 50rem;
+    white-space: nowrap;
+    width: 100%; /* Garante que todos tenham a mesma largura */
+}
+
+    .btn-custom:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+.btn-danger-custom {
+    border: 1px solid #dc3545;
+    font-weight: bold;
+    color: #dc3545;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 50rem;
+    white-space: nowrap;
+    width: 100%; /* Garante que todos tenham a mesma largura */
+}
+
+@media (min-width: 768px) {
+    .btn-container {
+        flex-direction: row;
+        gap: 10px; /* Espaçamento menor em telas maiores */
+    }
+
+    .btn-custom,
+    .btn-danger-custom {
+        width: auto; /* Largura automática em telas maiores */
+        padding: 0.25rem 0.75rem; /* Padding um pouco maior */
+    }
+}
+
+.btn-danger-custom {
+    border: 1px solid #dc3545;
+    font-weight: bold;
+    color: #dc3545;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 50rem;
+    white-space: nowrap;
+}
+
+/* CONTAINER DAS LISTAS E INFORMAÇÕES */
+.info-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+/* ESTILOS PARA JOGOS MARCADOS - MODIFICADO (REMOVIDO AZUL) */
+.scheduled-game-card {
+    display: block;
+    color: inherit;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 20px;
+    background-color: var(--card-bg);
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    max-width: 100%;
+    text-decoration: none !important;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    margin-top: 2px;
+}
+
+    .scheduled-game-card:hover {
+        background-color: #e9ecef;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+        border-color: var(--primary-color);
+        z-index: 2;
+    }
+
+.games-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 20px;
+    background: white;
+    height: fit-content;
+}
+
+    .games-section h1 {
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        text-align: center;
+        font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    }
+
+.teams-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.team-card {
+    text-align: center;
+    min-width: 100px;
+    flex: 1;
+}
+
+.team-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.team-name {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000; /* Alterado para preto */
+}
+
+.vs-badge {
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #222;
+}
+
+.game-details {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.empty-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    text-align: center;
+}
+
+/* LISTA DE JOGOS COM BARRA DE ROLAGEM */
+.games-list {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-right: -8px;
+    scrollbar-gutter: stable;
+    padding-top: 5px;
+    margin-top: -5px;
+}
+
+    .games-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .games-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .games-list::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+
+        .games-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+/* SEÇÃO DE INFORMAÇÕES DO USUÁRIO */
+.user-info-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+    .user-info-section h1 {
+        margin-top: 10px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        text-align: center;
+        font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    }
+
+.user-info-content {
+    max-height: 620px;
+}
+
+.info-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+    .info-card h2 {
+        text-align: center;
+        color: var(--primary-color);
+        margin: 0 0 12px 0;
+        font-size: 1.3rem;
+    }
+
+.form-group {
+    padding: 3px;
+    margin-bottom: 10px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(55, 195, 180, 0.25);
+    }
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .team-card {
+        min-width: 80px;
+    }
+
+    .team-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .vs-badge {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .scheduled-game-card {
+        padding: 10px;
+    }
+
+    .team-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .team-name {
+        font-size: 0.8rem;
+    }
+
+    .game-details {
+        font-size: 0.8rem;
+    }
+}

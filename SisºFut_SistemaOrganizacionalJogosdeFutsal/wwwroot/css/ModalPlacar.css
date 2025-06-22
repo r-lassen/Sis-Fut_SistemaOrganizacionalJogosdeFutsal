@@ -77,23 +77,47 @@
     align-items: center;
 }
 
+/* Botões do modal com estilo do btn-placar (mas mantendo cores originais) */
+.modal-footer .btn {
+    border-radius: 50px;
+    font-weight: bold;
+    padding: 8px 24px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 
+/* Botão Cancelar (mantendo estilo outline-dark) */
+.modal-footer .btn-outline-dark {
+    color: #343a40;
+    border: 2px solid #343a40;
+    background-color: transparent;
+}
 
-/* Botão personalizado */
-.btn-encerrar {
+/* Botão Salvar (mantendo estilo encerrar) */
+.modal-footer .btn-encerrar {
     background-color: #37c3b4;
     color: white;
     border: none;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    padding: 8px 20px;
-    transition: all 0.3s;
 }
 
-    .btn-encerrar:hover {
+    .modal-footer .btn-encerrar:hover {
         background-color: #2da89a;
-        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
+/* Container dos botões */
+.modal-footer .btn-group {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    justify-content: center;
+}
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -119,15 +143,40 @@
 
 @media (max-width: 576px) {
     .placar-container {
-        flex-direction: column;
+        flex-direction: row; /* Mantém os itens em linha mesmo em telas pequenas */
+        flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha se necessário */
+        justify-content: space-around; /* Distribui os itens uniformemente */
+    }
+
+    .time-placar {
+        flex-direction: row; /* Coloca os elementos do time em linha */
+        gap: 8px;
+        min-width: auto;
+    }
+
+    .controle-placar {
+        flex-direction: column; /* Coloca os botões em coluna (um sobre o outro) */
     }
 
     .vs-badge {
-        margin: 10px 0;
-        transform: rotate(90deg);
+        margin: 0 10px;
+        transform: rotate(0deg); /* Mantém o "vs" na orientação normal */
+        order: 0; /* Garante que o "vs" fique entre os times */
     }
 
     .nome-time {
-        margin-bottom: 15px;
+        margin-bottom: 0;
+        order: -1; /* Coloca o nome do time antes dos controles */
+    }
+}
+
+/* Estilo adicional para garantir que os botões fiquem alinhados corretamente */
+@media (max-width: 400px) {
+    .time-placar {
+        flex-direction: column; /* Em telas muito pequenas, volta para coluna */
+    }
+
+    .controle-placar {
+        flex-direction: row; /* Em telas muito pequenas, botões lado a lado */
     }
 }

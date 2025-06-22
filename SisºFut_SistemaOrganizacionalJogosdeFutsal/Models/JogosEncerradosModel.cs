@@ -6,7 +6,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
     public class JogosEncerradosModel
     {
 
-        public List<DadosJogosEncerrados> JogosEncerrados { get; set; }
         public int Id { get; set; }
         public int IdTime1 { get; set; }
         public int IdTime2 { get; set; }

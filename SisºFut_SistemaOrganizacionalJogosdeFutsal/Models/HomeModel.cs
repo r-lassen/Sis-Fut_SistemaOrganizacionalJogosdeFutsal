@@ -20,5 +20,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
         [NotMapped]
         public QuadrasModel Quadra { get; set; }
+
+        public List<DadosJogosEncerrados> Encerrados { get; set; } // <-- Adicione isso
     }
 }

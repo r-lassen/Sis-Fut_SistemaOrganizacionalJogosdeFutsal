@@ -115,11 +115,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             };
 
 
-
-
-
-
-
             return View(home);
         }
 
@@ -150,36 +145,33 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             try
             {
                 var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
-                var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
+                var quadraExistente = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
 
-                // Verifica se o e-mail já está em uso por outro usuário
+                // Verificações de duplicidade
                 var emailExiste = _usuarioRepositorio.BuscarPorEmail(homemodel.Usuario.Email);
                 if (emailExiste != null && emailExiste.Id != homemodel.Usuario.Id)
                 {
                     ModelState.AddModelError("Usuario.Email", "Este e-mail já está cadastrado por outro usuário.");
                 }
 
-                // Verifica se o login já está em uso por outro usuário
                 var loginExiste = _usuarioRepositorio.BuscarPorLogin(homemodel.Usuario.Login);
                 if (loginExiste != null && loginExiste.Id != homemodel.Usuario.Id)
                 {
                     ModelState.AddModelError("Usuario.Login", "Este login já está em uso por outro usuário.");
                 }
 
-                // Verifica se o nome do time já está em uso por outro usuário
                 var nomeTimeExiste = _usuarioRepositorio.BuscarPorNomeTime(homemodel.Usuario.Name);
                 if (nomeTimeExiste != null && nomeTimeExiste.Id != homemodel.Usuario.Id)
                 {
                     ModelState.AddModelError("Usuario.Name", "Este nome de time já está em uso por outro usuário.");
                 }
 
-                // Se houver erro de validação, retorna para a view de edição com os dados preenchidos
                 if (!ModelState.IsValid)
                 {
                     return View(homemodel);
                 }
 
-                // Conversão da imagem para Base64, se houver
+                // Conversão da imagem para Base64
                 var base64 = string.Empty;
                 if (homemodel.Usuario.FotoArquivo != null && homemodel.Usuario.FotoArquivo.Length > 0)
                 {
@@ -197,21 +189,17 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     DataCadastro = homemodel.Usuario.DataCadastro,
                     DataAtualização = DateTime.Now,
                     Senha = homemodel.Usuario.Senha,
-                    Foto = string.IsNullOrEmpty(base64) ? _usuarioRepositorio.BuscarPorId(usuarioLogado.Id).Foto : base64
+                    Foto = string.IsNullOrEmpty(base64)
+                        ? _usuarioRepositorio.BuscarPorId(usuarioLogado.Id).Foto
+                        : base64
                 };
 
-                // Atualiza os dados da quadra, somente se preencher
-                QuadrasModel quadra = null;
-                if (!string.IsNullOrEmpty(homemodel.Quadra?.DS_Endereco))
+                // Atualiza os dados da quadra, mesmo se estiverem em branco (serão salvos como null)
+                if (quadraExistente != null)
                 {
-                    quadra = new QuadrasModel
-                    {
-                        Id = homemodel.Quadra.Id,
-                        NM_Quadra = homemodel.Quadra.NM_Quadra,
-                        DS_Endereco = homemodel.Quadra.DS_Endereco,
-                        id_Time = homemodel.Quadra.id_Time
-                    };
-                    _quadrasRepositorio.Atualizar(quadra);
+                    quadraExistente.NM_Quadra = string.IsNullOrWhiteSpace(homemodel.Quadra?.NM_Quadra) ? null : homemodel.Quadra.NM_Quadra.Trim();
+                    quadraExistente.DS_Endereco = string.IsNullOrWhiteSpace(homemodel.Quadra?.DS_Endereco) ? null : homemodel.Quadra.DS_Endereco.Trim();
+                    _quadrasRepositorio.Atualizar(quadraExistente);
                 }
 
                 _usuarioRepositorio.Atualizar(usuario);
@@ -226,6 +214,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index", "MeuPerfil");
             }
         }
+
 
         public string ConverterParaBase64(IFormFile arquivo)
         {

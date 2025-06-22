@@ -1,0 +1,39 @@
+﻿<!-- Modal de Confirmação para Exclusão de Jogo -->
+<link href="~/css/ModalApagarJogo.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="modal fade" id="modalConfirmacaoExclusaoJogo" tabindex="-1" aria-labelledby="modalExclusaoJogoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="font-family: 'Courier New', Courier, monospace;">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalExclusaoJogoLabel">EXCLUIR JOGO</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+
+            <form asp-controller="Home" asp-action="ExcluirJogo" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body text-center">
+                    <p class="mb-0">Tem certeza que deseja <strong>excluir este jogo</strong>?</p>
+                    <input type="hidden" name="id" id="jogoIdParaExcluir" />
+                </div>
+
+                <div class="modal-footer border-top-0 justify-content-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline" data-bs-dismiss="modal">CANCELAR</button>
+                        <button type="submit" class="btn btn-danger">CONFIRMAR EXCLUSÃO</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function abrirModalConfirmacao(id) {
+        document.getElementById("jogoIdParaExcluir").value = id;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalConfirmacaoExclusaoJogo'));
+        modal.show();
+    }
+</script>
+

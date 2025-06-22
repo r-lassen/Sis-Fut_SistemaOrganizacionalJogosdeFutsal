@@ -116,14 +116,14 @@
                 <a class="btn btn-outline" asp-action="Index" asp-controller="Home">Voltar</a>
                 @if (isEditor)
                 {
-                    <button type="submit" class="btn btn-primary">Editar</button>
-
-
+            
                     <button type="button"
                             class="btn btn-danger"
                             onclick="abrirModalEncerrar('@Model.Agendar.id', '@Model.Agendar.Time1', '@Model.Agendar.Time2')">
                         Encerrar Jogo
                     </button>
+
+                    <button type="submit" class="btn btn-editar">Editar</button>
                 }
             </div>
         </div>

@@ -62,12 +62,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
             }
 
+            var abertos = _agendamentoRepositorio.ListarAbertos()
+                            .Where(a => a.st_ativo) // Só abertos ativos
+                            .ToList();
 
-            var abertos = _agendamentoRepositorio.ListarAbertos();
-
-            var marcados = _agendamentoRepositorio.ListarMarcados();
-
-
+            var marcados = _agendamentoRepositorio.ListarMarcados()
+                            .Where(m => m.st_ativo) // Só marcados ativos
+                            .ToList();
 
             List<DadosAgendamentos> dadosAbertos = new List<DadosAgendamentos>();
             List<DadosAgendamentos> dadosMarcados = new List<DadosAgendamentos>();
@@ -79,27 +80,24 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     var time1 = _usuarioRepositorio.BuscarPorId(aberto.id_Time1);
                     var quadra = _quadrasRepositorio.BuscarPorIdQuadra(aberto.id_Quadra);
 
-
-                    dadosAbertos.Add(new DadosAgendamentos
+                    // Só adiciona se time1 estiver ativo
+                    if (time1 != null && time1.st_ativo)
                     {
-                        Time1 = time1.Name,
-                        Time2 = "",
-                        Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
-                        Data = aberto.DT_Agendamento,
-                        DS_Descrição = aberto.DS_Descricao,
-                        Hora = aberto.HR_Agendamento,
-                        id = aberto.Id,
-                        FotoTime1 = time1.Foto,
-                        idTime1 = time1.Id,
-
-                    });
-
-
+                        dadosAbertos.Add(new DadosAgendamentos
+                        {
+                            Time1 = time1.Name,
+                            Time2 = "",
+                            Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                            Data = aberto.DT_Agendamento,
+                            DS_Descrição = aberto.DS_Descricao,
+                            Hora = aberto.HR_Agendamento,
+                            id = aberto.Id,
+                            FotoTime1 = time1.Foto,
+                            idTime1 = time1.Id,
+                        });
+                    }
                 }
-
             }
-
-
 
             if (marcados.Count > 0)
             {
@@ -107,46 +105,42 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 {
                     var time1 = _usuarioRepositorio.BuscarPorId(marcado.id_Time1);
                     var time2 = _usuarioRepositorio.BuscarPorId(marcado.id_Time2.Value);
-
                     var quadra = _quadrasRepositorio.BuscarPorIdQuadra(marcado.id_Quadra);
 
-
-                    dadosMarcados.Add(new DadosAgendamentos
+                    // Só adiciona se time1 e time2 estiverem ativos
+                    if (time1 != null && time1.st_ativo && time2 != null && time2.st_ativo)
                     {
-                        Time1 = time1.Name,
-                        Time2 = time2.Name,
-                        Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
-                        Data = marcado.DT_Agendamento,
-                        DS_Descrição = marcado.DS_Descricao,
-                        Hora = marcado.HR_Agendamento,
-                        id = marcado.Id,
-                        FotoTime1 = time1.Foto,
-                        FotoTime2 = time2.Foto,
-                        idTime1 = time1.Id,
-                        idTime2 = time2.Id,
-                    });
+                        dadosMarcados.Add(new DadosAgendamentos
+                        {
+                            Time1 = time1.Name,
+                            Time2 = time2.Name,
+                            Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                            Data = marcado.DT_Agendamento,
+                            DS_Descrição = marcado.DS_Descricao,
+                            Hora = marcado.HR_Agendamento,
+                            id = marcado.Id,
+                            FotoTime1 = time1.Foto,
+                            FotoTime2 = time2.Foto,
+                            idTime1 = time1.Id,
+                            idTime2 = time2.Id,
+                        });
+                    }
                 }
-
             }
-
-
-
-
 
             HomeModel home = new HomeModel
             {
                 Nome = usuarioLogado.Name,
                 Email = usuarioLogado.Email,
                 Id = usuarioLogado.Id,
-
                 Abertos = dadosAbertos,
                 Marcados = dadosMarcados,
-
-                //Banco = usuarioLogado.Banco // Pegando o nome do banco (adicione essa propriedade ao modelo)
             };
 
             return View(home);
         }
+
+
 
 
         public IActionResult Privacy()
@@ -164,6 +158,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         //---------------Essa carrega a view--------------
         public IActionResult Amistoso()
         {
+
+
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
             var usuarioSessao = _sessao.BuscarSessaoDoUsuario();
 
             var quadra = _quadrasRepositorio.BuscarPorId(usuarioSessao.Id);
@@ -175,9 +177,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             {
                 var usuariosAll = _usuarioRepositorio.BuscarTodos();
 
-                // Filtra para não incluir o próprio usuário e nem Admins
+                // Filtra para não incluir o próprio usuário, nem Admins, e somente usuários ativos
                 var usuariosFiltrados = usuariosAll
-                    .Where(m => m.Id != usuarioSessao.Id && m.Perfil != PerfilEnum.Admin)
+                    .Where(m => m.Id != usuarioSessao.Id && m.Perfil != PerfilEnum.Admin && m.st_ativo)
                     .ToList();
 
                 ViewBag.UserList = new SelectList(usuariosFiltrados, "Id", "Name");
@@ -199,19 +201,46 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
 
+
         [HttpPost]
         public IActionResult Amistoso(AgendamentosModel agendamentos)
         {
             try
             {
-                // Carrega a lista de usuários excluindo Admins, uma única vez
+
+                var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+                if (usuarioLogado == null)
+                {
+                    return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+                }
+
+                // Carrega a lista de usuários excluindo Admins e desativados, uma única vez
                 var usuarios = _usuarioRepositorio.BuscarTodos();
-                var usuariosFiltrados = usuarios.Where(u => u.Perfil != PerfilEnum.Admin).ToList();
+                var usuariosFiltrados = usuarios.Where(u => u.Perfil != PerfilEnum.Admin && u.st_ativo == true).ToList();
                 ViewBag.UserList = new SelectList(usuariosFiltrados, "Id", "Name");
+
+                // Verifica se os times estão ativos
+                var time1 = _usuarioRepositorio.BuscarPorId(agendamentos.id_Time1);
+                if (time1 == null || !time1.st_ativo)
+                {
+                    TempData["MensagemErro"] = "O time 1 está desativado ou inválido.";
+                    return View(agendamentos);
+                }
+
+                if (agendamentos.id_Time2.HasValue && agendamentos.id_Time2 > 0)
+                {
+                    var time2 = _usuarioRepositorio.BuscarPorId((int)agendamentos.id_Time2);
+                    if (time2 == null || !time2.st_ativo)
+                    {
+                        TempData["MensagemErro"] = "O time 2 está desativado ou inválido.";
+                        return View(agendamentos);
+                    }
+                }
 
                 if (agendamentos.DT_Agendamento < DateTime.Now)
                 {
-                    TempData["MensagemErro"] = "Selecione um data Valida";
+                    TempData["MensagemErro"] = "Selecione uma data válida.";
                     return View(agendamentos);
                 }
 
@@ -234,33 +263,26 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return View(agendamentos);
                 }
 
+                // Verifica se já existe jogo marcado para a data (para os dois times)
                 var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(agendamentos.id_Time1);
-                var jaExisteData = false;
+                var jaExisteData = jaTemAgendadoTime1.Any(a => a.DT_Agendamento.Date == agendamentos.DT_Agendamento.Date);
 
-                foreach (var a in jaTemAgendadoTime1)
+                if (agendamentos.id_Time2 > 0)
                 {
-                    if (a.DT_Agendamento == agendamentos.DT_Agendamento)
+                    var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2((int)agendamentos.id_Time2);
+                    if (jaTemAgendadoTime2.Any(a => a.DT_Agendamento.Date == agendamentos.DT_Agendamento.Date))
                     {
                         jaExisteData = true;
                     }
                 }
 
-                if (agendamentos.id_Time2 > 0)
-                {
-                    var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2((int)agendamentos.id_Time2);
-                    foreach (var a in jaTemAgendadoTime2)
-                    {
-                        if (a.DT_Agendamento == agendamentos.DT_Agendamento)
-                        {
-                            jaExisteData = true;
-                        }
-                    }
-                }
-
                 if (!jaExisteData)
                 {
+                    // Setar agendamento como ativo
+                    agendamentos.st_ativo = true;
+
                     var resultado = _agendamentoRepositorio.Adicionar(agendamentos);
-                    TempData["MensagemSucesso"] = "Jogo cadastrado com Sucesso";
+                    TempData["MensagemSucesso"] = "Jogo cadastrado com sucesso!";
                     return RedirectToAction("Index");
                 }
                 else
@@ -271,15 +293,23 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
             catch (System.Exception erro)
             {
-                TempData["MensagemErro"] = $"Erro ao cadastrar seu Jogo, tente novamente. Detalhe do erro: {erro.Message}";
+                TempData["MensagemErro"] = $"Erro ao cadastrar seu jogo, tente novamente. Detalhe do erro: {erro.Message}";
                 return RedirectToAction("Index");
             }
         }
 
 
+
         //---------------Essa carrega a view--------------
         public IActionResult JogoAberto(int id)
         {
+
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
             var Agendamento = _agendamentoRepositorio.BuscarPorId(id);
 
             var UsuarioSessao = _sessao.BuscarSessaoDoUsuario();
@@ -385,6 +415,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         //---------------Essa carrega a view--------------
         public IActionResult EditarJogoAberto(int id)
         {
+
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
             var Agendamento = _agendamentoRepositorio.BuscarPorId(id);
 
             var time1 = _usuarioRepositorio.BuscarPorId(Agendamento.id_Time1);
@@ -406,9 +443,9 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             var usuariosAll = _usuarioRepositorio.BuscarTodos();
 
-            // Filtra para excluir o próprio usuário e perfis Admin
+            // Filtra para excluir o próprio usuário, perfis Admin e incluir só ativos
             var usuariosFiltrados = usuariosAll
-                .Where(m => m.Id != UsuarioSessao.Id && m.Perfil != PerfilEnum.Admin)
+                .Where(m => m.Id != UsuarioSessao.Id && m.Perfil != PerfilEnum.Admin && m.st_ativo)
                 .ToList();
 
             ViewBag.UserList = new SelectList(usuariosFiltrados, "Id", "Name");
@@ -425,6 +462,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 id_Time1 = UsuarioSessao.Id
             });
         }
+
 
 
         [HttpPost]
@@ -680,11 +718,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             }
         }
 
-        //public IActionResult ModalPlacar(int id)
-        //{
-        //    AgendamentosModel agendamentos = _agendamentoRepositorio.BuscarPorId(id);
-        //    return RedirectToAction("Index");
-        //}
+
 
 
         [HttpPost]
@@ -692,6 +726,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
+
+                var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+                if (usuarioLogado == null)
+                {
+                    return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+                }
                 var agendamento = _agendamentoRepositorio.BuscarPorId(id);
                 if (agendamento == null)
                 {
@@ -719,7 +760,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 var resultado = _jogosEncerradosRepositorio.Adicionar(jogoEncerrado);
                 if (resultado != null)
                 {
-                    _agendamentoRepositorio.Apagar(agendamento.Id);
+                    // Atualiza o st_ativo para false e atualiza a data
+                    agendamento.st_ativo = false;
+                    agendamento.DT_Atualizacao = DateTime.Now;
+
+                    _agendamentoRepositorio.Atualizar(agendamento);
+
                     TempData["MensagemSucesso"] = "Jogo encerrado com sucesso!";
                 }
                 else
@@ -737,11 +783,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
 
+
         [HttpPost]
         public IActionResult ExcluirJogo(int id)
         {
             try
             {
+
+
                 var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
                 if (usuarioLogado == null)
                 {

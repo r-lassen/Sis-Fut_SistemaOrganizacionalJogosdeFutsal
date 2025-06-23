@@ -5,7 +5,7 @@
 @if (TempData["MensagemSucesso"] != null)
 {
     <div class="alert alert-success alert-dismissible text-center" role="alert">
-        <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
+
         <span class="d-block">@TempData["MensagemSucesso"]</span>
     </div>
 }
@@ -13,7 +13,7 @@
 @if (TempData["MensagemErro"] != null)
 {
     <div class="alert alert-danger alert-dismissible text-center" role="alert">
-        <button type="button" class="btn btn-danger btn-sm close-alert" aria-label="Close">X</button>
+
         <span class="d-block">@TempData["MensagemErro"]</span>
     </div>
 }
@@ -141,4 +141,28 @@
             }
         });
     });
+
+            // Desaparecer automaticamente os alertas
+    const alertSucesso = document.getElementById('alertSucesso');
+    const alertErro = document.getElementById('alertErro');
+
+    if (alertSucesso) {
+        setTimeout(() => {
+            alertSucesso.style.transition = "opacity 0.5s ease";
+            alertSucesso.style.opacity = "0";
+            setTimeout(() => {
+                alertSucesso.style.display = "none";
+            }, 500);
+        }, 8000); // 8 segundos
+    }
+
+    if (alertErro) {
+        setTimeout(() => {
+            alertErro.style.transition = "opacity 0.5s ease";
+            alertErro.style.opacity = "0";
+            setTimeout(() => {
+                alertErro.style.display = "none";
+            }, 500);
+        }, 15000); // 15 segundos
+    }
 </script>

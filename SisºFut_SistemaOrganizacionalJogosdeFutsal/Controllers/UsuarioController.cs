@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Data;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System;
@@ -18,24 +19,35 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IQuadrasRepositorio _quadrasRepositorio;
         private readonly IAgendamentoRepositorio _agendamentoRepositorio;
+        private readonly ISessao _sessao;
 
 
         public UsuarioController(IUsuarioRepositorio usuarioRepositorio,
              IQuadrasRepositorio quadras,
+              ISessao sessao,
              IAgendamentoRepositorio agendamentoRepositorio)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _quadrasRepositorio = quadras;
             _agendamentoRepositorio = agendamentoRepositorio;
+            _usuarioRepositorio = usuarioRepositorio;
         }
 
         public IActionResult Index(string filtro, int? page)
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
 
             int pageNumber = page ?? 1;
             int pageSize = 10;
 
-            var usuarios = _usuarioRepositorio.BuscarTodos().AsQueryable();
+            var usuarios = _usuarioRepositorio.BuscarTodos()
+                .Where(u => u.st_ativo) // Só usuários ativos
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(filtro))
             {
@@ -56,9 +68,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             int pageSize = 10;
 
             var usuarios = _usuarioRepositorio.BuscarTodos()
-                                             .Where(u => string.IsNullOrEmpty(filtro) || u.Name.Contains(filtro, StringComparison.OrdinalIgnoreCase))
-                                             .OrderBy(u => u.Name)
-                                             .ToPagedList(pageNumber, pageSize);
+                                .Where(u => u.st_ativo) // só ativos
+                                .Where(u => string.IsNullOrEmpty(filtro) || u.Name.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                                .OrderBy(u => u.Name)
+                                .ToPagedList(pageNumber, pageSize);
 
             return PartialView("_TabelaUsuarios", usuarios);
         }
@@ -66,11 +79,24 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult Criar()
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
             return View();
         }
 
         public IActionResult Editar(int id)
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
+
             var usuario = _usuarioRepositorio.BuscarPorId(id);
 
             if (usuario == null)
@@ -102,7 +128,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
-                // Busca o usuário pelo ID (que o ADM quer excluir)
+                // Busca o usuário pelo ID (que o ADM quer "excluir")
                 var usuario = _usuarioRepositorio.BuscarPorId(id);
                 if (usuario == null)
                 {
@@ -110,54 +136,46 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Verifica se o usuário tem quadra associada
+                // Desativa a quadra associada, se existir
                 var quadraUsuario = _quadrasRepositorio.BuscarPorId(id);
                 if (quadraUsuario != null)
                 {
-                    var quadraExcluida = _quadrasRepositorio.Apagar(quadraUsuario.Id);
-                    if (!quadraExcluida)
-                    {
-                        TempData["MensagemErro"] = "Não foi possível excluir a quadra do usuário.";
-                        return RedirectToAction("Index");
-                    }
+                    quadraUsuario.st_ativo = false;
+                    _quadrasRepositorio.Atualizar(quadraUsuario);
                 }
 
-                // Verifica agendamentos vinculados ao usuário (como time1 ou time2)
+                // Desativa os agendamentos vinculados (como time1 ou time2)
                 var agendamentosTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(id);
                 var agendamentosTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(id);
                 var todosAgendamentos = agendamentosTime1.Concat(agendamentosTime2).ToList();
 
-                if (todosAgendamentos.Count > 0)
+                foreach (var agendamento in todosAgendamentos)
                 {
-                    foreach (var agendamento in todosAgendamentos)
-                    {
-                        var agendamentoExcluido = _agendamentoRepositorio.Apagar(agendamento.Id);
-                        if (!agendamentoExcluido)
-                        {
-                            TempData["MensagemErro"] = "Não foi possível excluir um agendamento vinculado.";
-                            return RedirectToAction("Index");
-                        }
-                    }
+                    agendamento.st_ativo = false;
+                    _agendamentoRepositorio.Atualizar(agendamento);
                 }
 
-                // Exclui o usuário
-                var usuarioExcluido = _usuarioRepositorio.Apagar(id);
-                if (!usuarioExcluido)
+                // Desativa o usuário
+                usuario.st_ativo = false;
+                var usuarioAtualizado = _usuarioRepositorio.Atualizar(usuario);
+
+                if (usuarioAtualizado == null)
                 {
-                    TempData["MensagemErro"] = "Não foi possível excluir o usuário.";
+                    TempData["MensagemErro"] = "Não foi possível desativar o usuário.";
                     return RedirectToAction("Index");
                 }
 
                 // Sucesso!
-                TempData["MensagemSucesso"] = "Usuário e todos os dados vinculados foram excluídos com sucesso!";
+                TempData["MensagemSucesso"] = "Usuário e todos os dados vinculados foram desativados com sucesso!";
                 return RedirectToAction("Index");
             }
             catch (Exception erro)
             {
-                TempData["MensagemErro"] = $"Erro ao excluir usuário: {erro.Message}";
+                TempData["MensagemErro"] = $"Erro ao desativar usuário: {erro.Message}";
                 return RedirectToAction("Index");
             }
         }
+
 
         [HttpPost]
         [AllowAnonymous]
@@ -171,6 +189,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 usuario.Login = usuario.Login?.Trim();
                 usuario.Senha = usuario.Senha?.Trim();
 
+                // Verifica se login e senha foram preenchidos
+                if (string.IsNullOrEmpty(usuario.Login) || string.IsNullOrEmpty(usuario.Senha))
+                {
+                    TempData["MensagemErro"] = "Login e senha são obrigatórios.";
+                    return View(usuario);
+                }
+
                 if (ModelState.IsValid)
                 {
                     // Verifica se o e-mail já está cadastrado
@@ -178,6 +203,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     if (emailExiste != null)
                     {
                         ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
+                    }
+
+                    // Sugere correção para domínio de e-mail inválido
+                    var sugestao = EmailHelper.SugerirDominioCorreto(usuario.Email);
+                    if (sugestao != null)
+                    {
+                        ModelState.AddModelError("Email", $"Domínio inválido. Você quis dizer: {sugestao}?");
                     }
 
                     // Verifica se o login já está cadastrado
@@ -200,15 +232,19 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         return View(usuario);
                     }
 
+                    // Define st_ativo como true para o usuário
+                    usuario.st_ativo = true;
+
                     // Adiciona o usuário
                     usuario = _usuarioRepositorio.Adicionar(usuario);
 
-                    // Cria a quadra associada ao novo time
+                    // Cria a quadra associada ao novo time e seta st_ativo como true
                     QuadrasModel quadra = new QuadrasModel
                     {
                         NM_Quadra = string.Empty,
                         DS_Endereco = string.Empty,
-                        id_Time = usuario.Id
+                        id_Time = usuario.Id,
+                        st_ativo = true
                     };
 
                     _quadrasRepositorio.Adicionar(quadra);
@@ -225,6 +261,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+
 
 
 

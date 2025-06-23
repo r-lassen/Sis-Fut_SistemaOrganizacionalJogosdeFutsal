@@ -12,8 +12,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio
         ContatoModel Adicionar(ContatoModel contato);
         ContatoModel Atualizar(ContatoModel contato);
 
-        ContatoModel BuscarPorEmail(string email);
-        ContatoModel BuscarPorCelular(string celular);
+        ContatoModel BuscarPorCelularEUsuario(string celular, int usuarioId);
+        ContatoModel BuscarPorEmailEUsuario(string email, int usuarioId);
+
+
+
         bool Apagar(int id);
         //void ResetarAutoIncrement();  // Adicionando a assinatura do método
     }

@@ -50,6 +50,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
         public DateTime? TokenExpiracao { get; set; }
 
+        public bool st_ativo { get; set; }
+
         public string Foto { get; set; }
 
         [NotMapped]

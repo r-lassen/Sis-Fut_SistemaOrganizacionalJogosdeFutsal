@@ -1,0 +1,183 @@
+﻿@model ReativarUsuarioModel
+
+@{
+    Layout = "_LayoutDeslogado";
+    ViewData["Title"] = "Reativar Usuário";
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div id="alertSucesso" class="alert alert-success text-center" role="alert">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div id="alertErro" class="alert alert-danger text-center" role="alert">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+
+<div class="container-login">
+    <form asp-controller="Login" asp-action="ReativarUsuario" method="post" class="form-card">
+        <h1 style="font-weight: bold; margin-bottom: 30px; color: #37c3b4; text-align: center; font-family: 'Courier New', Courier, monospace;">
+            Reativar Usuário
+        </h1>
+
+        <div class="col-mb-4 form-group">
+            <input type="text" asp-for="Login" class="form-control floating-input @(ViewData.ModelState["Login"]?.Errors.Count > 0 ? "is-invalid" : "")" id="login" placeholder=" " autocomplete="username" />
+            <label for="login" class="floating-label">Login</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.Login)</span>
+        </div>
+
+        <div class="col-mb-4 form-group">
+            <input type="email" asp-for="Email" class="form-control floating-input @(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "is-invalid" : "")" id="email" placeholder=" " autocomplete="email" />
+            <label for="email" class="floating-label">Email</label>
+            <span class="field-validation-error">@Html.ValidationMessageFor(x => x.Email)</span>
+        </div>
+
+        <div class="btn-container">
+            <button type="submit" class="btn btn-login btn-entrar">Reativar</button>
+            <a asp-controller="Login" asp-action="Index" class="btn btn-login btn-criar-conta">Voltar ao Login</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Reutilizando o script para flutuação de label, validação visual e autofill que você já tem
+    function checkAutoFill() {
+        document.querySelectorAll('.floating-input').forEach(input => {
+            const isAutoFilled = input.matches(':-webkit-autofill') || (input.value && input.value.trim() !== '');
+            if (isAutoFilled) {
+                input.setAttribute('data-filled', 'true');
+            } else {
+                input.removeAttribute('data-filled');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        checkAutoFill();
+
+        const autoFillCheckInterval = setInterval(checkAutoFill, 100);
+        setTimeout(() => clearInterval(autoFillCheckInterval), 3000);
+
+        const inputs = document.querySelectorAll('.floating-input');
+
+        inputs.forEach(input => {
+            const value = input.value.trim();
+            const hasError = input.classList.contains('is-invalid');
+
+            if (hasError) {
+                input.value = '';
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+                input.removeAttribute('data-filled');
+            } else if (value !== '') {
+                input.setAttribute('data-filled', 'true');
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            }
+
+            input.addEventListener('input', function () {
+                if (this.value.trim() !== '') {
+                    this.setAttribute('data-filled', 'true');
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.removeAttribute('data-filled');
+                    this.classList.remove('is-valid');
+                }
+            });
+
+            input.addEventListener('change', function () {
+                if (this.value.trim() !== '') {
+                    this.setAttribute('data-filled', 'true');
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.removeAttribute('data-filled');
+                    this.classList.remove('is-valid');
+                }
+            });
+        });
+
+        document.querySelector('form').addEventListener('submit', function () {
+            inputs.forEach(input => {
+                const isEmpty = input.value.trim() === '';
+                if (isEmpty) {
+                    input.classList.add('is-invalid');
+                    input.classList.remove('is-valid');
+                    input.setAttribute('data-filled', 'true');
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+            });
+        });
+    });
+
+    // Autofill fix para Chrome
+    window.addEventListener('DOMContentLoaded', function () {
+        const inputs = document.querySelectorAll('.floating-input');
+
+        inputs.forEach(input => {
+            const value = input.value.trim();
+            const hasError = input.classList.contains('is-invalid');
+
+            if (hasError) {
+                input.value = '';
+                input.removeAttribute('data-filled');
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+            } else if (value !== '') {
+                input.setAttribute('data-filled', 'true');
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            }
+
+            input.addEventListener('input', function () {
+                if (this.value.trim() !== '') {
+                    this.setAttribute('data-filled', 'true');
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.removeAttribute('data-filled');
+                    this.classList.remove('is-valid');
+                }
+            });
+        });
+
+        setTimeout(() => {
+            document.querySelectorAll('.floating-input:-webkit-autofill').forEach(el => {
+                el.setAttribute('data-filled', 'true');
+                el.classList.add('is-valid');
+            });
+        }, 100);
+    });
+
+    // Desaparecer mensagens automaticamente
+    const alertSucesso = document.getElementById('alertSucesso');
+    const alertErro = document.getElementById('alertErro');
+
+    if (alertSucesso) {
+        setTimeout(() => {
+            alertSucesso.style.transition = "opacity 0.5s ease";
+            alertSucesso.style.opacity = "0";
+            setTimeout(() => { alertSucesso.style.display = "none"; }, 500);
+        }, 8000);
+    }
+
+    if (alertErro) {
+        setTimeout(() => {
+            alertErro.style.transition = "opacity 0.5s ease";
+            alertErro.style.opacity = "0";
+            setTimeout(() => { alertErro.style.display = "none"; }, 500);
+        }, 15000);
+    }
+</script>

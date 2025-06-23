@@ -10,11 +10,14 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly ISessao _sessao;
+        private readonly IQuadrasRepositorio _quadrasRepositorio;
         public LoginController(IUsuarioRepositorio usuarioRepositorio,
-                               ISessao sessao)
+                               ISessao sessao,
+                                 IQuadrasRepositorio quadras)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _sessao = sessao;
+            _quadrasRepositorio = quadras;
         }
         public IActionResult Index()
         {
@@ -41,6 +44,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             return RedirectToAction("Index", "Login");
         }
 
+
         [HttpPost]
         public IActionResult Entrar(LoginModel loginModel)
         {
@@ -48,12 +52,22 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    UsuarioModel usuario = _usuarioRepositorio.BuscarPorLogin(loginModel.Login);
+                    var usuario = _usuarioRepositorio.BuscarPorLogin(loginModel.Login);
 
                     if (usuario == null)
                     {
                         ModelState.AddModelError("Login", "Usuário não encontrado.");
                         return View("Index");
+                    }
+
+                    // Verifica se o usuário está desativado (false ou null)
+                    if (!usuario.st_ativo || usuario.st_ativo == false)
+                    {
+                        TempData["MensagemErro"] = "Este usuário está desativado. Você pode reativá-lo abaixo.";
+
+                        // Redireciona para a tela de reativação, preenchendo dados conhecidos
+                        return RedirectToAction("ReativarUsuario", "Login", new { login = usuario.Login, email = usuario.Email });
+
                     }
 
                     if (!usuario.SenhaValida(loginModel.Senha))
@@ -74,6 +88,61 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+
+        [HttpGet]
+        public IActionResult ReativarUsuario(string login, string email)
+        {
+            var model = new ReativarUsuarioModel
+            {
+                Login = login,
+                Email = email
+            };
+
+            return View("~/Views/Login/ReativarUsuario.cshtml", model);
+        }
+
+        [HttpPost]
+        public IActionResult ReativarUsuario(ReativarUsuarioModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Login/ReativarUsuario.cshtml", model);
+            }
+
+            // Busca usuário pelo login
+            var usuario = _usuarioRepositorio.BuscarPorLogin(model.Login);
+
+            if (usuario == null || usuario.Email.ToLower() != model.Email.ToLower())
+            {
+                ModelState.AddModelError("", "Login e e-mail não conferem.");
+                return View("~/Views/Login/ReativarUsuario.cshtml", model);
+            }
+
+            // Verifica se já está ativo
+            if (usuario.st_ativo)
+            {
+                ModelState.AddModelError("", "Este usuário já está ativo.");
+                return View("~/Views/Login/ReativarUsuario.cshtml", model);
+            }
+
+            // Reativa o usuário
+            usuario.st_ativo = true;
+            _usuarioRepositorio.Atualizar(usuario);
+
+            // Verifica se a quadra associada a esse usuário está desativada
+            var quadra = _quadrasRepositorio.BuscarPorId(usuario.Id); // Usando Id como id_time
+            if (quadra != null && !quadra.st_ativo)
+            {
+                quadra.st_ativo = true;
+                _quadrasRepositorio.Atualizar(quadra);
+            }
+
+            TempData["MensagemSucesso"] = "Usuário reativado com sucesso! Faça login para continuar.";
+            return RedirectToAction("Index", "Login");
+        }
+
+
 
         //[HttpPost]
         //public IActionResult EnviarLinkParaRedefinirSenha(RedefinirSenhaModel redefinirSenhaModel)

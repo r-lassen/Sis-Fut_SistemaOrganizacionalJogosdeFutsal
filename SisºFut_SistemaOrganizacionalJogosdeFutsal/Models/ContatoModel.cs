@@ -1,5 +1,6 @@
 ﻿using SisºFut_SistemaOrganizacionalJogosdeFutsal.Categoria;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 {
@@ -20,6 +21,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
         [Required(ErrorMessage = "Selecione uma Categoria")]
         public CategoriaEnum? Categoria { get; set; }
+
+
+        // 🔗 RELACIONAMENTO COM USUÁRIO
+        public int UsuarioId { get; set; }
+
 
     }
 }

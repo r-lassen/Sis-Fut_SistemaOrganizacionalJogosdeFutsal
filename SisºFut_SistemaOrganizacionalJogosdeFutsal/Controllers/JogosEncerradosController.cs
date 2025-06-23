@@ -33,7 +33,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             if (usuarioLogado == null)
             {
-                return RedirectToAction("Login", "Conta");
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
             }
 
             var jogos = _jogosEncerradosRepositorio.BuscarTodos();

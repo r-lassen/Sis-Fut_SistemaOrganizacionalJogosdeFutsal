@@ -37,20 +37,62 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
-                // Verificações de dados únicos
-                if (_usuarioRepositorio.BuscarPorEmail(cadastro.usuario.Email) != null)
+                // Busca usuário pelo login (ativo ou não)
+                var usuarioLoginExistente = _usuarioRepositorio.BuscarPorLogin(cadastro.usuario.Login);
+
+                // Busca usuário pelo e-mail (ativo ou não)
+                var usuarioEmailExistente = _usuarioRepositorio.BuscarPorEmail(cadastro.usuario.Email);
+
+                // Busca usuário pelo nome do time (ativo ou não)
+                var usuarioNomeTimeExistente = _usuarioRepositorio.BuscarPorNomeTime(cadastro.usuario.Name);
+
+                // Se já existir um usuário ativo com o login, e-mail ou nome do time, erro
+                if ((usuarioLoginExistente != null && usuarioLoginExistente.st_ativo) ||
+                    (usuarioEmailExistente != null && usuarioEmailExistente.st_ativo) ||
+                    (usuarioNomeTimeExistente != null && usuarioNomeTimeExistente.st_ativo))
                 {
-                    ModelState.AddModelError("usuario.Email", "Este e-mail já está cadastrado.");
+                    if (usuarioLoginExistente != null && usuarioLoginExistente.st_ativo)
+                        ModelState.AddModelError("usuario.Login", "Este login já está em uso.");
+
+                    if (usuarioEmailExistente != null && usuarioEmailExistente.st_ativo)
+                        ModelState.AddModelError("usuario.Email", "Este e-mail já está cadastrado.");
+
+                    if (usuarioNomeTimeExistente != null && usuarioNomeTimeExistente.st_ativo)
+                        ModelState.AddModelError("usuario.Name", "Este nome de time já está em uso.");
+
+                    return View(cadastro);
                 }
 
-                if (_usuarioRepositorio.BuscarPorLogin(cadastro.usuario.Login) != null)
+                // Se existir usuário desativado com o mesmo login, e o e-mail e nome do time não conflitam, redireciona para reativação
+                if (usuarioLoginExistente != null && !usuarioLoginExistente.st_ativo)
                 {
-                    ModelState.AddModelError("usuario.Login", "Este login já está em uso.");
+                    // Verifica se e-mail e nome do time NÃO conflitam com usuários ativos diferentes
+                    bool emailConflita = usuarioEmailExistente != null && usuarioEmailExistente.st_ativo && usuarioEmailExistente.Id != usuarioLoginExistente.Id;
+                    bool nomeTimeConflita = usuarioNomeTimeExistente != null && usuarioNomeTimeExistente.st_ativo && usuarioNomeTimeExistente.Id != usuarioLoginExistente.Id;
+
+                    if (!emailConflita && !nomeTimeConflita)
+                    {
+                        TempData["MensagemErro"] = "Este usuário está desativado. Você pode reativá-lo abaixo.";
+                        return View("~/Views/Login/ReativarUsuario.cshtml");
+                    }
+                    else
+                    {
+                        if (emailConflita)
+                            ModelState.AddModelError("usuario.Email", "Este e-mail já está cadastrado por outro usuário ativo.");
+
+                        if (nomeTimeConflita)
+                            ModelState.AddModelError("usuario.Name", "Este nome de time já está em uso por outro usuário ativo.");
+
+                        return View(cadastro);
+                    }
                 }
 
-                if (_usuarioRepositorio.BuscarPorNomeTime(cadastro.usuario.Name) != null)
+                // Aqui pode adicionar a verificação da quadra associada, se quiser — só um exemplo:
+                var quadraExistente = _quadrasRepositorio.BuscarPorId(usuarioLoginExistente?.Id ?? 0);
+                if (quadraExistente != null && !quadraExistente.st_ativo)
                 {
-                    ModelState.AddModelError("usuario.Name", "Este nome de time já está em uso.");
+                    ModelState.AddModelError("", "A quadra associada a este usuário está desativada.");
+                    return View(cadastro);
                 }
 
                 // Verifica domínio do e-mail
@@ -61,7 +103,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     ModelState.AddModelError("usuario.Email", "O domínio do e-mail não é válido ou não existe.");
                 }
 
-                // Verifica digitaoção do e-mail
+                // Verifica digitação do e-mail
                 var sugestao = EmailHelper.SugerirDominioCorreto(cadastro.usuario.Email);
                 if (sugestao != null)
                 {
@@ -75,7 +117,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return View(cadastro);
                 }
 
-                // ✅ Só valida depois de adicionar todos os possíveis erros
                 if (!ModelState.IsValid)
                 {
                     return View(cadastro);
@@ -88,13 +129,18 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 }
 
                 cadastro.usuario.Perfil = Enums.PerfilEnum.Padrao;
+
+                // Setar ativo
+                cadastro.usuario.st_ativo = true;
+
                 var usuarioCriado = _usuarioRepositorio.Adicionar(cadastro.usuario);
 
                 var quadra = new QuadrasModel
                 {
                     DS_Endereco = cadastro.quadras?.DS_Endereco ?? string.Empty,
                     NM_Quadra = cadastro.quadras?.NM_Quadra ?? string.Empty,
-                    id_Time = usuarioCriado.Id
+                    id_Time = usuarioCriado.Id,
+                    st_ativo = true // aqui seta ativo para quadra
                 };
 
                 _quadrasRepositorio.Adicionar(quadra);
@@ -108,10 +154,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 return View(cadastro);
             }
         }
-
-
-
-
 
 
 

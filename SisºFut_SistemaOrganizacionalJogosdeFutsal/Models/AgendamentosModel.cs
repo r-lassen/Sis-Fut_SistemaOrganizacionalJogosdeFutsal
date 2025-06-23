@@ -30,6 +30,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Models
 
         public string DS_Descricao { get; set; }
 
+        public bool st_ativo { get; set; }
+
         [NotMapped]
         public UsuarioModel Usuario { get; set; }
     }

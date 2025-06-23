@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Filters;
+using SisºFut_SistemaOrganizacionalJogosdeFutsal.Helper;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using X.PagedList;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
@@ -13,17 +15,30 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
     public class ContatoController : Controller
     {
         private readonly IContatoRepositorio _contatoRepositorio;
-        public ContatoController(IContatoRepositorio contatoRepositorio)
+        private readonly ISessao _sessao;
+        public ContatoController(IContatoRepositorio contatoRepositorio,
+                                  ISessao sessao)
         {
             _contatoRepositorio = contatoRepositorio;
+            _sessao = sessao;
         }
 
         public IActionResult Index(string filtro, int? page)
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+            if (usuarioLogado == null)
+            {
+                // Redireciona para login se não estiver logado
+                return RedirectToAction("Login", "Conta");
+            }
+
             int pageNumber = page ?? 1;
             int pageSize = 10;
 
-            var contatos = _contatoRepositorio.BuscarTodos().AsQueryable();
+            // Busca só os contatos do usuário logado
+            var contatos = _contatoRepositorio.BuscarTodos()
+                .Where(c => c.UsuarioId == usuarioLogado.Id)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(filtro))
             {
@@ -39,26 +54,47 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
 
+
         public IActionResult Filtrar(string filtro, int? page)
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+            if (usuarioLogado == null)
+            {
+                // Pode redirecionar para login ou retornar erro
+                return RedirectToAction("Login", "Conta");
+            }
+
             int pageNumber = page ?? 1;
             int pageSize = 10;
 
             var contatos = _contatoRepositorio.BuscarTodos()
-                                             .Where(c => string.IsNullOrEmpty(filtro) || c.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase))
-                                             .OrderBy(c => c.Nome)
-                                             .ToPagedList(pageNumber, pageSize);
+                .Where(c => c.UsuarioId == usuarioLogado.Id &&
+                            (string.IsNullOrEmpty(filtro) || c.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase)))
+                .OrderBy(c => c.Nome)
+                .ToPagedList(pageNumber, pageSize);
 
             return PartialView("_TabelaContatos", contatos);
         }
 
         public IActionResult Criar()
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
             return View();
         }
 
         public IActionResult Editar(int id)
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
             ContatoModel contato = _contatoRepositorio.BuscarPorId(id);
             return View(contato);
         }
@@ -146,30 +182,46 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         //}
 
         [HttpPost]
-        public IActionResult Criar(ContatoModel contato)
+        public async Task<IActionResult> Criar(ContatoModel contato)
         {
             try
             {
+                var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+                if (usuarioLogado == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não está logado.";
+                    return RedirectToAction("Login", "Conta");
+                }
+
                 if (ModelState.IsValid)
                 {
-                    //// Remove máscara do celular, deixando só números
-                    //if (!string.IsNullOrEmpty(contato.Celular))
-                    //{
-                    //    contato.Celular = new string(contato.Celular.Where(char.IsDigit).ToArray());
-                    //}
+                    contato.UsuarioId = usuarioLogado.Id;
 
-                    // Verifica se o número de celular já está cadastrado
-                    var celularExistente = _contatoRepositorio.BuscarPorCelular(contato.Celular);
-                    if (celularExistente != null)
+                    // Verifica domínio do e-mail
+                    var emailHelper = new EmailHelper();
+                    bool dominioValido = await emailHelper.VerificarDominioEmailAsync(contato.Email);
+                    if (!dominioValido)
                     {
-                        ModelState.AddModelError("Celular", "Este número de celular já está cadastrado.");
+                        ModelState.AddModelError("Email", "O domínio do e-mail não é válido ou não existe.");
                     }
 
-                    // Verifica se o e-mail já está cadastrado
-                    var emailExistente = _contatoRepositorio.BuscarPorEmail(contato.Email);
+                    // Verifica digitação do e-mail (sugestão)
+                    var sugestao = EmailHelper.SugerirDominioCorreto(contato.Email);
+                    if (sugestao != null)
+                    {
+                        ModelState.AddModelError("Email", $"Domínio inválido. Você quis dizer: {sugestao}?");
+                    }
+
+                    var celularExistente = _contatoRepositorio.BuscarPorCelularEUsuario(contato.Celular, usuarioLogado.Id);
+                    if (celularExistente != null)
+                    {
+                        ModelState.AddModelError("Celular", "Você já cadastrou esse número de celular.");
+                    }
+
+                    var emailExistente = _contatoRepositorio.BuscarPorEmailEUsuario(contato.Email, usuarioLogado.Id);
                     if (emailExistente != null)
                     {
-                        ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
+                        ModelState.AddModelError("Email", "Você já cadastrou esse e-mail.");
                     }
 
                     if (!ModelState.IsValid)
@@ -177,27 +229,34 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                         return View(contato);
                     }
 
-                    // Adiciona o contato
                     _contatoRepositorio.Adicionar(contato);
+
                     TempData["MensagemSucesso"] = "Contato cadastrado com sucesso!";
                     return RedirectToAction("Index");
                 }
 
                 return View(contato);
             }
-            catch (System.Exception erro)
+            catch (Exception erro)
             {
                 TempData["MensagemErro"] = $"Erro ao cadastrar o contato. Detalhes: {erro.Message}";
                 throw;
             }
         }
 
+
+
         [HttpPost]
         public IActionResult Alterar(ContatoModel contato)
         {
             try
             {
-
+                var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+                if (usuarioLogado == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não está logado.";
+                    return RedirectToAction("Login", "Conta");
+                }
 
                 var contatoNoBanco = _contatoRepositorio.BuscarPorId(contato.Id);
 
@@ -207,18 +266,18 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Verifica se o celular já está em uso por outro contato
-                var celularExistente = _contatoRepositorio.BuscarPorCelular(contato.Celular);
+                // Verifica se o celular já está em uso por outro contato (excluindo o contato atual)
+                var celularExistente = _contatoRepositorio.BuscarPorCelularEUsuario(contato.Celular, usuarioLogado.Id);
                 if (celularExistente != null && celularExistente.Id != contato.Id)
                 {
-                    ModelState.AddModelError("Celular", "Este número de celular já está cadastrado.");
+                    ModelState.AddModelError("Celular", "Você já cadastrou esse número de celular.");
                 }
 
-                // Verifica se o e-mail já está em uso por outro contato
-                var emailExistente = _contatoRepositorio.BuscarPorEmail(contato.Email);
+                // Verifica se o e-mail já está em uso por outro contato (excluindo o contato atual)
+                var emailExistente = _contatoRepositorio.BuscarPorEmailEUsuario(contato.Email, usuarioLogado.Id);
                 if (emailExistente != null && emailExistente.Id != contato.Id)
                 {
-                    ModelState.AddModelError("Email", "Este e-mail já está cadastrado.");
+                    ModelState.AddModelError("Email", "Você já cadastrou esse e-mail.");
                 }
 
                 // Se houver erro de validação, retorna à view

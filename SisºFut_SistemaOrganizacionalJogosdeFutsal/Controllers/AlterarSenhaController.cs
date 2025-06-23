@@ -35,6 +35,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         {
             try
             {
+
+
                 UsuarioModel usuarioLogado = _sessao.BuscarSessaoDoUsuario();
                 alterarSenhaModel.Id = usuarioLogado.Id;
 

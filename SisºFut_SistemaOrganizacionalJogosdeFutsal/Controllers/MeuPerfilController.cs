@@ -38,10 +38,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             if (usuarioLogado == null)
             {
-                return RedirectToAction("Login", "Index"); // Redireciona para login se não estiver logado
+                return RedirectToAction("Login", "Index");
             }
-
-
 
             var time1 = _usuarioRepositorio.BuscarPorId(usuarioLogado.Id);
 
@@ -50,12 +48,11 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
             var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(usuarioLogado.Id);
             var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(usuarioLogado.Id);
 
-
             if (jaTemAgendadoTime1.Count > 0)
             {
                 foreach (var a in jaTemAgendadoTime1)
                 {
-                    if (a.id_Time2 != null)
+                    if (a.st_ativo && a.id_Time2 != null)
                     {
                         listaAgendamentos.Add(a);
                     }
@@ -64,64 +61,61 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
             if (jaTemAgendadoTime2.Count > 0)
             {
-                listaAgendamentos.AddRange(jaTemAgendadoTime2);
-
+                foreach (var a in jaTemAgendadoTime2)
+                {
+                    if (a.st_ativo)
+                    {
+                        listaAgendamentos.Add(a);
+                    }
+                }
             }
 
-
             List<DadosAgendamentos> dadosMarcados = new List<DadosAgendamentos>();
-
 
             foreach (var marcado in listaAgendamentos)
             {
                 var time1OK = _usuarioRepositorio.BuscarPorId(marcado.id_Time1);
                 var time2OK = _usuarioRepositorio.BuscarPorId(marcado.id_Time2.Value);
-
                 var quadra = _quadrasRepositorio.BuscarPorIdQuadra(marcado.id_Quadra);
-
 
                 dadosMarcados.Add(new DadosAgendamentos
                 {
-                    Time1 = time1OK.Name,
-                    Time2 = time2OK.Name,
-                    Local = quadra.NM_Quadra + "-" + quadra.DS_Endereco,
+                    Time1 = time1OK?.Name,
+                    Time2 = time2OK?.Name,
+                    Local = quadra != null ? quadra.NM_Quadra + "-" + quadra.DS_Endereco : "",
                     Data = marcado.DT_Agendamento,
                     DS_Descrição = marcado.DS_Descricao,
                     Hora = marcado.HR_Agendamento,
                     id = marcado.Id,
-                    FotoTime1 = time1OK.Foto,
-                    FotoTime2 = time2OK.Foto,
-                    idTime1 = time1OK.Id,
-                    idTime2 = time2OK.Id,
+                    FotoTime1 = time1OK?.Foto,
+                    FotoTime2 = time2OK?.Foto,
+                    idTime1 = time1OK?.Id ?? 0,
+                    idTime2 = time2OK?.Id ?? 0,
                 });
             }
 
             var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
 
-
             HomeModel home = new HomeModel
             {
-                //Nome = usuarioLogado.Name,
-                //Email = usuarioLogado.Email,
-                //Id = usuarioLogado.Id,
-
-
                 Quadra = quadraOk,
                 Usuario = time1,
-
                 Marcados = dadosMarcados,
-
-                //Banco = usuarioLogado.Banco // Pegando o nome do banco (adicione essa propriedade ao modelo)
             };
-
 
             return View(home);
         }
+
 
         public IActionResult Editar()
         {
 
             var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
 
             var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
 
@@ -152,6 +146,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 if (emailExiste != null && emailExiste.Id != homemodel.Usuario.Id)
                 {
                     ModelState.AddModelError("Usuario.Email", "Este e-mail já está cadastrado por outro usuário.");
+                }
+
+                // Sugestão para domínio de e-mail inválido
+                var sugestao = EmailHelper.SugerirDominioCorreto(homemodel.Usuario.Email);
+                if (sugestao != null)
+                {
+                    ModelState.AddModelError("Usuario.Email", $"Domínio inválido. Você quis dizer: {sugestao}?");
                 }
 
                 var loginExiste = _usuarioRepositorio.BuscarPorLogin(homemodel.Usuario.Login);
@@ -216,6 +217,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
         }
 
 
+
         public string ConverterParaBase64(IFormFile arquivo)
         {
             if (arquivo == null || arquivo.Length == 0)
@@ -231,6 +233,12 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult JogoMarcado(int id)
         {
+            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+
+            if (usuarioLogado == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
+            }
 
             var Agendamento = _agendamentoRepositorio.BuscarPorId(id);
 
@@ -372,7 +380,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return RedirectToAction("Index", "Login");
                 }
 
-                // Busca os dados do usuário, quadra e agendamentos
                 var quadraOk = _quadrasRepositorio.BuscarPorId(usuarioLogado.Id);
                 var usuariook = _usuarioRepositorio.BuscarPorId(usuarioLogado.Id);
 
@@ -382,7 +389,6 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                     return RedirectToAction("Index", "Perfil");
                 }
 
-                // Verifica agendamentos pendentes
                 var listaAgendamentos = new List<AgendamentosModel>();
                 var jaTemAgendadoTime1 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime1(usuarioLogado.Id);
                 var jaTemAgendadoTime2 = _agendamentoRepositorio.BuscarJogosAbertosPorIdTime2(usuarioLogado.Id);
@@ -390,53 +396,53 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 if (jaTemAgendadoTime1.Count > 0) listaAgendamentos.AddRange(jaTemAgendadoTime1);
                 if (jaTemAgendadoTime2.Count > 0) listaAgendamentos.AddRange(jaTemAgendadoTime2);
 
-                // Tenta excluir quadra (se existir)
+                // Atualiza st_ativo da quadra para false (se existir)
                 if (quadraOk != null)
                 {
-                    var quadraExcluida = _quadrasRepositorio.Apagar(quadraOk.Id);
-                    if (!quadraExcluida)
+                    quadraOk.st_ativo = false;
+                    var quadraAtualizada = _quadrasRepositorio.Atualizar(quadraOk);
+                    if (quadraAtualizada == null)
                     {
-                        TempData["MensagemErro"] = "Não foi possível excluir a quadra associada.";
+                        TempData["MensagemErro"] = "Não foi possível desativar a quadra associada.";
                         return RedirectToAction("Index", "Perfil");
                     }
                 }
 
-                // Tenta excluir agendamentos (se existirem)
-                if (listaAgendamentos.Count > 0)
+                // Atualiza st_ativo de todos os agendamentos para false
+                foreach (var agendamento in listaAgendamentos)
                 {
-                    foreach (var agendamento in listaAgendamentos)
+                    agendamento.st_ativo = false;
+                    agendamento.DT_Atualizacao = DateTime.Now; // opcional, se tiver campo de atualização
+                    var agendamentoAtualizado = _agendamentoRepositorio.Atualizar(agendamento);
+                    if (agendamentoAtualizado == null)
                     {
-                        var agendamentoExcluido = _agendamentoRepositorio.Apagar(agendamento.Id);
-                        if (!agendamentoExcluido)
-                        {
-                            TempData["MensagemErro"] = "Não foi possível excluir um agendamento pendente.";
-                            return RedirectToAction("Index", "Perfil");
-                        }
+                        TempData["MensagemErro"] = "Não foi possível desativar um agendamento pendente.";
+                        return RedirectToAction("Index", "Perfil");
                     }
                 }
 
-                // Tenta excluir o usuário
-                var usuarioExcluido = _usuarioRepositorio.Apagar(usuariook.Id);
-                if (!usuarioExcluido)
+                // Atualiza st_ativo do usuário para false
+                usuariook.st_ativo = false;
+                var usuarioAtualizado = _usuarioRepositorio.Atualizar(usuariook);
+                if (usuarioAtualizado == null)
                 {
-                    TempData["MensagemErro"] = "Não foi possível excluir o perfil.";
+                    TempData["MensagemErro"] = "Não foi possível desativar o perfil.";
                     return RedirectToAction("Index", "Perfil");
                 }
 
-                // Se tudo der certo:
+                // Remove sessão do usuário
                 _sessao.RemoverSessaoUsuario();
-                TempData["MensagemSucesso"] = "Perfil excluído com sucesso!";
+                TempData["MensagemSucesso"] = "Perfil desativado com sucesso!";
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
-                // Log do erro (em produção, use um logger como Serilog, NLog, etc.)
-                Console.WriteLine($"Erro ao excluir perfil: {ex.Message}");
-
-                TempData["MensagemErro"] = "Ocorreu um erro ao tentar excluir o perfil. Tente novamente mais tarde.";
+                Console.WriteLine($"Erro ao desativar perfil: {ex.Message}");
+                TempData["MensagemErro"] = "Ocorreu um erro ao tentar desativar o perfil. Tente novamente mais tarde.";
                 return RedirectToAction("Index", "Perfil");
             }
         }
+
 
 
         //[HttpPost]

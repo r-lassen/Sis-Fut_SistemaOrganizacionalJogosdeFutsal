@@ -128,6 +128,10 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 }
             }
 
+            // Ordena por Data os jogos abertos e marcados
+            dadosAbertos = dadosAbertos.OrderBy(j => j.Data).ToList();
+            dadosMarcados = dadosMarcados.OrderBy(j => j.Data).ToList();
+
             HomeModel home = new HomeModel
             {
                 Nome = usuarioLogado.Name,

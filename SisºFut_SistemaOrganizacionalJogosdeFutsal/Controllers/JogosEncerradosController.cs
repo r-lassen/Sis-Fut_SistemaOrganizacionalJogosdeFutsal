@@ -4,6 +4,7 @@ using SisºFut_SistemaOrganizacionalJogosdeFutsal.Models;
 using SisºFut_SistemaOrganizacionalJogosdeFutsal.Repositorio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 {
@@ -72,6 +73,8 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
                 Nome = usuarioLogado.Name,
                 Email = usuarioLogado.Email,
                 Encerrados = dadosEncerrados
+                    .OrderByDescending(j => j.Data) // mais recente primeiro
+                    .ToList()
             };
 
             return View(home);

@@ -9,7 +9,7 @@
 
 @{
     Layout = "_LayoutDeslogado";
-    ViewData["Title"] = "Cadastrar Times";
+
 }
 
 
@@ -161,18 +161,32 @@
 
                         <small id="feedbackConfirmacao" class="text-danger d-none mt-1">As senhas não coincidem.</small>
 
+
+
+                        <!-- Aceitar Termos -->
+                        <div class="form-check mb-3" style="margin: 10px">
+                            <input class="form-check-input" type="checkbox" id="aceitarTermos" required>
+                            <label class="form-check-label" for="aceitarTermos">
+                                Eu li e concordo com os <a href="#" data-bs-toggle="modal" data-bs-target="#modalTermos">Termos de Uso e Política de Privacidade</a>.
+                            </label>
+                            <div class="invalid-feedback d-block d-none" id="erroTermos">
+                                Você precisa aceitar os termos antes de continuar.
+                            </div>
+                        </div>
+
                         <!-- Botões -->
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="btn-group">
                                     <!-- Botão Voltar -->
-                                    <a class="btn btn-outline" asp-action="Index" asp-controller="Usuario"> Voltar </a>
+                                    <a class="btn btn-outline" asp-action="Index" asp-controller="Login"> Voltar </a>
 
                                     <!-- Botão Cadastrar -->
                                     <button type="submit" class="btn btn-cadastrar"> Cadastrar </button>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -445,4 +459,77 @@
         }, 15000); // 15 segundos
     }
 
+
+        // Validação do checkbox de termos
+    const form = document.getElementById('cadastroForm');
+    const termosCheckbox = document.getElementById('aceitarTermos');
+    const erroTermos = document.getElementById('erroTermos');
+
+    if (form && termosCheckbox && erroTermos) {
+        form.addEventListener('submit', function (event) {
+            if (!termosCheckbox.checked) {
+                erroTermos.classList.remove('d-none');
+                termosCheckbox.focus();
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                erroTermos.classList.add('d-none');
+            }
+        });
+    }
+
 </script>
+
+
+
+<!-- Modal de Termos -->
+<div class="modal fade" id="modalTermos" tabindex="-1" aria-labelledby="modalTermosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTermosLabel">Termos de Uso e Política de Privacidade</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+
+            <div class="modal-body" style="font-size: 0.95rem; color: #333;">
+                <section style="margin-bottom: 1.5rem;">
+                    <h6 class="fw-bold text-primary mb-2">🔹 Termos de Uso do SisFut:</h6>
+                    <ol class="ps-3" style="line-height: 1.6;">
+                        <li>O sistema deve ser utilizado exclusivamente para fins relacionados ao agendamento e organização de jogos amistosos entre equipes de futsal feminino.</li>
+                        <li>É proibido utilizar a plataforma para fins ilícitos ou qualquer comportamento que prejudique a experiência de outros usuários.</li>
+                        <li>O SisFut reserva-se o direito de suspender ou remover contas que violem estes termos, sem aviso prévio.</li>
+                        <li>Este termo poderá ser atualizado conforme necessidade, sendo responsabilidade do usuário acompanhar alterações futuras.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h6 class="fw-bold text-primary mb-2">🔒 Política de Privacidade e Segurança – LGPD:</h6>
+                    <ol class="ps-3" style="line-height: 1.6;">
+                        <li><strong>Coleta de Dados:</strong> Coletamos apenas os dados necessários para o funcionamento do SisFut: nome, e-mail, equipe e disponibilidade de jogos.</li>
+                        <li>
+                            <strong>Uso das Informações:</strong> Os dados são utilizados exclusivamente para:
+                            <ul class="ps-3 mt-1">
+                                <li>Facilitar o agendamento de jogos entre equipes.</li>
+                                <li>Melhorar a comunicação entre os usuários.</li>
+                                <li>Garantir a integridade e personalização da experiência na plataforma.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Compartilhamento de Dados:</strong> Não compartilhamos suas informações com terceiros, exceto em casos previstos por lei ou com sua autorização expressa.</li>
+                        <li><strong>Armazenamento e Proteção:</strong> Seus dados são armazenados em ambiente seguro, com medidas técnicas e administrativas para proteção, conforme a LGPD (Lei nº 13.709/2018).</li>
+                        <li>
+                            <strong>Seus Direitos:</strong> Você pode, a qualquer momento:
+                            <ul class="ps-3 mt-1">
+                                <li>Solicitar a atualização, correção ou exclusão de seus dados.</li>
+                                <li>Entrar em contato para esclarecer dúvidas: <a href="mailto:sistemadefutsal@gmail.com">sistemadefutsal@gmail.com</a></li>
+                            </ul>
+                        </li>
+                    </ol>
+                </section>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>

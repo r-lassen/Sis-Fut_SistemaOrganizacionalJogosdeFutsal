@@ -298,3 +298,28 @@ body {
     border-color: #28a745 !important;
     box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }
+
+
+
+/* Wrapper do campo com botão toggle fixo */
+.input-wrapper-toggle {
+    position: relative;
+}
+
+/* Ícone de mostrar senha */
+.btn-icon-toggle-senha {
+    position: absolute;
+    top: 50%;
+    right: 2.5rem;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    z-index: 10;
+    padding: 0.25rem;
+    font-size: 1.1rem;
+}
+
+    .btn-icon-toggle-senha:hover {
+        color: var(--primary-color);
+    }

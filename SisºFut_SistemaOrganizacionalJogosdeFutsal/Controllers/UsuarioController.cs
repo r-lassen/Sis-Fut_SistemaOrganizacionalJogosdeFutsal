@@ -35,12 +35,7 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult Index(string filtro, int? page)
         {
-            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
 
-            if (usuarioLogado == null)
-            {
-                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
-            }
 
             int pageNumber = page ?? 1;
             int pageSize = 10;
@@ -79,23 +74,13 @@ namespace SisºFut_SistemaOrganizacionalJogosdeFutsal.Controllers
 
         public IActionResult Criar()
         {
-            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
 
-            if (usuarioLogado == null)
-            {
-                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
-            }
             return View();
         }
 
         public IActionResult Editar(int id)
         {
-            var usuarioLogado = _sessao.BuscarSessaoDoUsuario();
 
-            if (usuarioLogado == null)
-            {
-                return RedirectToAction("Login", "Conta"); // Redireciona para login se não estiver logado
-            }
 
             var usuario = _usuarioRepositorio.BuscarPorId(id);
 

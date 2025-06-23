@@ -2,7 +2,7 @@
 
 @{
     Layout = "_LayoutDeslogado";
-    ViewData["Title"] = "Redefinir Senha";
+
 }
 
 <!-- SEÇÃO DE MENSAGENS DE ALERTA -->
@@ -40,8 +40,15 @@
         </div>
 
         <div class="col-mb-4 form-group">
-            <input type="password" asp-for="Senha" class="form-control floating-input @(ViewData.ModelState["Senha"]?.Errors.Count > 0 ? "is-invalid" : "")" id="senha" placeholder=" " autocomplete="current-password">
-            <label for="senha" class="floating-label">Senha</label>
+            <div class="input-wrapper-toggle position-relative">
+                <input type="password" asp-for="Senha" class="form-control floating-input @(ViewData.ModelState["Senha"]?.Errors.Count > 0 ? "is-invalid" : "")" id="senha" placeholder=" " autocomplete="current-password">
+                <label for="senha" class="floating-label">Senha</label>
+
+                <button type="button" class="btn btn-sm btn-icon-toggle-senha" onclick="toggleSenha()" aria-label="Mostrar ou ocultar senha">
+                    <i id="iconeToggleSenha" class="bi bi-eye"></i>
+                </button>
+            </div>
+
             <span class="field-validation-error">@Html.ValidationMessageFor(x => x.Senha)</span>
         </div>
 
@@ -195,5 +202,21 @@
                 alertErro.style.display = "none";
             }, 500);
         }, 15000); // 15 segundos
+    }
+
+
+    function toggleSenha() {
+        const campoSenha = document.getElementById("senha");
+        const icone = document.getElementById("iconeToggleSenha");
+
+        if (campoSenha.type === "password") {
+            campoSenha.type = "text";
+            icone.classList.remove("bi-eye");
+            icone.classList.add("bi-eye-slash");
+        } else {
+            campoSenha.type = "password";
+            icone.classList.remove("bi-eye-slash");
+            icone.classList.add("bi-eye");
+        }
     }
 </script>

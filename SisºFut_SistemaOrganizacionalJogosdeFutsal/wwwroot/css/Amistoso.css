@@ -118,6 +118,55 @@ body {
     margin: 0;
 }
 
+/* ESTILOS PARA O DROPDOWN DO TIME 2 - ATUALIZADO */
+#dropdownTime2 {
+    text-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding: 10px 32px 10px 12px; /* Ajuste no padding para melhor alinhamento */
+    cursor: pointer;
+    line-height: normal; /* Garante que o line-height não interfira no alinhamento */
+    height: 40px; /* Altura fixa para consistência */
+    display: flex;
+    align-items: center; /* Centraliza verticalmente o texto */
+    justify-content: center; /* Centraliza horizontalmente o texto */
+}
+
+/* Adicionando um container especial para o dropdown para melhor controle */
+.dropdown-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+/* Estilo quando o dropdown está em foco */
+#dropdownTime2:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(55, 195, 180, 0.25);
+    outline: none;
+}
+
+/* Estilo para as opções do dropdown */
+#dropdownTime2 option {
+    text-align: left; /* Alinha o texto das opções à esquerda */
+    padding: 8px;
+}
+
+    /* Estilo para o placeholder (opção padrão) */
+    #dropdownTime2 option[value=""] {
+        color: #999; /* Cor mais clara para o placeholder */
+        text-align: center; /* Centraliza o placeholder */
+    }
+
+
+
+
 /* BOTÕES */
 .btn-group {
     display: flex;

@@ -57,7 +57,7 @@
                 <span class="text-danger small mt-1 d-block">@Html.ValidationMessageFor(x => x.NovaSenha)</span>
 
                 <small id="capsWarning" class="text-warning d-none mt-1 d-block">Caps Lock está ativado!</small>
-                <small id="senhaAviso" class="text-danger d-none mt-1 d-block">A senha deve ter no mínimo 6 caracteres, sem espaços ou caracteres especiais.</small>
+                <small id="senhaAviso" class="text-danger d-none mt-1 d-block">A senha deve ter no mínimo 6 caracteres. Você pode usar letras, números e caracteres especiais para deixá-la mais segura.</small>
 
                 <div id="senhaForca" class="mt-2">
                     <div class="progress" style="height: 6px;">
@@ -142,9 +142,9 @@
 
             function validarConteudoSenha() {
                 const valor = novaSenha.value;
-                const regex = /^[A-Za-z0-9]{6,}$/;
+                const regex = /^[A-Za-z0-9!#\$%\^&\*\(\)_\-\+=\[\{\]\};:'",.<>\/\?\\|]{6,}$/;
 
-                if (!regex.test(valor)) {
+                if (!regex.test(valor) || /\s/.test(valor)) {
                     novaSenha.setCustomValidity("Senha inválida.");
                     novaSenha.classList.add('is-invalid');
                     senhaAviso.classList.remove('d-none');
@@ -159,14 +159,15 @@
                 if (valor.length >= 6) forca += 1;
                 if (/[A-Z]/.test(valor)) forca += 1;
                 if (/[0-9]/.test(valor)) forca += 1;
+                if (/[^A-Za-z0-9]/.test(valor)) forca += 1;
 
-                let largura = (forca / 3) * 100;
+                let largura = (forca / 4) * 100;
                 barraForca.style.width = `${largura}%`;
 
                 barraForca.className = 'progress-bar';
-                if (forca === 1) barraForca.classList.add('bg-danger');
+                if (forca <= 1) barraForca.classList.add('bg-danger');
                 else if (forca === 2) barraForca.classList.add('bg-warning');
-                else if (forca === 3) barraForca.classList.add('bg-success');
+                else barraForca.classList.add('bg-success');
             }
 
             novaSenha.addEventListener('input', validarConteudoSenha);
@@ -198,7 +199,6 @@
         const toggle = document.getElementById(toggleId);
 
         if (input && toggle) {
-            // Alterna tipo de input e ícone
             toggle.addEventListener('click', function () {
                 const tipoAtual = input.getAttribute('type');
                 input.setAttribute('type', tipoAtual === 'password' ? 'text' : 'password');
@@ -206,7 +206,6 @@
                 toggle.classList.toggle('bi-eye-slash');
             });
 
-            // Mostra/esconde o ícone dependendo do conteúdo
             input.addEventListener('input', function () {
                 if (input.value.trim().length > 0) {
                     toggle.classList.remove('d-none');
@@ -220,8 +219,7 @@
         }
     }
 
-
-            // Desaparecer automaticamente os alertas
+    // Desaparecer automaticamente os alertas
     const alertSucesso = document.getElementById('alertSucesso');
     const alertErro = document.getElementById('alertErro');
 
@@ -232,7 +230,7 @@
             setTimeout(() => {
                 alertSucesso.style.display = "none";
             }, 500);
-        }, 8000); // 8 segundos
+        }, 8000);
     }
 
     if (alertErro) {
@@ -242,6 +240,6 @@
             setTimeout(() => {
                 alertErro.style.display = "none";
             }, 500);
-        }, 15000); // 15 segundos
+        }, 15000);
     }
 </script>

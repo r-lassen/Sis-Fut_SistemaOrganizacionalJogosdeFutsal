@@ -40,7 +40,8 @@
                        class="form-control floating-input pe-5"
                        placeholder=" " required />
                 <label for="novaSenha" class="floating-label required-field">Nova Senha</label>
-                <i id="toggleNovaSenha" class="bi bi-eye password-toggle-icon d-none"></i>
+                <i id="toggleNovaSenha" class="bi bi-eye position-absolute text-muted d-none"
+                   style="top: 50%; right:45px; transform: translateY(-50%); cursor: pointer; z-index: 10;"></i>
             </div>
             <span class="field-validation-error">@Html.ValidationMessageFor(x => x.NovaSenha)</span>
 
@@ -48,7 +49,7 @@
                 <i class="bi bi-capslock-fill"></i> Caps Lock está ativado!
             </small>
             <small id="senhaAviso" class="password-feedback invalid d-none">
-                A senha deve ter no mínimo 6 caracteres, sem espaços ou caracteres especiais.
+                A senha deve ter no mínimo 6 caracteres. Você pode usar letras, números e caracteres especiais para deixá-la mais segura.
             </small>
 
             <div id="senhaForca" class="mt-2">
@@ -64,7 +65,8 @@
                    class="form-control floating-input pe-5"
                    placeholder=" " required />
             <label for="confirmarSenha" class="floating-label required-field">Confirmar Nova Senha</label>
-            <i id="toggleConfirmarSenha" class="bi bi-eye password-toggle-icon d-none"></i>
+            <i id="toggleConfirmarSenha" class="bi bi-eye position-absolute text-muted d-none"
+               style="top: 50%; right: 45px; transform: translateY(-50%); cursor: pointer; z-index: 10;"></i>
 
             <span class="field-validation-error">@Html.ValidationMessageFor(x => x.ConfirmarNovaSenha)</span>
 
@@ -114,7 +116,7 @@
 
         function validarConteudoSenha() {
             const valor = novaSenha.value;
-            const regex = /^[A-Za-z0-9]{6,}$/;
+            const regex = /^[A-Za-z0-9!#\$%\^&\*\(\)_\-\+=\[\{\]\};:'",.<>\/\?\\|]{6,}$/;
 
             if (!regex.test(valor)) {
                 novaSenha.setCustomValidity("Senha inválida");
@@ -134,14 +136,15 @@
             if (senha.length >= 6) forca += 1;
             if (/[A-Z]/.test(senha)) forca += 1;
             if (/[0-9]/.test(senha)) forca += 1;
+            if (/[^A-Za-z0-9]/.test(senha)) forca += 1;
 
-            let largura = (forca / 3) * 100;
+            let largura = (forca / 4) * 100;
             barraForca.style.width = `${largura}%`;
 
             barraForca.className = 'progress-bar';
-            if (forca === 1) barraForca.classList.add('bg-danger');
+            if (forca <= 1) barraForca.classList.add('bg-danger');
             else if (forca === 2) barraForca.classList.add('bg-warning');
-            else if (forca === 3) barraForca.classList.add('bg-success');
+            else barraForca.classList.add('bg-success');
         }
 
         function verificarCapsLock(e, avisoElemento) {
@@ -213,7 +216,7 @@
         });
     }
 
-            // Desaparecer automaticamente os alertas
+    // Desaparecer automaticamente os alertas
     const alertSucesso = document.getElementById('alertSucesso');
     const alertErro = document.getElementById('alertErro');
 
@@ -224,7 +227,7 @@
             setTimeout(() => {
                 alertSucesso.style.display = "none";
             }, 500);
-        }, 8000); // 8 segundos
+        }, 8000);
     }
 
     if (alertErro) {
@@ -234,6 +237,7 @@
             setTimeout(() => {
                 alertErro.style.display = "none";
             }, 500);
-        }, 15000); // 15 segundos
+        }, 15000);
     }
 </script>
+

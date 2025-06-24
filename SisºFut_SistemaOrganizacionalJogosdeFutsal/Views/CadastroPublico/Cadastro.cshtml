@@ -142,7 +142,7 @@
                             @Html.ValidationMessageFor(x => x.usuario.Senha, "", new { @class = "text-danger small mt-1 d-block" })
 
                             <small id="capsWarning" class="text-warning d-none mt-1 d-block">Caps Lock está ativado!</small>
-                            <small id="senhaAviso" class="text-danger d-none mt-1 d-block">A senha deve ter no mínimo 6 caracteres, sem espaços ou caracteres especiais.</small>
+                            <small id="senhaAviso" class="text-danger d-none mt-1 d-block">A senha deve ter no mínimo 6 caracteres. Você pode usar letras, números e caracteres especiais para deixá-la mais segura..</small>
 
                             <div id="senhaForca" class="mt-2">
                                 <div class="progress" style="height: 6px;">
@@ -231,7 +231,7 @@
 
             function validarConteudoSenha() {
                 const valor = senha.value;
-                const regex = /^[A-Za-z0-9]{6,}$/;
+                const regex = /^[A-Za-z0-9!#\$%\^&\*\(\)_\-\+=\[\{\]\};:'",.<>\/\?\\|]{6,}$/;
 
                 if (!regex.test(valor)) {
                     senha.setCustomValidity("Senha inválida.");
@@ -248,14 +248,15 @@
                 if (valor.length >= 6) forca += 1;
                 if (/[A-Z]/.test(valor)) forca += 1;
                 if (/[0-9]/.test(valor)) forca += 1;
+                if (/[^A-Za-z0-9]/.test(valor)) forca += 1;
 
-                let largura = (forca / 3) * 100;
+                let largura = (forca / 4) * 100;
                 barraForca.style.width = `${largura}%`;
 
                 barraForca.className = 'progress-bar';
-                if (forca === 1) barraForca.classList.add('bg-danger');
+                if (forca <= 1) barraForca.classList.add('bg-danger');
                 else if (forca === 2) barraForca.classList.add('bg-warning');
-                else if (forca === 3) barraForca.classList.add('bg-success');
+                else barraForca.classList.add('bg-success');
             }
 
             senha.addEventListener('input', validarConteudoSenha);
@@ -338,7 +339,6 @@
         const toggle = document.getElementById(toggleId);
 
         if (input && toggle) {
-            // Alterna tipo de input e ícone
             toggle.addEventListener('click', function () {
                 const tipoAtual = input.getAttribute('type');
                 input.setAttribute('type', tipoAtual === 'password' ? 'text' : 'password');
@@ -346,7 +346,6 @@
                 toggle.classList.toggle('bi-eye-slash');
             });
 
-            // Mostra/esconde o ícone dependendo do conteúdo
             input.addEventListener('input', function () {
                 if (input.value.trim().length > 0) {
                     toggle.classList.remove('d-none');
@@ -360,10 +359,8 @@
         }
     }
 
-    // Aplicar aos campos de senha e confirmação
     configurarToggleSenha('usuario_Senha', 'toggleSenha');
     configurarToggleSenha('confirmacaoSenha', 'toggleConfirmacao');
-
 
     // Formatador de CEP
     function formatarCEP(input) {
@@ -394,7 +391,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.erro) throw new Error("CEP não encontrado");
-
                 document.getElementById('endereco').value = data.logradouro || "";
                 document.getElementById('nomeQuadra').focus();
             })
@@ -420,7 +416,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.erro) throw new Error("CEP não encontrado");
-
                 document.getElementById('endereco').value = data.logradouro || "";
                 document.getElementById('nomeQuadra').focus();
             })
@@ -434,8 +429,7 @@
             });
     }
 
-
-            // Desaparecer automaticamente os alertas
+    // Alertas automáticos
     const alertSucesso = document.getElementById('alertSucesso');
     const alertErro = document.getElementById('alertErro');
 
@@ -446,7 +440,7 @@
             setTimeout(() => {
                 alertSucesso.style.display = "none";
             }, 500);
-        }, 8000); // 8 segundos
+        }, 8000);
     }
 
     if (alertErro) {
@@ -456,11 +450,10 @@
             setTimeout(() => {
                 alertErro.style.display = "none";
             }, 500);
-        }, 15000); // 15 segundos
+        }, 15000);
     }
 
-
-        // Validação do checkbox de termos
+    // Validação do checkbox de termos
     const form = document.getElementById('cadastroForm');
     const termosCheckbox = document.getElementById('aceitarTermos');
     const erroTermos = document.getElementById('erroTermos');
@@ -477,8 +470,8 @@
             }
         });
     }
-
 </script>
+
 
 
 
